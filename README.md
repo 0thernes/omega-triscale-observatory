@@ -1,0 +1,18 @@
+# OMEGA 4-TIER STACK OBSERVATORY v6.2 (`REAL 128B DNA→CELLS · 13-VEC FULL PARITY · 150 LEAN 4 PROOFS`)
+
+Unified real-time 4-tier Artificial Life cockpit supervising **ALL 6 LIVE LOCAL ENDPOINTS** simultaneously on `http://127.0.0.1:8790/` (**`150` combined Pure Lean 4 Formal Proofs: `31` `autophage` + `58` `cellulogonic-mecha` + `61` `cellular-engine-omega`, `0 sorryAx`**):
+
+| # | Tier / Instrument | Biological & Computational Layer | Native Engine / Formal Proofs | Standalone Live URL |
+|---|---|---|---|---|
+| **#1** | **Tier 1 · DNA (`10⁻⁹ m`)** | 256B x86-64 RWX Genomes, 8×8 F₂ Ribosomes, GF(2⁸), Real 128B Genome Export, Fixed `BedauPackard_Anew` | `AUTOPHAGE v1.1` (`autophage.exe` · **31 Lean 4 Proofs** · 18/18 Gates) | `http://127.0.0.1:8787/` |
+| **#2** | **Tier 2 · CELLS (`10⁻⁶ m`)** | 3D Z-Stratified Embryogenesis, ATP-Coupled CPG Propulsion, Stateful Fröhlich ODE, SHA-256 `.cmbin`, Full 13-Vec & 128B DNA Ingest | `Cellulogonic Mecha v1.2.1` (`cellulogonic.exe` · **58 Lean 4 Proofs** · 24/24 Gates / 8/8 Mutants) | `http://127.0.0.1:8788/` |
+| **#3** | **Tier 2+ · DEEP STRATA, BIO-FROSTBITE INET & VIRTUAL-CELL AI** | 16 Frontier Testbeds (`TB01`–`TB16`): CISS, MC Cohesin TAD, Jacobi Trp Superradiance, 1ns Cnidocyte ODE, Levin `Vmem` 1→2H, 5×SHA INet VM, Ridge Zero-Shot Virtual-Cell AI, 573-Gene `JCVI-syn3A` CRISPRi & Lean Differential Trace Receipt | `Cellular Engine Omega v4.2` (`omega_cell.exe` · **61 Lean 4 Proofs** · 43/43 Gates / 10/10 Mutants) | `http://127.0.0.1:8791/` |
+| **#4** | **Tier 3+4 · CREATURES & ENVIRONMENT (`10⁻² m → 10¹ m`)** | Embodied Wild Organisms, 48×48 Octahedral 3D Shapes, 3D Dome, Terrain, Vents, Dual-Sun, Voxel Fields | `Asmodensius-Native` (`build\z\az_live.exe` via read-only `macro_wild_relay.py`, `D7` isolated; read-only respecting active `codex` `WRITER.lock`) | `http://127.0.0.1:8794/` |
+| **#5** | **ALL 4 TIERS · MASSIVE "SEE ALL" HUB v6.2** | Unified 4-Tier Cockpit + **Real 128B DNA→Cells Transfection** + **Full `T1:13 · T2:13` Restraint Parity** + **Cross-Tier `Bedau–Packard A_new` (`A⁺`)** + 12-Shader WebGL2 Microscope + 8-Skin ULTRA Dome Proxy | `server.mjs` (supervises all servers cleanly!) | `http://127.0.0.1:8790/` |
+| **#6** | **ZETA-OMEGA 13-VECTOR SINGULARITY ATLAS & LIVE ALIFEOPS RUNNER** | Interactive 13-Vector Meta-Dashboard (310 canonical records) + Live 4-Engine `run_alifeops_suite.py` (`OVBS-52 = 87.01`, Stage 5) | Served via Hub `/zeta-omega/` | `http://127.0.0.1:8790/zeta-omega/` |
+
+## Scientific Provenance & Honest Coupling Disclosure (`v6.2`)
+- **`DNA128` (`128B` in 4×4 Matrix, `T1 → T2`)**: Streams the **real evolved 128-byte deterministic `AUTOPHAGE` Strand α+β genome hex** (`genome_hex`, zero RDTSC) via `POST /api/cmd { op: "autophage_dna", hex }` directly into `Cellulogonic Mecha v1.2.1` (`cellulogonic_ingest_autophage_128b`).
+- **`Zeta-Omega 13-Vec (T1:13 · T2:13)`**: All 13 independent restraint sliders drive BOTH `AUTOPHAGE v1.1` AND `Cellulogonic Mecha v1.2.1` (`restraint_vec`) directly with continuous attenuation (dead-zones eliminated).
+- **`LIVE` / `WAVE` / `NAT` / `CORR` / `D7 RO` / `OFF`**: Every remaining cell in the 4×4 matrix reflects its exact live channel; `Asmodensius-Native` remains strictly `D7 RO` (and read-only on disk while live `codex` PID `40064` holds `WRITER.lock`; ready-to-apply handoff patches are archived in [`ASMODENSIUS_HANDOFF_PATCH_BLUEPRINT.md`](ASMODENSIUS_HANDOFF_PATCH_BLUEPRINT.md)).
+- **`cosθ` / `σH` / `A⁺`**: `cosθ` computes cosine coherence on a semantically aligned 8-axis biophysical vector; `σH` reports rolling volatility/entropy index (not a mathematical Lyapunov exponent); `A⁺` aggregates live cross-tier `Bedau–Packard A_new` novelty.

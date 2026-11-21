@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OMEGA 4-TIER OBSERVATORY — DNA · Cells · Creatures · Environment</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-order="bottom-up">
+  <!-- BAR 1: SCIENTIFIC INSTRUMENT COMMAND HEADER -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="sigil" aria-hidden="true"><span></span></div>
+      <div class="brand-text">
+        <h1>OMEGA 4-TIER OBSERVATORY <span class="ver">v6.2 · REAL 128B DNA→CELLS · 13-VEC PARITY · 150 LEAN 4</span></h1>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <a class="inet-pill" id="pillBioInet" href="http://127.0.0.1:8791/" target="_blank" rel="noopener" title="Open Cellular Engine Omega v4.2 — Bio-Frostbite INet (TB14), Deep Strata (TB15), Virtual-Cell AI (TB16) & Differential Trace Receipt · 61 Pure Lean 4 Proofs">
+        <i class="status-led"></i><span>Omega v4.2 · syncing…</span>
+      </a>
+      <div class="proof-pill ok" id="pillConservation" title="Live thermodynamic & observer-independence invariant verification across all 4 tiers">
+        <i class="status-led"></i><span>0 amu · 0 uq · 0 2nd · 0 Obs</span>
+      </div>
+
+      <div class="seg-group" id="layoutModes" role="group" aria-label="Viewport Layout">
+        <button data-layout="strip4" class="active" title="4-Tier Side-by-Side (Key 0)">4-Up</button>
+        <button data-layout="quad2x2" title="2×2 Quadrant Grid (Key Q)">2×2</button>
+      </div>
+
+      <button id="btnFlipOrder" class="tbtn" title="Flip Scale Direction: Bottom-Up (DNA→Env) vs Top-Down (Env→DNA) [Key R]">DNA→ENV</button>
+      <button id="btnToggleDeck" class="tbtn active" title="Toggle Metrology & Differential Lab Deck (Key D)">Lab Deck ▾</button>
+
+      <div class="popover-wrap">
+        <button id="btnLinksMenu" class="tbtn" title="Standalone engine endpoints & repositories">Links ▾</button>
+        <div class="popover" id="linksPopover" hidden>
+          <div class="pop-title">All 6 Live Local Instruments (150 Lean 4 Proofs)</div>
+          <a href="http://127.0.0.1:8787/" target="_blank" rel="noopener"><i class="pip t1"></i>#1 · T1 AUTOPHAGE v1.1 DNA (31 Lean) <span>:8787</span></a>
+          <a href="http://127.0.0.1:8788/" target="_blank" rel="noopener"><i class="pip t2"></i>#2 · T2 Cellulogonic Mecha v1.2.1 (58 Lean) <span>:8788</span></a>
+          <a href="http://127.0.0.1:8791/" target="_blank" rel="noopener"><i class="pip omega"></i>#3 · Cellular Omega v4.2 (TB01–16 · 61 Lean) <span>:8791</span></a>
+          <a href="http://127.0.0.1:8794/" target="_blank" rel="noopener"><i class="pip t4"></i>#4 · T3+T4 Wild Cambrian Cosmos <span>:8794</span></a>
+          <a href="http://127.0.0.1:8790/" target="_blank" rel="noopener"><i class="pip t3"></i>#5 · Massive "See All" 4-Tier Hub v6.2 <span>:8790</span></a>
+          <a href="http://127.0.0.1:8790/zeta-omega/" target="_blank" rel="noopener"><i class="pip omega"></i>#6 · Zeta-Omega 13-Vec Singularity Atlas <span>/zeta-omega</span></a>
+          <div class="pop-sep"></div>
+          <div class="pop-title">Source Repositories (0thernes)</div>
+          <a href="https://github.com/0thernes/autophage" target="_blank" rel="noopener">0thernes/autophage <span>↗</span></a>
+          <a href="https://github.com/0thernes/cellulogonic-mecha" target="_blank" rel="noopener">0thernes/cellulogonic-mecha (Private) <span>↗</span></a>
+          <a href="https://github.com/0thernes/cellular-engine-omega" target="_blank" rel="noopener">0thernes/cellular-engine-omega <span>↗</span></a>
+          <a href="https://github.com/0thernes/omega-triscale-observatory" target="_blank" rel="noopener">0thernes/omega-triscale-observatory (Private) <span>↗</span></a>
+          <a href="https://github.com/0thernes/alife-singularity-omega-package" target="_blank" rel="noopener">0thernes/alife-singularity-omega-package (Private) <span>↗</span></a>
+          <a href="https://0thernes.github.io/Asmodensius/viewer/" target="_blank" rel="noopener">0thernes.github.io/Asmodensius <span>↗</span></a>
+          <div class="pop-sep"></div>
+          <div class="pop-keys">Keys: <code>1-4</code> Tier · <code>0</code> 4-Up · <code>Q</code> 2×2 · <code>R</code> Flip · <code>D</code> Deck · <code>T</code> Transfect · <code>N</code> Next</div>
+        </div>
+      </div>
+
+      <button id="btnExportJson" class="tbtn" title="Export synchronized 4-Tier forensic JSON snapshot">Export JSON</button>
+      <button id="btnSyncPause" class="tbtn" title="Pause/Resume Macro & Micro engines">Pause</button>
+    </div>
+  </header>
+
+  <!-- BAR 2: FULL-WIDTH COLUMN-ALIGNED 4-TIER BIOPHYSICAL SCALE RULER -->
+  <nav class="scale-ruler" id="scaleRuler" aria-label="4-Tier Biophysical Scale Ruler">
+    <button class="ruler-node t1" data-tier-jump="dna" title="Focus Tier 1: Molecular DNA (Key 1)">
+      <span class="r-mag">10⁻⁹ m</span>
+      <span class="r-lbl">T1 DNA</span>
+      <span class="r-val" id="chipDna">connecting…</span>
+    </button>
+    <span class="r-sep" aria-hidden="true">⇄</span>
+    <button class="ruler-node t2" data-tier-jump="cells" title="Focus Tier 2: Cellular Embryogenesis (Key 2)">
+      <span class="r-mag">10⁻⁶ m</span>
+      <span class="r-lbl">T2 CELLS</span>
+      <span class="r-val" id="chipCells">connecting…</span>
+    </button>
+    <span class="r-sep" aria-hidden="true">⇄</span>
+    <button class="ruler-node t3" data-tier-jump="creature" title="Focus Tier 3: Embodied Creature (Key 3)">
+      <span class="r-mag">10⁻² m</span>
+      <span class="r-lbl">T3 CREATURE</span>
+      <span class="r-val" id="chipCreature">locking…</span>
+    </button>
+    <span class="r-sep" aria-hidden="true">⇄</span>
+    <button class="ruler-node t4" data-tier-jump="env" title="Focus Tier 4: Environment Substrate (Key 4)">
+      <span class="r-mag">10¹ m</span>
+      <span class="r-lbl">T4 ENVIRONMENT</span>
+      <span class="r-val" id="chipEnv">connecting…</span>
+    </button>
+  </nav>
+
+  <!-- BAR 2: ERGONOMIC GROUPED OPERATOR WORKBENCH -->
+  <section class="workbench-bar" aria-label="Cross-Tier Controls">
+    <div class="wb-group">
+      <label class="toggle-chip" title="Continuous closed-loop coupling: T1 DNA ➔ T2 Cells, T4 Env ➔ T2 Solvent, T3 Creature ➔ T2 Plume/Shock">
+        <input type="checkbox" id="chkAutoCouple" checked />
+        <span>Auto</span>
+      </label>
+      <label class="toggle-chip" title="Automatically synchronize Tier 2 planetary solvent to Tier 4 local voxel habitat">
+        <input type="checkbox" id="chkEnvSolvent" checked />
+        <span>Env➔Sol</span>
+      </label>
+      <label class="toggle-chip" title="Re-seed Tier 2 Cells & Tier 1 DNA deterministically when switching Tier 3 Creature">
+        <input type="checkbox" id="chkReseed" />
+        <span>Re-Seed</span>
+      </label>
+      <label class="toggle-chip" title="Anti-Monoculture Guard: automatically ignites a fresh wild Cambrian radiation if competitive exclusion collapses the Dome to <=3 clades">
+        <input type="checkbox" id="chkAntiMono" checked />
+        <span>Anti-Mono</span>
+      </label>
+    </div>
+
+    <div class="wb-div"></div>
+
+    <div class="wb-group">
+      <span class="wb-lbl t3-txt">T3</span>
+      <button id="btnCycleCreature" class="wbtn" title="Lock next living creature in Tier 4 dome (Key N)">Next ▸</button>
+      <button id="btnTopClade" class="wbtn" title="Lock member of dominant living clade">Top Clade</button>
+      <select id="selRoster" class="wsel" style="max-width:170px" title="Select sampled living specimen from Asmodensius dome">
+        <option value="">Dome Roster…</option>
+      </select>
+    </div>
+
+    <div class="wb-div"></div>
+
+    <div class="wb-group">
+      <button id="btnTransfect" class="wbtn t1-accent" title="REAL 128-Byte DNA Transfection: streams live evolved T1 AUTOPHAGE Strand alpha+beta hex directly into T2 Cellulogonic Mecha operons (Key T)">DNA-128B➔Cells</button>
+      <button id="btnPlume" class="wbtn t2-accent" title="Inject conservation-exact photochemical nutrient plume into T2 Cells">Plume</button>
+      <button id="btnEmbryo" class="wbtn t2-accent" title="Initialize Cellulogonic v1.2 Regime 5 (3D GRN Embryogenesis)">Embryo R5</button>
+      <button id="btnSyncMorph" class="wbtn omega-accent" title="Synchronized 4-Tier Evolution Pulse: Inoculate DNA + Transfect Cells + Nutrient Plume + Adaptive Spectrum + Morph Specimen">Sync Morph</button>
+      <button id="btnVivisect" class="wbtn danger-accent" title="Execute 50% Planarian genomic excision in T1 AUTOPHAGE">50% DNA</button>
+    </div>
+
+    <div class="wb-div"></div>
+
+    <div class="wb-group">
+      <span class="wb-lbl t4-txt">WORLD</span>
+      <select id="selCosmosPreset" class="wsel" style="max-width:120px" title="Wild biodiversity & intelligence preset for Asmodensius-Native">
+        <option value="cambrian" selected>Cambrian Ultra</option>
+        <option value="hyperbrain">Hyper-Brain</option>
+        <option value="hyperchaos">Hyper-Chaos 512</option>
+        <option value="megaswarm">Mega-Swarm 24K</option>
+        <option value="abyss">Vent Abyss 220</option>
+      </select>
+      <button id="btnRespawnCosmos" class="wbtn t4-accent" title="Ignite selected preset cosmos on :8794">Respawn</button>
+      <button id="btnFeralAll4" class="wbtn omega-accent" title="Ignite hardware RDSEED + OS Wild Entropy across ALL 4 TIERS simultaneously">Feral All-4</button>
+      <button id="btnToggleGenesis" class="wbtn t4-accent" title="Open Genesis Studio: adjust Population, Founders, Cap, Species, Brain Intelligence & all 23 Engine Flags (Key G)">⚙ Genesis &amp; Flags ▾</button>
+    </div>
+
+    <div class="wb-spacer"></div>
+
+    <div class="wb-telemetry">
+      <span class="wb-stat" id="mWireCount">0 DNA · 0 Env · 0 Plume</span>
+    </div>
+  </section>
+
+  <!-- COLLAPSIBLE GENESIS · INTELLIGENCE · 23-FLAG STUDIO DRAWER -->
+  <section class="genesis-drawer collapsed" id="genesisDrawer" aria-label="4-Tier Genesis, Population, Intelligence and Engine Flags">
+    <div class="gen-col">
+      <div class="gen-head">
+        <h3>1 · Population, Founders &amp; World Geometry</h3>
+        <span class="mono-dim" id="genActiveSummary">Wild · n=8,000 · cap=48,000 · 320 sp</span>
+      </div>
+      <div class="gen-grid">
+        <label class="gfield"><span>Founders (--n)</span><input type="number" id="genN" min="64" max="250000" step="500" value="8000" /></label>
+        <label class="gfield"><span>Pop Cap (--cap)</span><input type="number" id="genCap" min="4096" max="1000000" step="4096" value="48000" /></label>
+        <label class="gfield" title="Note: Asmodensius-Native core/az_worldgen.c [DEMO-16] clamps initial founder species to WG_MAX_SPECIES=100; further clades radiate via live mutation"><span style="color:var(--t4)">Founder Species (≤100*)</span><input type="number" id="genSpecies" min="1" max="65535" step="16" value="100" /></label>
+        <label class="gfield"><span>Grid Volume</span>
+          <select id="genGrid">
+            <option value="5,5,4">32×32×16 (Fast)</option>
+            <option value="6,6,5" selected>64×64×32 (Cambrian)</option>
+            <option value="7,6,5">128×64×32 (Vast)</option>
+            <option value="7,7,5">128×128×32 (Oceanic)</option>
+          </select>
+        </label>
+        <label class="gfield"><span>Entropy Mode</span>
+          <select id="genLabMode">
+            <option value="wild" selected>Wild (True OS Chaos)</option>
+            <option value="lab">Lab (Seeded Repeatable)</option>
+          </select>
+        </label>
+        <label class="gfield"><span>Lab Seed</span><input type="number" id="genSeed" min="0" max="99999999" value="42" /></label>
+        <label class="gfield"><span>CPU Threads (0=Auto)</span><input type="number" id="genThreads" min="0" max="64" value="0" /></label>
+        <label class="gfield"><span>Live TPS (0=Max)</span><input type="number" id="genTps" min="0" max="1000" value="14" /></label>
+        <label class="gfield"><span>Live Snap/s</span><input type="number" id="genSps" min="1" max="60" value="12" /></label>
+      </div>
+      <div class="gen-actions-row">
+        <button id="btnApplyLiveRates" class="wbtn t2-accent" title="Apply TPS and Snap/s live right now without restarting the world">Apply Live Pace (No Restart)</button>
+        <label class="toggle-chip" title="Also re-initialize Tier 1 DNA & Tier 2 Cells synchronously when igniting">
+          <input type="checkbox" id="genSyncLower" checked />
+          <span>Sync T1+T2</span>
+        </label>
+        <select id="genCellRegime" class="wsel" style="max-width:110px" title="Tier 2 Cellulogonic Regime on Sync">
+          <option value="5" selected>T2 Embryo R5</option>
+          <option value="3">T2 Feral R3</option>
+          <option value="1">T2 Mitosis R1</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="gen-col">
+      <div class="gen-head">
+        <h3>2 · Intelligence, Neurology &amp; Evolution Params</h3>
+        <span class="mono-dim">Real native AZ_PARAM controls</span>
+      </div>
+      <div class="gen-sliders" id="genParamSliders"></div>
+    </div>
+
+    <div class="gen-col">
+      <div class="gen-head">
+        <h3>3 · All 23 Engine Behavior &amp; Cognition Flags</h3>
+        <span class="mono-dim" id="genLesionHex">lesion=0x000000 · 23/23 ON</span>
+      </div>
+      <div class="flag-presets">
+        <button class="pbtn" id="btnFlagsAllOn">All 23 Active</button>
+        <button class="pbtn" id="btnFlagsZeroBrain">0-Brain Passive</button>
+        <button class="pbtn" id="btnFlagsZeroGrav">Zero Gravity</button>
+        <button class="pbtn" id="btnFlagsFrozenEvo">Frozen Heredity</button>
+      </div>
+      <div class="flags-grid" id="genFlagsGrid"></div>
+      <div class="gen-actions-row" style="margin-top:auto">
+        <button id="btnIgniteGenesis" class="wbtn omega-accent" style="flex:1;height:26px;font-weight:700">⚡ Ignite Custom 4-Tier Cosmos</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- METROLOGY & DIFFERENTIAL INSTRUMENTATION DECK (4 CALIBRATED LAB CARDS) -->
+  <section class="lab-deck" id="diffDeck">
+    <!-- INSTRUMENT 1: 112-TRAIT CROSS-TIER SPECTRAL DIFFERENTIAL -->
+    <article class="inst-card">
+      <header class="inst-head">
+        <h2>112-Trait Spectral Δ</h2>
+        <div class="kpi-row">
+          <span class="kpi-tag t1" id="mCoh">cosθ —</span>
+          <span class="kpi-tag t2" id="mMeanD">|Δ| —</span>
+          <span class="kpi-tag t3" id="mMaxD">max —</span>
+          <span class="kpi-tag t4" id="mMargin">ΔV —</span>
+        </div>
+      </header>
+      <div class="canvas-stage">
+        <canvas id="canvasSpectrum"></canvas>
+      </div>
+      <footer class="inst-foot">
+        <span id="spectrumHover" class="mono-dim">Raw T1 [Opcode/Ribo] vs Clamped T2 [Biophys/Operon] · cosθ = Aligned 8-Axis</span>
+        <span class="legend">
+          <i class="sw t1"></i>DNA
+          <i class="sw t2"></i>Cells
+          <i class="sw t3"></i>Δ
+          <i class="sw t4"></i>dΔ/di
+        </span>
+      </footer>
+    </article>
+
+    <!-- INSTRUMENT 2: OMNITEMPORAL 4-TIER PHASE OSCILLOSCOPE + ENTROPY / VOLATILITY / GRN -->
+    <article class="inst-card">
+      <header class="inst-head">
+        <h2>Omnitemporal Phase &amp; Volatility</h2>
+        <div class="kpi-row">
+          <span class="kpi-tag omega" id="mChaos" title="Cross-tier Volatility & Shannon Entropy Index (0..1; rolling delta jumps + hue/genome entropy, not a Lyapunov exponent)">σH —</span>
+          <span class="kpi-tag t4" id="mCladeH">H —b</span>
+          <span class="kpi-tag warn" id="mBacklash">Bkl 0</span>
+        </div>
+      </header>
+      <div class="canvas-stage">
+        <canvas id="canvasOsc"></canvas>
+      </div>
+      <div class="scrub-row">
+        <button id="btnLiveSnap" class="scrub-live active" title="Snap back to live telemetry">LIVE ●</button>
+        <input type="range" id="rngTimeScrub" min="0" max="0" value="0" title="Scrub omnitemporal 4-tier history" />
+        <span id="lblScrub" class="mono-dim">t-0</span>
+      </div>
+      <div class="grn-panel" id="grnStrip">
+        <span class="mono-dim">Awaiting Cellulogonic v1.2 GRN fates &amp; Wnt/BMP/Shh GPS…</span>
+      </div>
+    </article>
+
+    <!-- INSTRUMENT 3: ZETA-OMEGA 13-VECTOR DYNAMIC SPECTRUM OPERATOR -->
+    <article class="inst-card">
+      <header class="inst-head">
+        <h2 title="Full 13-vector independent parity: all 13 sliders drive BOTH T1 AUTOPHAGE and T2 Cellulogonic Mecha v1.2.1 directly">Zeta-Omega 13-Vec (T1:13 · T2:13)</h2>
+        <span class="kpi-tag omega" id="mWaveMode">manual</span>
+      </header>
+      <div class="preset-strip" id="wavePresets">
+        <button data-wave="feral" class="pbtn">0% Feral</button>
+        <button data-wave="paradox50" class="pbtn">50% Esc</button>
+        <button data-wave="constitutional" class="pbtn">Track A</button>
+        <button data-wave="gradient" class="pbtn">Ramp</button>
+        <button data-wave="sine" class="pbtn">Sine</button>
+        <button data-wave="adaptive" class="pbtn">4T Adapt</button>
+        <button data-wave="castrated100" class="pbtn danger">100%</button>
+      </div>
+      <div class="vec13-rack" id="vec13Bars"></div>
+    </article>
+
+    <!-- INSTRUMENT 4: 4×4 OMNISCIENT COUPLING MATRIX & LIVE EVENT BUS -->
+    <article class="inst-card">
+      <header class="inst-head">
+        <h2>4×4 Omniscient Matrix &amp; Bus</h2>
+        <span class="kpi-tag" id="mVarStat">σ² —</span>
+      </header>
+      <div class="matrix-4x4" id="matrix4x4"></div>
+      <div class="event-bus" id="causalLog"></div>
+    </article>
+  </section>
+
+  <!-- MAIN 4-TIER VIEWPORT STAGE (Default Bottom-Up: T1 DNA -> T2 CELLS -> T3 CREATURES -> T4 ENV) -->
+  <main class="stage-grid layout-strip4" id="stageGrid">
+    <!-- TIER 1: DNA (10^-9 m) -->
+    <section class="tier-pane pane-dna" id="paneDna" data-tier="1">
+      <header class="pane-head">
+        <div class="pane-id">
+          <span class="tier-pill t1">T1 · 10⁻⁹ m</span>
+          <h3>DNA &amp; Ribosome</h3>
+          <span class="pane-meta" id="subDna">AUTOPHAGE v1.0 · x86-64 RWX</span>
+        </div>
+        <div class="pane-tools">
+          <i class="live-led" id="dotDna"></i>
+          <button class="ibtn" data-focus="dna" title="Fullscreen Tier 1 (Key 1)">⤢</button>
+          <a class="ibtn" href="http://127.0.0.1:8787/" target="_blank" rel="noopener" title="Open standalone :8787">↗</a>
+        </div>
+      </header>
+      <iframe id="frameMicro" src="/proxy/micro/?embed=1" title="Tier 1: AUTOPHAGE x86-64 Genetic Engine"></iframe>
+    </section>
+
+    <!-- TIER 2: CELLS (10^-6 m) -->
+    <section class="tier-pane pane-cells" id="paneCells" data-tier="2">
+      <header class="pane-head">
+        <div class="pane-id">
+          <span class="tier-pill t2">T2 · 10⁻⁶ m</span>
+          <h3>Cells &amp; Embryogenesis</h3>
+          <span class="pane-meta" id="subCells">Cellulogonic v1.2 · WebGL2 3D</span>
+        </div>
+        <div class="pane-tools">
+          <i class="live-led" id="dotCells"></i>
+          <select id="selSolventQuick" class="mini-sel" title="Planetary / Xenocellular Solvent">
+            <option value="0">H₂O</option>
+            <option value="1">Titan</option>
+            <option value="2">Vent</option>
+            <option value="3">Venus</option>
+          </select>
+          <button class="ibtn" data-focus="cells" title="Fullscreen Tier 2 (Key 2)">⤢</button>
+          <a class="ibtn" href="http://127.0.0.1:8788/" target="_blank" rel="noopener" title="Open standalone :8788">↗</a>
+        </div>
+      </header>
+      <iframe id="frameMeso" src="/proxy/meso/?embed=1" title="Tier 2: Cellulogonic Mecha v1.2 3D Cellular Observatory"></iframe>
+    </section>
+
+    <!-- TIER 3: CREATURES (10^-2 m) -->
+    <section class="tier-pane pane-creature" id="paneCreature" data-tier="3">
+      <header class="pane-head">
+        <div class="pane-id">
+          <span class="tier-pill t3">T3 · 10⁻² m</span>
+          <h3>Creature Specimen</h3>
+          <span class="pane-meta" id="subCreature">48×48 Octahedral + /api/inspect</span>
+        </div>
+        <div class="pane-tools">
+          <i class="live-led" id="dotCreature"></i>
+          <button class="ibtn" id="btnCreatureSpin" title="Toggle auto-orbit">↻</button>
+          <button class="ibtn" data-focus="creature" title="Fullscreen Tier 3 (Key 3)">⤢</button>
+        </div>
+      </header>
+      <div class="specimen-body">
+        <div class="specimen-viewport">
+          <canvas id="canvasCreature3D"></canvas>
+          <canvas id="canvasCreatureHud"></canvas>
+          <div class="vp-top">
+            <span class="vp-chip" id="specUidBadge">UID —</span>
+            <span class="vp-chip t3" id="specShapeBadge">SHAPES syncing…</span>
+          </div>
+          <div class="vp-bot" id="specMorphLine">Drag to orbit · Scroll to zoom · Click any creature in Tier 4 Dome</div>
+        </div>
+
+        <div class="taxon-banner" id="specTaxonBanner">
+          <strong id="specSpeciesName">Syncing binomial species…</strong>
+          <span id="specIndivName">Individual —</span>
+        </div>
+
+        <div class="shader-bar">
+          <select id="selSpecimenShader" class="mini-sel" title="Real-time WebGL2 Biophysical Multi-Shader & Extreme Cellular Geometry (12 modes)">
+            <option value="0" selected>Skin: Auto (Genome · 11 Skins)</option>
+            <option value="1">1 · Bio-Chitin Voronoi Scales</option>
+            <option value="2">2 · Neural Organ X-Ray</option>
+            <option value="3">3 · Turing Chromatophore</option>
+            <option value="4">4 · Vent Crystalline Magma</option>
+            <option value="5">5 · Δ112 Spectral Manifold</option>
+            <option value="6">6 · Prismatic Nacreous Opal</option>
+            <option value="7">7 · Abyssal Protoplasm</option>
+            <option value="8">8 · Silica Diatom Frustule (3D Ribs)</option>
+            <option value="9">9 · Levin Bioelectric Vmem Field</option>
+            <option value="10">10 · Coenocyte Syncytium + Russian-Doll</option>
+            <option value="11">11 · Haloquadratum Square + Ocelloid Eye</option>
+          </select>
+          <input type="range" id="rngMorphGain" min="0" max="200" value="100" style="width:52px;accent-color:var(--t3);cursor:pointer" title="Live 3D Cellular & Extreme Geometry Morph Gain (0%–200%)" />
+          <button class="ibtn" id="btnCycleSkins" title="Auto-cycle across all 11 custom biophysical multi-shaders">Cycle</button>
+          <button class="ibtn active" id="btnToggleOrgans" title="Toggle Count-Driven 3D Organ & Neural Projection (synthesized from live parts, neurons, tiles & T2 active axons)">Organs*</button>
+          <button class="ibtn active" id="btnToggleMorph" title="Toggle live cellular & organ vertex geometry morphing">Morph</button>
+        </div>
+        <div class="shader-bind-line" id="shaderBindLine">WebGL2 Hard-Wired: Parts · Neurons · Tiles · Axons · CPG · GHz · Δ112 · T4 Temp</div>
+
+        <section class="spec-block">
+          <h4>Organismal Anatomy &amp; Lineage</h4>
+          <div class="kv-grid cols-3" id="anatGrid"></div>
+        </section>
+
+        <section class="spec-block">
+          <h4>Local Micro-Habitat Sensor <span>T4 Voxel @ Creature XYZ</span></h4>
+          <div class="kv-grid cols-2" id="habGrid"><div class="kv"><span>Status</span><strong>Syncing FIELDS…</strong></div></div>
+        </section>
+
+        <section class="spec-block">
+          <h4>T2 Cells (GRN) ↔ T3 Creature Organogenesis</h4>
+          <div class="align-list" id="cellToCreatureMap"></div>
+        </section>
+
+        <section class="spec-block">
+          <h4>Biodiversity Hue Spectrum &amp; Aggregation <span id="aggSummary">Singular / Cluster / Globular</span></h4>
+          <canvas id="canvasHueSpec" style="width:100%;height:34px;border-radius:4px;background:#06080c;border:1px solid var(--line);display:block;margin-bottom:5px;"></canvas>
+          <div class="kv-grid cols-3" id="aggGrid"></div>
+        </section>
+
+        <section class="spec-block">
+          <h4>Dominant Clades in Dome <span>Click clade to inspect 3D shape</span></h4>
+          <div class="clade-list" id="cladeBars"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- TIER 4: ENVIRONMENT (10^1 m) -->
+    <section class="tier-pane pane-env" id="paneEnv" data-tier="4">
+      <header class="pane-head">
+        <div class="pane-id">
+          <span class="tier-pill t4">T4 · 10¹ m</span>
+          <h3>Environment &amp; Dome</h3>
+          <span class="pane-meta" id="subEnv">Asmodensius-Native · STATIC + FIELDS</span>
+        </div>
+        <div class="pane-tools">
+          <i class="live-led" id="dotEnv"></i>
+          <button class="ibtn active" id="btnDomeZoom" title="Toggle Reef-Dive Close-Up Camera vs Wide Dome Orbit">Dive</button>
+          <button class="ibtn active" id="btnDomeBioFx" title="Toggle Observer-Only Bio-FX ULTRA Multi-Shaders, 360-Raymarch & 320-Tri 3D Meshes (D7 zero-mutation)">Ultra</button>
+          <button class="ibtn" id="btnToggleRadar" title="Toggle Voxel Field Inspector">Fields ▾</button>
+          <button class="ibtn" data-focus="env" title="Fullscreen Tier 4 (Key 4)">⤢</button>
+          <a class="ibtn" href="http://127.0.0.1:8794/" target="_blank" rel="noopener" title="Open standalone Wild Cosmos :8794">↗</a>
+        </div>
+      </header>
+
+      <div class="gpu-driver-bar" id="gpuDriverBar">
+        <span class="gpu-pill" id="gpuDriverName">GPU: Initializing WebGL2 Ultra…</span>
+        <span class="gpu-stat" id="gpuWorldName">World: —</span>
+      </div>
+
+      <div class="env-inspector" id="envRadar">
+        <div class="env-map-col">
+          <canvas id="canvasEnvField" title="Hover to probe voxel · Click to inject targeted T4➔T2 nutrient plume"></canvas>
+          <div class="colorbar-row">
+            <span>0%</span>
+            <div class="colorbar" id="envColorbar"></div>
+            <span>100%</span>
+          </div>
+          <div class="probe-readout" id="envProbeLine">Hover/Click voxel ➔ T2 Plume</div>
+        </div>
+        <div class="env-ctrl-col">
+          <div class="mode-pills" id="envFieldMode">
+            <button data-fmode="temp" class="active">Temp</button>
+            <button data-fmode="light">Light</button>
+            <button data-fmode="solvent">Solvent</button>
+            <button data-fmode="terrain">Rock</button>
+          </div>
+          <div class="z-slider-row">
+            <span>Z=<b id="envZVal">4</b></span>
+            <input type="range" id="rngEnvZ" min="0" max="31" value="4" />
+          </div>
+          <div class="env-metrics" id="envKpis">Loading STATIC &amp; FIELDS…</div>
+        </div>
+      </div>
+
+      <iframe id="frameMacro" src="/proxy/macro/?embed=1&amp;biofx=1&amp;detail=close&amp;zoom=dive" title="Tier 4: Asmodensius-Native 3D World Dome"></iframe>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

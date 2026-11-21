@@ -1,0 +1,8 @@
+# Runtime data, logs, caches, dependencies
+runtime/
+__pycache__/
+*.pyc
+*.log
+node_modules/
+.DS_Store
+Thumbs.db
