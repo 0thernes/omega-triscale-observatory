@@ -1061,7 +1061,7 @@ function applyStackState(st) {
     ["P0–3", (env.solventDist || [0,0,0,0]).join("/")]
   ].map(([k, v]) => `<div class="ek"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
 
-  // Noetic Organism Omega v1.0 Cognitive Pill (:8792 — M5–M10 · 14/14 Butlin · 10/10 Theories · 25/25 CQM · PCI*)
+  // Noetic Organism Omega v1.0 Cognitive Pill (:8795 — M5–M10 · 14/14 Butlin · 10/10 Theories · 25/25 CQM · PCI*)
   const noeticPill = $("pillNoetic");
   if (noeticPill) {
     const no = st.noetic;
@@ -1071,7 +1071,7 @@ function applyStackState(st) {
       noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic B${esc(no.summary.butlin14_passed)}/14 · T${esc(no.summary.theories10_passed)}/10 · CQM${esc(no.summary.cqm25_passed)}/25 · PCI ${esc(Number(no.pci_star).toFixed(2))}</span>`;
     } else if (st.engines?.t3_noetic) {
       noeticPill.className = "inet-pill ok";
-      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic v1.0 · :8792 LIVE</span>`;
+      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic v1.0 · :8795 LIVE</span>`;
     }
   }
 

@@ -13,7 +13,7 @@ fs.mkdirSync(MACRO_DATA_DIR, { recursive: true });
 
 const HUB_PORT    = Number(process.env.TRISCALE_PORT || 8790);
 const MACRO_PORT  = 8794; // Dedicated fresh Wild Biodiversity Asmodensius-Native relay (read-only)!
-const NOETIC_PORT = 8792; // Tier 3/4 (Noetic Organism Omega v1.0 · M5–M10 · 14/10/25 · 24 Pure Lean 4)
+const NOETIC_PORT = 8795; // Tier 3/4 (Noetic Organism Omega v1.0 · M5–M10 · 14/10/25 · 24 Pure Lean 4)
 const OMEGA_PORT  = 8791; // Tier 2+ (Cellular Engine Omega v5.0 · 16 Testbeds · 66 Pure Lean 4)
 const MESO_PORT   = 8788; // Tier 2 (Cells v1.3 Embryogenesis + GRN · 58 Pure Lean 4)
 const MICRO_PORT  = 8787; // Tier 1 (DNA AUTOPHAGE v1.2 + Zeta-Omega 13-Vec · 38 Pure Lean 4)

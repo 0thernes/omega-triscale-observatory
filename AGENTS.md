@@ -8,7 +8,7 @@ This repository is part of **ONE unified 6-repository Artificial Life series** o
 1. `autophage` (`https://github.com/0thernes/autophage`) — Tier 1 DNA · x86-64 genetic soup · `38` Pure Lean 4 · `:8787`
 2. `cellulogonic-mecha` (`https://github.com/0thernes/cellulogonic-mecha`) — Tier 2 3D cells · 4 solvents · GRN · `58` Pure Lean 4 · `:8788`
 3. `cellular-engine-omega` (`https://github.com/0thernes/cellular-engine-omega`) — Tier 2+ Frontier 16-testbed VM · `66` Pure Lean 4 · `:8791`
-4. `noetic-organism-omega` (`https://github.com/0thernes/noetic-organism-omega`) — Tier 3/4 Whole-Organism Cognitive & M5–M10 Engine (`14` Butlin / `10` Theories / `25` CQM / `825` Honest Trace) · `24` Pure Lean 4 · `:8792`
+4. `noetic-organism-omega` (`https://github.com/0thernes/noetic-organism-omega`) — Tier 3/4 Whole-Organism Cognitive & M5–M10 Engine (`14` Butlin / `10` Theories / `25` CQM / `825` Honest Trace) · `24` Pure Lean 4 · `:8795`
 5. `omega-triscale-observatory` (`https://github.com/0thernes/omega-triscale-observatory`) — Unified 7-Endpoint Observatory Hub (`v6.4`) · `:8790`
 6. `alife-singularity-omega-package` (`https://github.com/0thernes/alife-singularity-omega-package`) — Master Spec, Empirical Archive & `OVBS-52` Suite · `:8790/zeta-omega/`
 
