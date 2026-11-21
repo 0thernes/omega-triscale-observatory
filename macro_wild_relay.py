@@ -3,20 +3,21 @@
 OMEGA 4-TIER OBSERVATORY — Dedicated Wild Hyper-Diverse Asmodensius-Native Relay (:8794)
 Imports the verified viewer_server.py from Asmodensius-Native READ-ONLY (zero edits to
 Asmodensius-Native) and launches a configurable Wild (or Lab-seeded) cosmos with strong
-environmental niche partitioning (thermal/depth/vent/reef/toxin gradients) so hundreds of
-clades coexist across all 3D habitats without rapid monoculture collapse.
+environmental niche partitioning (thermal/depth/vent/reef/toxin gradients) so clades
+coexist across all 3D habitats without rapid monoculture collapse.
 """
 import argparse
 import importlib.util
+import os
 import re
+import shutil
+import signal
+import threading
 from pathlib import Path
 
-ASMO_DEMO = Path(r"Z:\[Vibe Coded (AI)]\CLAUDECODE\Asmodensius-Native\demo")
-ASMO_ENGINE = Path(r"Z:\[Vibe Coded (AI)]\CLAUDECODE\Asmodensius-Native\build\z\az_live.exe")
-
-spec = importlib.util.spec_from_file_location("az_viewer_server", str(ASMO_DEMO / "viewer_server.py"))
-vs = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(vs)
+DEFAULT_ASMO_ROOT = Path(r"Z:\[Vibe Coded (AI)]\CLAUDECODE\Asmodensius-Native")
+ASMO_ENGINE = DEFAULT_ASMO_ROOT / "build" / "z" / "az_live.exe"
+MAX_RETAINED_RUNS = 5
 
 NICHE_BASE = {
     # Strong environmental niche partitioning to break competitive exclusion:
@@ -31,12 +32,13 @@ NICHE_BASE = {
     "LIFE_DISPERSAL_SCALE": 12,
 }
 
+# NOTE: Asmodensius-Native enforces WG_MAX_SPECIES = 100 (DEMO-16); all presets align honestly <= 100.
 PRESETS = {
     "cambrian": {
         "n": 8000,
         "cap": 48000,
         "grid": "6,6,5",
-        "species": 320,
+        "species": 100,
         "tps": 14,
         "sps": 12,
         "threads": 0,
@@ -69,7 +71,7 @@ PRESETS = {
         "n": 6000,
         "cap": 40000,
         "grid": "6,6,5",
-        "species": 220,
+        "species": 100,
         "tps": 12,
         "sps": 12,
         "threads": 0,
@@ -103,7 +105,7 @@ PRESETS = {
         "n": 10000,
         "cap": 65536,
         "grid": "6,6,5",
-        "species": 512,
+        "species": 100,
         "tps": 18,
         "sps": 12,
         "threads": 0,
@@ -137,7 +139,7 @@ PRESETS = {
         "n": 24000,
         "cap": 110000,
         "grid": "6,6,5",
-        "species": 512,
+        "species": 100,
         "tps": 12,
         "sps": 10,
         "threads": 0,
@@ -168,7 +170,7 @@ PRESETS = {
         "n": 8000,
         "cap": 48000,
         "grid": "6,6,5",
-        "species": 256,
+        "species": 100,
         "tps": 14,
         "sps": 12,
         "threads": 0,
@@ -196,6 +198,52 @@ PRESETS = {
         },
     },
 }
+
+
+def resolve_asmo_demo(engine_path: Path) -> Path:
+    env_dir = os.environ.get("ASMODENSIUS_DEMO_DIR")
+    if env_dir and (Path(env_dir) / "viewer_server.py").exists():
+        return Path(env_dir)
+    # Derive from <Asmodensius-Native>/build/<cfg>/az_live.exe -> <Asmodensius-Native>/demo
+    for anc in engine_path.resolve().parents:
+        cand = anc / "demo"
+        if (cand / "viewer_server.py").exists():
+            return cand
+    return DEFAULT_ASMO_ROOT / "demo"
+
+
+def load_viewer_server_module(demo_dir: Path):
+    vs_path = demo_dir / "viewer_server.py"
+    if not vs_path.exists():
+        raise FileNotFoundError(f"Asmodensius viewer_server.py not found at {vs_path}")
+    spec = importlib.util.spec_from_file_location("az_viewer_server", str(vs_path))
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Failed to load module spec from {vs_path}")
+    vs = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(vs)
+    return vs
+
+
+def sanitize_grid(raw: str | None, fallback: str) -> str:
+    if not raw or not re.fullmatch(r"\d+,\d+,\d+", raw):
+        return fallback
+    parts = [int(x) for x in raw.split(",")]
+    # Clamp each log2 grid bit-width to safe bounds [4..8] to prevent OOM in az_live.exe
+    clamped = [max(4, min(8, v)) for v in parts]
+    return f"{clamped[0]},{clamped[1]},{clamped[2]}"
+
+
+def prune_old_run_dirs(data_dir: Path, keep_latest: int = MAX_RETAINED_RUNS, active_run_id: str | None = None) -> None:
+    runs_dir = data_dir / "runs"
+    if not runs_dir.exists():
+        return
+    dirs = [d for d in runs_dir.iterdir() if d.is_dir() and d.name != active_run_id]
+    dirs.sort(key=lambda d: d.stat().st_mtime, reverse=True)
+    for stale in dirs[keep_latest:]:
+        try:
+            shutil.rmtree(stale, ignore_errors=True)
+        except OSError:
+            pass
 
 
 def parse_param_string(raw: str) -> dict:
@@ -233,11 +281,14 @@ def main():
     p.add_argument("--param", type=str, default="")
     a = p.parse_args()
 
+    demo_dir = resolve_asmo_demo(a.engine)
+    vs = load_viewer_server_module(demo_dir)
+
     cfg = PRESETS[a.preset]
     n_val = max(64, min(250000, a.n if a.n is not None else cfg["n"]))
     cap_val = max(n_val + 4096, min(1000000, a.cap if a.cap is not None else cfg["cap"]))
-    sp_val = max(1, min(65535, a.species if a.species is not None else cfg["species"]))
-    grid_val = a.grid if (a.grid and re.fullmatch(r"\d+,\d+,\d+", a.grid)) else cfg["grid"]
+    sp_val = max(1, min(100, a.species if a.species is not None else cfg["species"]))
+    grid_val = sanitize_grid(a.grid, cfg["grid"])
     tps_val = max(0, min(1000, a.tps if a.tps is not None else cfg["tps"]))
     sps_val = max(1, min(60, a.sps if a.sps is not None else cfg["sps"]))
     threads_val = max(0, min(64, a.threads if a.threads is not None else cfg["threads"]))
@@ -266,14 +317,25 @@ def main():
     ]
     if lesion_val:
         options.extend(["--lesion", hex(lesion_val)])
+    safe_seed = max(0, a.seed) if a.seed is not None else None
     if a.lab:
         options.append("--lab")
-        if a.seed is not None:
-            options.extend(["--seed", str(a.seed)])
+        if safe_seed is not None:
+            options.extend(["--seed", str(safe_seed)])
 
-    mode_lbl = f"LAB(seed={a.seed})" if a.lab else f"WILD {a.preset.upper()}"
-    app = vs.App(a.port, a.data_dir.resolve())
+    data_dir = a.data_dir.resolve()
+    prune_old_run_dirs(data_dir, keep_latest=MAX_RETAINED_RUNS)
+
+    mode_lbl = f"LAB(seed={safe_seed})" if a.lab else f"WILD {a.preset.upper()}"
+    app = vs.App(a.port, data_dir)
     with vs.ThreadingHTTPServer(("127.0.0.1", a.port), vs.handler(app)) as server:
+        def _handle_signal(_signum, _frame):
+            threading.Thread(target=server.shutdown, daemon=True).start()
+
+        signal.signal(signal.SIGTERM, _handle_signal)
+        if hasattr(signal, "SIGBREAK"):
+            signal.signal(signal.SIGBREAK, _handle_signal)
+
         try:
             app.start(a.engine.resolve(), options)
             print(
@@ -287,6 +349,7 @@ def main():
             pass
         finally:
             app.stop()
+            prune_old_run_dirs(data_dir, keep_latest=MAX_RETAINED_RUNS)
 
 
 if __name__ == "__main__":

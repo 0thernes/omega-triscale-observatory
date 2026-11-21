@@ -120,11 +120,11 @@ const ENGINE_FLAG_DEFS = [
 ];
 
 const CLIENT_GENESIS_PRESETS = {
-  cambrian:   { n: 8000,  cap: 48000,  species: 320, grid: "6,6,5", tps: 14, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 6,  BRAIN_DENSITY: 148, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 14, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 162, LIFE_SIZE_MU: 22 } },
-  hyperbrain: { n: 6000,  cap: 40000,  species: 220, grid: "6,6,5", tps: 12, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 12, BRAIN_DENSITY: 224, NEURO_RATE: 480, TIER1_LEARN_SHIFT: 12, EXPR_MUT_RATE: 280, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 36, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 48, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 24 } },
-  hyperchaos: { n: 10000, cap: 65536,  species: 512, grid: "6,6,5", tps: 18, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 8,  BRAIN_DENSITY: 168, NEURO_RATE: 512, TIER1_LEARN_SHIFT: 13, EXPR_MUT_RATE: 640, GENE_NEW_RATE: 380, FAMILY_SPACE: 32768, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 48, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 158, LIFE_SIZE_MU: 22 } },
-  megaswarm:  { n: 24000, cap: 110000, species: 512, grid: "6,6,5", tps: 12, sps: 10, lesion: 0, params: { BRAIN_FOUND_HID: 5,  BRAIN_DENSITY: 128, NEURO_RATE: 300, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 360, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 24, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 56, WORLDGEN_SEA_LEVEL: 168, LIFE_SIZE_MU: 18 } },
-  abyss:      { n: 8000,  cap: 48000,  species: 256, grid: "6,6,5", tps: 14, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 7,  BRAIN_DENSITY: 156, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 200, FAMILY_SPACE: 16384, COLONY_FOUND: 16, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 224, LIFE_SIZE_MU: 24 } }
+  cambrian:   { n: 8000,  cap: 48000,  species: 100, grid: "6,6,5", tps: 14, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 6,  BRAIN_DENSITY: 148, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 14, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 162, LIFE_SIZE_MU: 22 } },
+  hyperbrain: { n: 6000,  cap: 40000,  species: 100, grid: "6,6,5", tps: 12, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 12, BRAIN_DENSITY: 224, NEURO_RATE: 480, TIER1_LEARN_SHIFT: 12, EXPR_MUT_RATE: 280, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 36, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 48, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 24 } },
+  hyperchaos: { n: 10000, cap: 65536,  species: 100, grid: "6,6,5", tps: 18, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 8,  BRAIN_DENSITY: 168, NEURO_RATE: 512, TIER1_LEARN_SHIFT: 13, EXPR_MUT_RATE: 640, GENE_NEW_RATE: 380, FAMILY_SPACE: 32768, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 48, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 158, LIFE_SIZE_MU: 22 } },
+  megaswarm:  { n: 24000, cap: 110000, species: 100, grid: "6,6,5", tps: 12, sps: 10, lesion: 0, params: { BRAIN_FOUND_HID: 5,  BRAIN_DENSITY: 128, NEURO_RATE: 300, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 360, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 24, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 56, WORLDGEN_SEA_LEVEL: 168, LIFE_SIZE_MU: 18 } },
+  abyss:      { n: 8000,  cap: 48000,  species: 100, grid: "6,6,5", tps: 14, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 7,  BRAIN_DENSITY: 156, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 200, FAMILY_SPACE: 16384, COLONY_FOUND: 16, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 224, LIFE_SIZE_MU: 24 } }
 };
 
 async function postAction(payload) {
@@ -459,7 +459,7 @@ $("btnExportJson").addEventListener("click", () => {
   if (!latestState) return;
   const bundle = {
     exported_utc: new Date().toISOString(),
-    observatory: "OMEGA 4-TIER OBSERVATORY v6.0 (12-SHADER EXTREME BIO · DEEP STRATA · V-CELL AI · 148 LEAN 4 PROOFS)",
+    observatory: "OMEGA 4-TIER OBSERVATORY v6.3 (12-SHADER EXTREME BIO · DEEP STRATA · V-CELL AI · 162 PURE LEAN 4 PROOFS)",
     proof_lock: latestState.differential?.conservationOk ?? false,
     genesis_config: latestState.genesis || null,
     omega_frontier_tb13_16: latestState.omega || null,
@@ -470,8 +470,8 @@ $("btnExportJson").addEventListener("click", () => {
       creature_species: latestState.creatures?.locked?.found ? nameSpecies(latestState.creatures.locked.clade, loadedShape, latestState.creatures.lockedVisual, latestState.creatures.locked) : null,
       creature_individual: latestState.creatures?.locked?.found ? nameCreature(latestState.creatures.locked.uid, latestState.creatures.locked.clade, latestState.creatures.locked.generation) : null
     },
-    tier1_dna_autophage: latestState.dna,
-    tier2_cells_v1_2: latestState.cells,
+    tier1_dna_autophage_v1_2: latestState.dna,
+    tier2_cells_v1_3: latestState.cells,
     tier3_creatures: latestState.creatures,
     tier4_environment: latestState.env,
     cross_tier_differential: latestState.differential,
@@ -942,12 +942,12 @@ function applyStackState(st) {
     const mm = Array.isArray(ct.morph_means) ? ct.morph_means : [0,0,0];
     $("grnStrip").innerHTML = `
       <div class="grn-bar">${fates.map((n, i) =>
-        `<div class="grn-seg" style="width:${(n / fSum) * 100}%;background:${FATE_COLORS[i]}" title="${FATE_NAMES[i]}: ${n}"></div>`
+        `<div class="grn-seg" style="width:${(Number(n) / fSum) * 100}%;background:${FATE_COLORS[i]}" title="${esc(FATE_NAMES[i])}: ${esc(n)}"></div>`
       ).join("")}</div>
       <div class="grn-meta">
-        ${fates.map((n, i) => `<span style="color:${FATE_COLORS[i]}">${FATE_NAMES[i]} ${n}</span>`).join(" ")}
-        <span>· Wnt/BMP/Shh <b>${mm[0].toFixed(0)}/${mm[1].toFixed(0)}/${mm[2].toFixed(0)}</b></span>
-        <span>· Ax <b>${ct.active_axons ?? 0}</b> · CPG <b>${ct.cpg_pulses ?? 0}</b></span>
+        ${fates.map((n, i) => `<span style="color:${FATE_COLORS[i]}">${esc(FATE_NAMES[i])} ${esc(n)}</span>`).join(" ")}
+        <span>· Wnt/BMP/Shh <b>${esc(Number(mm[0]).toFixed(0))}/${esc(Number(mm[1]).toFixed(0))}/${esc(Number(mm[2]).toFixed(0))}</b></span>
+        <span>· Ax <b>${esc(ct.active_axons ?? 0)}</b> · CPG <b>${esc(ct.cpg_pulses ?? 0)}</b></span>
       </div>`;
   }
 
@@ -1006,7 +1006,7 @@ function applyStackState(st) {
       ["Singular", (ag.singular ?? 0).toLocaleString()],
       ["Clustered", (ag.clustered ?? 0).toLocaleString()],
       ["Globular", (ag.globular ?? 0).toLocaleString()]
-    ].map(([k, v]) => `<div class="kv"><span>${k}</span><strong>${v}</strong></div>`).join("");
+    ].map(([k, v]) => `<div class="kv"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join("");
   }
 
   if (Array.isArray(cr.topClades) && cr.topClades.length > 0) {
@@ -1016,10 +1016,10 @@ function applyStackState(st) {
       const isCur = lk && Number(lk.clade) === cid;
       const hueDeg = Math.round(((cid * 67) % 360));
       const spBin = nameSpecies(cid);
-      return `<div class="cbar-row clickable" data-clade="${cid}" title="Click to inspect ${spBin} (Clade ${cid})">
-        <span style="color:${isCur ? "#e06c75" : "#b8c4d6"};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${isCur ? "▸ " : ""}${spBin.split(" ")[0]}·${cid}</span>
+      return `<div class="cbar-row clickable" data-clade="${esc(cid)}" title="Click to inspect ${esc(spBin)} (Clade ${esc(cid)})">
+        <span style="color:${isCur ? "#e06c75" : "#b8c4d6"};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${isCur ? "▸ " : ""}${esc(spBin.split(" ")[0])}·${esc(cid)}</span>
         <div class="cbar-track"><div class="cbar-fill" style="width:${pct}%;background:hsl(${hueDeg},68%,56%)"></div></div>
-        <span style="text-align:right;color:#eef2f7">${cnt.toLocaleString()}</span>
+        <span style="text-align:right;color:#eef2f7">${esc(cnt.toLocaleString())}</span>
       </div>`;
     }).join("");
     $("cladeBars").querySelectorAll("[data-clade]").forEach((row) => {
@@ -1029,11 +1029,11 @@ function applyStackState(st) {
 
   if (Array.isArray(cr.roster) && cr.roster.length > 0 && document.activeElement !== $("selRoster")) {
     $("selRoster").innerHTML =
-      `<option value="">Roster (${cr.roster.length} sampled)…</option>` +
+      `<option value="">Roster (${esc(cr.roster.length)} sampled)…</option>` +
       cr.roster.map((c) => {
         const nm = nameCreature(c.uid, c.clade, 0).split("·")[0];
         const gn = nameSpecies(c.clade, null, c).split(" ")[0];
-        return `<option value="${c.uid}" ${c.uid === cr.lockedUid ? "selected" : ""}>${nm} (${gn}·C${c.clade})</option>`;
+        return `<option value="${esc(c.uid)}" ${c.uid === cr.lockedUid ? "selected" : ""}>${esc(nm)} (${esc(gn)}·C${esc(c.clade)})</option>`;
       }).join("");
   }
 
@@ -1059,9 +1059,9 @@ function applyStackState(st) {
     ["Temp μ/M", `${env.meanTemp ?? 0}/${env.maxTemp ?? 0}%`],
     ["Vents", `${env.ventCount ?? 0} (${env.ventMeanTemp ?? 0}%)`],
     ["P0–3", (env.solventDist || [0,0,0,0]).join("/")]
-  ].map(([k, v]) => `<div class="ek"><span>${k}</span><b>${v}</b></div>`).join("");
+  ].map(([k, v]) => `<div class="ek"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
 
-  // Omega v4.2 Frontier Telemetry Pill (:8791 — TB14 Bio-Frostbite + TB15 Deep Strata + TB16 Virtual-Cell AI)
+  // Omega v4.3 Frontier Telemetry Pill (:8791 — TB14 Bio-Frostbite + TB15 Deep Strata + TB16 Virtual-Cell AI)
   const inetPill = $("pillBioInet");
   if (inetPill) {
     const t14 = st.omega?.tb14;
@@ -1072,22 +1072,29 @@ function applyStackState(st) {
                  (!t15 || (t15.levin_reprog_heads === 2 && t15.ciss_magnetite_ee > 0.96)) &&
                  (!t16 || t16.proj_mass_res < 1e-12);
       inetPill.className = ok ? "inet-pill ok" : "inet-pill";
-      const levTxt = t15 ? ` · Levin ${t15.levin_reprog_heads}H` : "";
-      const vcTxt  = t16 ? ` · VCell R² ${t16.perturb_r2.toFixed(2)}` : "";
+      const levTxt = t15 ? ` · Levin ${esc(t15.levin_reprog_heads)}H` : "";
+      const vcTxt  = t16 ? ` · VCell R² ${esc(Number(t16.perturb_r2).toFixed(2))}` : "";
       inetPill.innerHTML = `<i class="status-led"></i><span>INet 5×SHA${levTxt}${vcTxt}</span>`;
     } else if (st.engines?.t2_omega) {
       inetPill.className = "inet-pill ok";
-      inetPill.innerHTML = `<i class="status-led"></i><span>Omega v4.2 · :8791 LIVE</span>`;
+      inetPill.innerHTML = `<i class="status-led"></i><span>Omega v5.0 · :8791 LIVE</span>`;
     }
   }
 
-  // Proof Lock & Differentials
+  // Proof Lock & Differentials (strictly checks live connectivity — never false-green when offline!)
   const d = st.differential || {};
   const pill = $("pillConservation");
-  pill.className = d.conservationOk ? "proof-pill ok" : "proof-pill bad";
-  pill.innerHTML = d.conservationOk
-    ? `<i class="status-led"></i><span>0 amu · 0 uq · 0 2nd · 0 Obs</span>`
-    : `<i class="status-led"></i><span>INVARIANT ALERT</span>`;
+  const cState = d.conservationState || (d.conservationOk ? "VERIFIED" : "ALERT");
+  if (cState === "VERIFIED") {
+    pill.className = "proof-pill ok";
+    pill.innerHTML = `<i class="status-led"></i><span>0 amu · 0 uq · 0 2nd · 0 Obs</span>`;
+  } else if (cState === "DEGRADED") {
+    pill.className = "proof-pill";
+    pill.innerHTML = `<i class="status-led"></i><span>SYNCING / DEGRADED</span>`;
+  } else {
+    pill.className = "proof-pill bad";
+    pill.innerHTML = `<i class="status-led"></i><span>INVARIANT ALERT</span>`;
+  }
 
   $("mCoh").textContent = `cosθ ${(d.cosineCoherence ?? 0).toFixed(3)}`;
   $("mMeanD").textContent = `|Δ| ${(d.meanAbsDelta ?? 0).toFixed(3)}`;
@@ -1115,7 +1122,7 @@ function applyStackState(st) {
     const labels = ["T1", "T2", "T3", "T4"];
     const cols = ["var(--t1)", "var(--t2)", "var(--t3)", "var(--t4)"];
     const modeDesc = {
-      DNA128: "REAL 128-byte evolved AUTOPHAGE Strand alpha+beta DNA transfection into Cellulogonic v1.2.1",
+      DNA128: "REAL 128-byte evolved AUTOPHAGE Strand alpha+beta DNA transfection into Cellulogonic v1.3",
       LIVE: "Active live runtime command channel",
       SEED: "Deterministic metadata-seed hash bridge",
       WAVE: "Adaptive 13-vector independent restraint modulation (T1:13 & T2:13)",
@@ -1124,11 +1131,12 @@ function applyStackState(st) {
       D7RO: "Strictly Read-Only Observer Boundary (Asmodensius Law 4 / D7)",
       OFF:  "Toggle currently disabled (0.00)"
     };
-    let html = `<div class="mx-hd">→</div>` + labels.map((l, i) => `<div class="mx-hd" style="color:${cols[i]}">${l}</div>`).join("");
+    let html = `<div class="mx-hd">→</div>` + labels.map((l, i) => `<div class="mx-hd" style="color:${cols[i]}">${esc(l)}</div>`).join("");
     for (let r = 0; r < 4; r++) {
-      html += `<div class="mx-hd" style="color:${cols[r]}">${labels[r]}</div>`;
+      html += `<div class="mx-hd" style="color:${cols[r]}">${esc(labels[r])}</div>`;
       for (let c = 0; c < 4; c++) {
         const cell = mx[r][c];
+        const sNum = Number(cell.s) || 0;
         const tip = `${labels[r]}→${labels[c]} [${cell.m}]: ${modeDesc[cell.m] || cell.m}`;
         if (cell.m === "SELF") {
           html += `<div class="mx-cell self">—</div>`;
@@ -1137,11 +1145,11 @@ function applyStackState(st) {
         } else if (cell.m === "OFF") {
           html += `<div class="mx-cell ro" title="${esc(tip)}">OFF</div>`;
         } else if (cell.m === "CORR") {
-          html += `<div class="mx-cell" style="background:rgba(78,168,222,0.16);border-color:rgba(78,168,222,0.35)" title="${esc(tip)}">r ${cell.s.toFixed(2)}</div>`;
+          html += `<div class="mx-cell" style="background:rgba(78,168,222,0.16);border-color:rgba(78,168,222,0.35)" title="${esc(tip)}">r ${esc(sNum.toFixed(2))}</div>`;
         } else {
-          const alpha = (0.08 + cell.s * 0.28).toFixed(2);
+          const alpha = (0.08 + sNum * 0.28).toFixed(2);
           const tag = cell.m === "DNA128" ? "128B" : cell.m === "NAT" ? "NAT" : cell.m === "SEED" ? "SD" : cell.m === "WAVE" ? "WV" : "";
-          html += `<div class="mx-cell" style="background:rgba(63,185,80,${alpha});border-color:rgba(63,185,80,0.35)" title="${esc(tip)}">${tag ? tag + " " : ""}${cell.s.toFixed(2)}</div>`;
+          html += `<div class="mx-cell" style="background:rgba(63,185,80,${alpha});border-color:rgba(63,185,80,0.35)" title="${esc(tip)}">${esc(tag ? tag + " " : "")}${esc(sNum.toFixed(2))}</div>`;
         }
       }
     }

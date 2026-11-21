@@ -13,9 +13,9 @@ fs.mkdirSync(MACRO_DATA_DIR, { recursive: true });
 
 const HUB_PORT   = Number(process.env.TRISCALE_PORT || 8790);
 const MACRO_PORT = 8794; // Dedicated fresh Wild Biodiversity Asmodensius-Native relay!
-const OMEGA_PORT = 8791; // Tier 2+ (Cellular Engine Omega v4.2 · 16 Testbeds · 61 Lean 4)
-const MESO_PORT  = 8788; // Tier 2 (Cells v1.2.1 Embryogenesis + GRN · 58 Lean 4)
-const MICRO_PORT = 8787; // Tier 1 (DNA AUTOPHAGE v1.1 + Zeta-Omega 13-Vec · 31 Lean 4)
+const OMEGA_PORT = 8791; // Tier 2+ (Cellular Engine Omega v5.0 · 16 Testbeds · 66 Pure Lean 4)
+const MESO_PORT  = 8788; // Tier 2 (Cells v1.3 Embryogenesis + GRN · 58 Pure Lean 4)
+const MICRO_PORT = 8787; // Tier 1 (DNA AUTOPHAGE v1.2 + Zeta-Omega 13-Vec · 38 Pure Lean 4)
 
 const PYTHON_BIN = [
   "C:\\Users\\Alexa\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
@@ -25,6 +25,7 @@ const PYTHON_BIN = [
 ].find((p) => p === "python" || fs.existsSync(p));
 
 const ANTIGRAVITY_ROOT = path.resolve(__dirname, "..");
+const ZETA_PKG_ROOT = path.join(ANTIGRAVITY_ROOT, "alife-singularity-omega-package");
 
 const PATHS = {
   macroRelay:  path.join(__dirname, "macro_wild_relay.py"),
@@ -32,7 +33,7 @@ const PATHS = {
   omegaServer: path.join(ANTIGRAVITY_ROOT, "cellular-engine-omega", "web", "server.mjs"),
   mesoServer:  path.join(ANTIGRAVITY_ROOT, "cellulogonic-mecha", "web", "server.mjs"),
   microServer: path.join(ANTIGRAVITY_ROOT, "autophage", "web", "server.mjs"),
-  zetaHtml:    path.join(ANTIGRAVITY_ROOT, "alife-singularity-omega-package", "html", "ALife_Singularity_SuperLife_Omega_Dashboard.html")
+  zetaHtml:    path.join(ZETA_PKG_ROOT, "html", "ALife_Singularity_SuperLife_Omega_Dashboard.html")
 };
 
 const SOLVENT_NAMES = [
@@ -48,34 +49,82 @@ const MIME = {
   ".css":  "text/css; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".svg":  "image/svg+xml",
-  ".png":  "image/png"
+  ".png":  "image/png",
+  ".pdf":  "application/pdf",
+  ".csv":  "text/csv; charset=utf-8",
+  ".md":   "text/markdown; charset=utf-8",
+  ".txt":  "text/plain; charset=utf-8",
+  ".yaml": "text/yaml; charset=utf-8",
+  ".yml":  "text/yaml; charset=utf-8",
+  ".xml":  "application/xml; charset=utf-8",
+  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  ".xls":  "application/vnd.ms-excel"
 };
 
+/* Deterministic seeded SplitMix32 PRNG (replaces non-reproducible Math.random() calls) */
+let hubRngState = 0x5EED6301 >>> 0;
+function nextHubRand() {
+  hubRngState = (hubRngState + 0x9E3779B9) >>> 0;
+  let z = hubRngState;
+  z = Math.imul(z ^ (z >>> 16), 0x85EBCA6B) >>> 0;
+  z = Math.imul(z ^ (z >>> 13), 0xC2B2AE35) >>> 0;
+  return ((z ^ (z >>> 16)) >>> 0) / 4294967296;
+}
+
+function clampInt(val, lo, hi, fallback) {
+  const n = Number(val);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.max(lo, Math.min(hi, Math.round(n)));
+}
+
+/* Strict Loopback Host / Origin / Sec-Fetch-Site Guard (defeats cross-site CSRF & CSWSH) */
+function isLoopbackHost(hostHdr) {
+  if (!hostHdr || typeof hostHdr !== "string") return false;
+  return /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/i.test(hostHdr.trim());
+}
+
+function isLoopbackOrigin(originHdr) {
+  if (!originHdr || typeof originHdr !== "string") return true;
+  return /^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/i.test(originHdr.trim());
+}
+
+function isSafeLoopbackRequest(req, requireJson = false) {
+  if (!isLoopbackHost(req.headers.host)) return false;
+  if (req.headers.origin && !isLoopbackOrigin(req.headers.origin)) return false;
+  const sfs = String(req.headers["sec-fetch-site"] || "").toLowerCase();
+  if (sfs && sfs !== "same-origin" && sfs !== "same-site" && sfs !== "none") return false;
+  if (requireJson) {
+    const ct = String(req.headers["content-type"] || "").toLowerCase();
+    if (!ct.includes("application/json")) return false;
+  }
+  return true;
+}
+
 /* ============================================================================
- * 1. Child Native Engine Supervisor (With Live Hot-Respawn for Wild Cosmos!)
+ * 1. Child Native Engine Supervisor (With Live Hot-Respawn & Clean Tree Reaping)
  * ============================================================================ */
 const children = [];
 let macroChild = null;
 let currentCosmosPreset = "cambrian";
 const GENESIS_PRESETS = {
   cambrian: {
-    preset: "cambrian", n: 8000, cap: 48000, species: 320, grid: "6,6,5", tps: 14, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
+    preset: "cambrian", n: 8000, cap: 48000, species: 100, grid: "6,6,5", tps: 14, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
     params: { BRAIN_FOUND_HID: 6, BRAIN_DENSITY: 148, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 14, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 162, LIFE_SIZE_MU: 22 }
   },
   hyperbrain: {
-    preset: "hyperbrain", n: 6000, cap: 40000, species: 220, grid: "6,6,5", tps: 12, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
+    preset: "hyperbrain", n: 6000, cap: 40000, species: 100, grid: "6,6,5", tps: 12, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
     params: { BRAIN_FOUND_HID: 12, BRAIN_DENSITY: 224, NEURO_RATE: 480, TIER1_LEARN_SHIFT: 12, EXPR_MUT_RATE: 280, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 36, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 48, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 24 }
   },
   hyperchaos: {
-    preset: "hyperchaos", n: 10000, cap: 65536, species: 512, grid: "6,6,5", tps: 18, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
+    preset: "hyperchaos", n: 10000, cap: 65536, species: 100, grid: "6,6,5", tps: 18, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
     params: { BRAIN_FOUND_HID: 8, BRAIN_DENSITY: 168, NEURO_RATE: 512, TIER1_LEARN_SHIFT: 13, EXPR_MUT_RATE: 640, GENE_NEW_RATE: 380, FAMILY_SPACE: 32768, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 48, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 158, LIFE_SIZE_MU: 22 }
   },
   megaswarm: {
-    preset: "megaswarm", n: 24000, cap: 110000, species: 512, grid: "6,6,5", tps: 12, sps: 10, threads: 0, lesion: 0, lab: false, seed: 42,
+    preset: "megaswarm", n: 24000, cap: 110000, species: 100, grid: "6,6,5", tps: 12, sps: 10, threads: 0, lesion: 0, lab: false, seed: 42,
     params: { BRAIN_FOUND_HID: 5, BRAIN_DENSITY: 128, NEURO_RATE: 300, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 360, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 24, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 56, WORLDGEN_SEA_LEVEL: 168, LIFE_SIZE_MU: 18 }
   },
   abyss: {
-    preset: "abyss", n: 8000, cap: 48000, species: 256, grid: "6,6,5", tps: 14, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
+    preset: "abyss", n: 8000, cap: 48000, species: 100, grid: "6,6,5", tps: 14, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
     params: { BRAIN_FOUND_HID: 7, BRAIN_DENSITY: 156, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 200, FAMILY_SPACE: 16384, COLONY_FOUND: 16, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 224, LIFE_SIZE_MU: 24 }
   }
 };
@@ -104,6 +153,36 @@ async function waitForPort(port, label, maxWaitMs = 20000) {
   return false;
 }
 
+function killProcessTree(pid) {
+  if (!pid) return;
+  if (process.platform === "win32") {
+    try {
+      const tk = spawn("taskkill", ["/T", "/F", "/PID", String(pid)], { stdio: "ignore", windowsHide: true });
+      tk.on("error", () => {});
+    } catch {}
+  } else {
+    try { process.kill(pid, "SIGKILL"); } catch {}
+  }
+}
+
+async function stopChildGracefully(child, shutdownPort = null, waitMs = 3500) {
+  if (!child || child.exitCode !== null || child.killed) return;
+  const exited = new Promise((resolve) => {
+    child.once("exit", () => resolve(true));
+    setTimeout(() => resolve(false), waitMs);
+  });
+  if (shutdownPort) {
+    try { await httpRequest(shutdownPort, "POST", "/api/shutdown", {}, {}, 1500); } catch {}
+  } else {
+    try { child.kill("SIGTERM"); } catch {}
+  }
+  const done = await exited;
+  if (!done && child.exitCode === null) {
+    killProcessTree(child.pid);
+    await new Promise((r) => setTimeout(r, 300));
+  }
+}
+
 function spawnEngine(label, cmd, args, env = {}) {
   console.log(`[4TIER] Starting ${label}: ${cmd} ${args.join(" ")}`);
   const child = spawn(cmd, args, {
@@ -114,7 +193,11 @@ function spawnEngine(label, cmd, args, env = {}) {
   child.stdout.on("data", (d) => { const s = String(d).trim(); if (s) console.log(`[${label}] ${s}`); });
   child.stderr.on("data", (d) => { const s = String(d).trim(); if (s) console.error(`[${label} err] ${s}`); });
   child.on("error", (err) => console.error(`[${label} spawn err] ${err.message}`));
-  child.on("exit", (code) => console.log(`[${label}] exited (${code})`));
+  child.on("exit", (code) => {
+    console.log(`[${label}] exited (${code})`);
+    const idx = children.indexOf(child);
+    if (idx !== -1) children.splice(idx, 1);
+  });
   children.push(child);
   return child;
 }
@@ -180,18 +263,22 @@ async function spawnWildCosmos(presetOrCfg = "cambrian") {
     } else {
       const baseKey = GENESIS_PRESETS[presetOrCfg?.preset] ? presetOrCfg.preset : "cambrian";
       const base = structuredClone(GENESIS_PRESETS[baseKey]);
+      const rawGrid = String(presetOrCfg.grid || "");
+      const safeGrid = /^\d+,\d+,\d+$/.test(rawGrid)
+        ? rawGrid.split(",").map((g) => clampInt(g, 4, 8, 6)).join(",")
+        : base.grid;
       cfg = {
         preset: baseKey,
-        n: Math.max(64, Math.min(250000, Math.round(Number(presetOrCfg.n ?? base.n)))),
-        cap: Math.max(4096, Math.min(1000000, Math.round(Number(presetOrCfg.cap ?? base.cap)))),
-        species: Math.max(1, Math.min(65535, Math.round(Number(presetOrCfg.species ?? base.species)))),
-        grid: /^\d+,\d+,\d+$/.test(String(presetOrCfg.grid || "")) ? String(presetOrCfg.grid) : base.grid,
-        tps: Math.max(0, Math.min(1000, Math.round(Number(presetOrCfg.tps ?? base.tps)))),
-        sps: Math.max(1, Math.min(60, Math.round(Number(presetOrCfg.sps ?? base.sps)))),
-        threads: Math.max(0, Math.min(64, Math.round(Number(presetOrCfg.threads ?? base.threads)))),
-        lesion: (Number(presetOrCfg.lesion ?? base.lesion) >>> 0) & 0x7fffff,
+        n: clampInt(presetOrCfg.n, 64, 250000, base.n),
+        cap: clampInt(presetOrCfg.cap, 4096, 1000000, base.cap),
+        species: clampInt(presetOrCfg.species, 1, 100, base.species),
+        grid: safeGrid,
+        tps: clampInt(presetOrCfg.tps, 0, 1000, base.tps),
+        sps: clampInt(presetOrCfg.sps, 1, 60, base.sps),
+        threads: clampInt(presetOrCfg.threads, 0, 64, base.threads),
+        lesion: (clampInt(presetOrCfg.lesion, 0, 0x7fffff, base.lesion) >>> 0) & 0x7fffff,
         lab: Boolean(presetOrCfg.lab),
-        seed: Math.max(0, Math.round(Number(presetOrCfg.seed ?? base.seed))),
+        seed: clampInt(presetOrCfg.seed, 0, 2147483647, base.seed),
         params: { ...base.params, ...(presetOrCfg.params && typeof presetOrCfg.params === "object" ? presetOrCfg.params : {}) }
       };
       if (cfg.cap < cfg.n + 4096) cfg.cap = cfg.n + 4096;
@@ -200,10 +287,9 @@ async function spawnWildCosmos(presetOrCfg = "cambrian") {
     currentGenesis = cfg;
 
     if (macroChild) {
-      try { await httpRequest(MACRO_PORT, "POST", "/api/shutdown", {}); } catch {}
-      try { macroChild.kill(); } catch {}
+      const oldMacro = macroChild;
       macroChild = null;
-      await new Promise((r) => setTimeout(r, 650));
+      await stopChildGracefully(oldMacro, MACRO_PORT, 3500);
     }
     resetMacroCaches();
     macroChild = spawnEngine(`T3+T4:${cfg.lab ? "Lab" : "Wild"}-${cfg.preset}`, PYTHON_BIN, buildRelayArgs(cfg));
@@ -235,9 +321,9 @@ async function ensureAllEngines() {
   }
   await Promise.all([
     waitForPort(MACRO_PORT, "T3+T4 Wild Cambrian Cosmos", 25000),
-    waitForPort(OMEGA_PORT, "T2+ Cellular Engine Omega v4.2 (TB01-TB16 · 61 Lean 4)", 12000),
-    waitForPort(MESO_PORT,  "T2 Cellulogonic Mecha v1.2.1 (58 Lean 4)", 12000),
-    waitForPort(MICRO_PORT, "T1 AUTOPHAGE v1.1 / Zeta-Omega (31 Lean 4)", 12000)
+    waitForPort(OMEGA_PORT, "T2+ Cellular Engine Omega v5.0 (TB01-TB16 · 66 Pure Lean 4)", 12000),
+    waitForPort(MESO_PORT,  "T2 Cellulogonic Mecha v1.3 (58 Pure Lean 4)", 12000),
+    waitForPort(MICRO_PORT, "T1 AUTOPHAGE v1.2 / Zeta-Omega (38 Pure Lean 4)", 12000)
   ]);
 }
 
@@ -278,6 +364,8 @@ const rawCache = {
  * ============================================================================ */
 const state = {
   engines: { t1_dna: false, t2_cells: false, t2_omega: false, t3_creatures: false, t4_env: false },
+  paused: false,
+  omegaFeral: false,
   cosmosPreset: "cambrian",
   omega: null,
   coupling: {
@@ -344,7 +432,8 @@ const state = {
     varCladeH: 0,
     entropyVelocity: 0,
     backlashTotal: 0,
-    conservationOk: true,
+    conservationOk: false,
+    conservationState: "DEGRADED",
     signedDelta112: new Array(112).fill(0),
     gradientSlope111: new Array(111).fill(0),
     // 4x4 Omniscient Coupling Matrix [source 0..3][target 0..3]: { mode, strength }
@@ -370,9 +459,10 @@ function pushCausalEvent(direction, kind, detail) {
   if (state.events.length > 80) state.events.length = 80;
 }
 
-function broadcastState() {
-  const payload = `data: ${JSON.stringify({
+function buildStatePayload() {
+  return `data: ${JSON.stringify({
     engines: state.engines,
+    paused: state.paused,
     cosmosPreset: currentCosmosPreset,
     genesis: currentGenesis,
     coupling: state.coupling,
@@ -411,6 +501,7 @@ function broadcastState() {
       irred_centromeres: state.dna.frame.irred_centromeres,
       execs_per_sec: state.dna.frame.execs_per_sec,
       ovi: state.dna.frame.ovi,
+      bp_anew: state.dna.frame.bp_anew ?? 0,
       stage: state.dna.frame.stage,
       met: state.dna.frame.met,
       entropy: state.dna.frame.entropy,
@@ -427,6 +518,10 @@ function broadcastState() {
     differential: state.differential,
     events: state.events.slice(0, 24)
   })}\n\n`;
+}
+
+function broadcastState() {
+  const payload = buildStatePayload();
   for (const res of sseClients) {
     if (res.writableEnded || res.destroyed) { sseClients.delete(res); continue; }
     try { res.write(payload); } catch { sseClients.delete(res); }
@@ -595,9 +690,23 @@ function computeDifferentials() {
   d.backlashTotal = (state.cells.telemetry?.backlash?.reduce((a, b) => a + b, 0) ?? 0) +
                     (state.dna.frame?.backlash?.reduce((a, b) => a + b, 0) ?? 0);
 
-  const cellsOk = !state.cells.telemetry || (state.cells.telemetry.mass_res === 0 && state.cells.telemetry.energy_res === 0 && state.cells.telemetry.second_law === 0);
-  const dnaOk = !state.dna.frame?.ledger || (state.dna.frame.ledger.int_res === 0 && state.dna.frame.ledger.second_law_v === 0);
-  d.conservationOk = Boolean(cellsOk && dnaOk && state.env.observerFail === 0);
+  const now = Date.now();
+  const hasDna   = Boolean(state.engines.t1_dna && state.dna.frame?.ledger && (now - state.dna.updatedAt < 15000));
+  const hasCells = Boolean(state.engines.t2_cells && state.cells.telemetry && (now - state.cells.updatedAt < 15000));
+  const hasMacro = Boolean(state.engines.t4_env && (now - state.creatures.updatedAt < 15000));
+  const cellsAlert = Boolean(state.cells.telemetry && (state.cells.telemetry.mass_res !== 0 || state.cells.telemetry.energy_res !== 0 || state.cells.telemetry.second_law !== 0));
+  const dnaAlert   = Boolean(state.dna.frame?.ledger && (state.dna.frame.ledger.int_res !== 0 || state.dna.frame.ledger.second_law_v !== 0));
+  const obsAlert   = state.env.observerFail !== 0;
+  if (cellsAlert || dnaAlert || obsAlert) {
+    d.conservationState = "ALERT";
+    d.conservationOk = false;
+  } else if (hasDna && hasCells && hasMacro) {
+    d.conservationState = "VERIFIED";
+    d.conservationOk = true;
+  } else {
+    d.conservationState = "DEGRADED";
+    d.conservationOk = false;
+  }
 
   const lk = state.creatures.locked;
   const hab = state.creatures.localHabitat;
@@ -675,7 +784,7 @@ function computeDifferentials() {
  * ============================================================================ */
 function deriveDnaSeed32() {
   const a = state.dna.frame?.apex;
-  if (!a) return Math.floor(Math.random() * 89999999) + 1000;
+  if (!a) return Math.floor(nextHubRand() * 89999999) + 1000;
   const rHi = parseInt(String(a.ribo_hex || "0").slice(0, 8), 16) || 1;
   const rLo = parseInt(String(a.ribo_hex || "0").slice(8, 16), 16) || 1;
   const addr = parseInt(String(a.addr || "0"), 16) || 1;
@@ -694,7 +803,7 @@ async function transfectDnaToCells(reason = "manual") {
   try {
     const r = hex128
       ? await httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "autophage_dna", hex: hex128 })
-      : await httpRequest(MESO_PORT, "GET", `/api/action?op=autophage&seed=${deriveDnaSeed32()}`);
+      : await httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "autophage", seed: deriveDnaSeed32() });
     if (r.status === 200) {
       const data = JSON.parse(r.body.toString("utf8"));
       if (data.telemetry) { state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge; state.cells.updatedAt = Date.now(); }
@@ -715,9 +824,8 @@ async function transfectDnaToCells(reason = "manual") {
 }
 
 async function triggerCellsAction(op, params = {}, direction = "T3 CREATURE ➔ T2 CELLS", label = "") {
-  const qs = new URLSearchParams({ op, ...params }).toString();
   try {
-    const r = await httpRequest(MESO_PORT, "GET", `/api/action?${qs}`);
+    const r = await httpRequest(MESO_PORT, "POST", "/api/cmd", { op, ...params });
     if (r.status === 200) {
       const data = JSON.parse(r.body.toString("utf8"));
       if (data.telemetry) { state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge; state.cells.updatedAt = Date.now(); }
@@ -731,7 +839,7 @@ async function triggerCellsAction(op, params = {}, direction = "T3 CREATURE ➔ 
 }
 
 async function syncEnvSolventToCells(targetSolvent, reason = "local-habitat") {
-  const sol = Math.max(0, Math.min(3, Number(targetSolvent) || 0));
+  const sol = clampInt(targetSolvent, 0, 3, 0);
   const isAuto = reason !== "operator-override";
   if (isAuto && sol === state.coupling.activeSolvent) return;
   const now = Date.now();
@@ -743,24 +851,42 @@ async function syncEnvSolventToCells(targetSolvent, reason = "local-habitat") {
 }
 
 async function applyUnifiedRestraints(vec13, reason = "spectrum") {
-  const clean = vec13.slice(0, 13).map((v) => Math.max(0, Math.min(100, Math.round(Number(v) || 0))));
+  const clean = vec13.slice(0, 13).map((v) => clampInt(v, 0, 100, 0));
   while (clean.length < 13) clean.push(0);
   state.coupling.restraints = clean;
   const allEqual = clean.every((v) => v === clean[0]);
+  let t1Ok = false, t2Ok = false;
   try {
-    if (allEqual) await httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "all_restraints", val: clean[0] });
-    else for (let idx = 0; idx < 13; idx++) await httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "restraint", idx, val: clean[idx] });
+    let r1;
+    if (allEqual) {
+      r1 = await httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "all_restraints", val: clean[0] });
+    } else {
+      r1 = await httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "restraint_vec", vec: clean });
+      if (r1.status !== 200) {
+        let allStepOk = true;
+        for (let idx = 0; idx < 13; idx++) {
+          const ri = await httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "restraint", idx, val: clean[idx] });
+          if (ri.status !== 200) allStepOk = false;
+        }
+        r1 = { status: allStepOk ? 200 : 500 };
+      }
+    }
+    t1Ok = r1.status === 200;
   } catch {}
   try {
-    /* Full 13-vector independent restraint parity in Tier 2 (Cellulogonic v1.2.1!) */
+    /* Full 13-vector independent restraint parity in Tier 2 (Cellulogonic v1.3!) */
     const r = await httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "restraint_vec", vec: clean });
     if (r.status === 200) {
+      t2Ok = true;
       const data = JSON.parse(r.body.toString("utf8"));
       if (data.telemetry) { state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge; state.cells.updatedAt = Date.now(); }
     }
   } catch {}
   const meanPct = Math.round(clean.reduce((a, b) => a + b, 0) / 13);
-  pushCausalEvent("ZETA-OMEGA ➔ T1+T2", "13-VEC", `${reason}: T1+T2 13-vec [${Math.min(...clean)}..${Math.max(...clean)}%] (μ=${meanPct}%)`);
+  if (t1Ok || t2Ok) {
+    const scope = t1Ok && t2Ok ? "T1+T2" : (t1Ok ? "T1-only" : "T2-only");
+    pushCausalEvent("ZETA-OMEGA ➔ T1+T2", "13-VEC", `${reason}: ${scope} 13-vec [${Math.min(...clean)}..${Math.max(...clean)}%] (μ=${meanPct}%)`);
+  }
   computeDifferentials();
   broadcastState();
 }
@@ -810,7 +936,7 @@ async function onCreatureInspect(info, source = "click", forceSwitch = false) {
       const sol = state.creatures.localHabitat ? state.creatures.localHabitat.recommendedSolvent : ((Number(info.clade) || 0) % 4);
       const meanR = Math.round(state.coupling.restraints.reduce((a, b) => a + b, 0) / 13);
       state.coupling.activeSolvent = sol;
-      httpRequest(MESO_PORT, "GET", `/api/init?regime=${state.coupling.activeRegime}&solvent=${sol}&seed=${cSeed}&restraint=${meanR}&warmup=42`).catch(() => {});
+      httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "init", regime: state.coupling.activeRegime, solvent: sol, seed: cSeed, restraint: meanR, warmup: 42 }).catch(() => {});
       httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "reset", regime: 1, seed: cSeed }).catch(() => {});
       pushCausalEvent("T4+T3 ➔ T2+T1", "STACK RE-SEED", `Bound Cells & DNA to Creature UID seed ${cSeed}`);
     }
@@ -1078,8 +1204,10 @@ function startDnaSseWatcher() {
 function startAsmodensiusPollers() {
   let monocultureStreak = 0;
   let renewingCosmos = false;
+  let snapInFlight = false;
   setInterval(async () => {
-    if (renewingCosmos) return;
+    if (renewingCosmos || snapInFlight) return;
+    snapInFlight = true;
     try {
       const st = await httpRequest(MACRO_PORT, "GET", "/api/state");
       if (st.status === 200) {
@@ -1112,7 +1240,7 @@ function startAsmodensiusPollers() {
           if (!state.creatures.lockedUid && dec.roster.length > 0) await lockCreature(dec.roster[0].uid, "auto-lock");
 
           // Anti-Monoculture Guard: prevent long-run competitive exclusion from collapsing the cosmos to 1 red clade!
-          if (state.coupling.antiMonoculture && dec.tick > 500 && dec.count > 100 && (dec.activeClades <= 3 || dec.cladeEntropyBits < 0.45)) {
+          if (!state.paused && state.coupling.antiMonoculture && dec.tick > 500 && dec.count > 100 && (dec.activeClades <= 3 || dec.cladeEntropyBits < 0.45)) {
             monocultureStreak++;
             if (monocultureStreak >= 8) {
               monocultureStreak = 0;
@@ -1145,12 +1273,16 @@ function startAsmodensiusPollers() {
       }
     } catch {
       state.engines.t3_creatures = false; state.engines.t4_env = false;
+    } finally {
+      snapInFlight = false;
     }
   }, 1200);
 
   let fieldTickCount = 0;
+  let fieldInFlight = false;
   setInterval(async () => {
-    if (!state.env.runId) return;
+    if (!state.env.runId || fieldInFlight) return;
+    fieldInFlight = true;
     const rid = `&run_id=${encodeURIComponent(state.env.runId)}`;
     fieldTickCount++;
     try {
@@ -1170,76 +1302,95 @@ function startAsmodensiusPollers() {
         if (rsh.status === 200) decodeAzstShapes(rsh.body);
       }
     } catch {}
+    finally { fieldInFlight = false; }
   }, 2400);
 }
 
 function startCellsHeartbeatAndWaveEngine() {
   let zeroCellTicks = 0;
   let lastRegenAt = 0;
+  let cellsInFlight = false;
   setInterval(async () => {
-    if (Date.now() - state.cells.updatedAt > 1400) {
-      try {
-        const r = await httpRequest(MESO_PORT, "GET", "/api/step?n=1");
-        if (r.status === 200) {
-          const data = JSON.parse(r.body.toString("utf8"));
-          if (data.telemetry) {
-            state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge;
-            state.cells.updatedAt = Date.now(); state.engines.t2_cells = true;
-            computeDifferentials(); broadcastState();
-          }
-        }
-      } catch { state.engines.t2_cells = false; }
-    } else { state.engines.t2_cells = true; }
-
-    // Autonomous T2 Cellular Regenesis: if 3D embryo hits 0 cells while Auto-Couple is ON,
-    // re-embryonate from the locked T3 creature's UID + local T4 habitat solvent!
-    const alive = state.cells.telemetry?.alive;
-    if (state.coupling.autoCouple && alive === 0 && (Date.now() - lastRegenAt > 8000)) {
-      zeroCellTicks++;
-      if (zeroCellTicks >= 3) {
-        zeroCellTicks = 0;
-        lastRegenAt = Date.now();
-        const seed = state.creatures.lockedUid ? uidToSeed32(state.creatures.lockedUid) : deriveDnaSeed32();
-        const sol = state.creatures.localHabitat ? state.creatures.localHabitat.recommendedSolvent : state.coupling.activeSolvent;
-        const reg = state.coupling.activeRegime ?? 5;
-        const safeR = Math.min(25, Math.round(state.coupling.restraints.reduce((a, b) => a + b, 0) / 13));
+    if (state.paused || cellsInFlight) return;
+    cellsInFlight = true;
+    try {
+      if (Date.now() - state.cells.updatedAt > 1400) {
         try {
-          const r = await httpRequest(MESO_PORT, "GET", `/api/init?regime=${reg}&solvent=${sol}&seed=${seed}&restraint=${safeR}&warmup=40`);
+          const r = await httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "step", n: 1 });
           if (r.status === 200) {
             const data = JSON.parse(r.body.toString("utf8"));
-            if (data.telemetry) { state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge; state.cells.updatedAt = Date.now(); }
-            pushCausalEvent("T1+T3+T4 ➔ T2", "AUTO-REGENESIS", `Re-embryonated 3D cells (R${reg}, ${SOLVENT_NAMES[sol]}, seed ${seed}) after collapse`);
-            computeDifferentials(); broadcastState();
+            if (data.telemetry) {
+              state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge;
+              state.cells.updatedAt = Date.now(); state.engines.t2_cells = true;
+              computeDifferentials(); broadcastState();
+            }
           }
-        } catch {}
+        } catch { state.engines.t2_cells = false; }
+      } else { state.engines.t2_cells = true; }
+
+      // Autonomous T2 Cellular Regenesis: if 3D embryo hits 0 cells while Auto-Couple is ON,
+      // re-embryonate from the locked T3 creature's UID + local T4 habitat solvent!
+      const alive = state.cells.telemetry?.alive;
+      if (state.coupling.autoCouple && alive === 0 && (Date.now() - lastRegenAt > 8000)) {
+        zeroCellTicks++;
+        if (zeroCellTicks >= 3) {
+          zeroCellTicks = 0;
+          lastRegenAt = Date.now();
+          const seed = state.creatures.lockedUid ? uidToSeed32(state.creatures.lockedUid) : deriveDnaSeed32();
+          const sol = state.creatures.localHabitat ? state.creatures.localHabitat.recommendedSolvent : state.coupling.activeSolvent;
+          const reg = state.coupling.activeRegime ?? 5;
+          const safeR = Math.min(25, Math.round(state.coupling.restraints.reduce((a, b) => a + b, 0) / 13));
+          try {
+            const r = await httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "init", regime: reg, solvent: sol, seed, restraint: safeR, warmup: 40 });
+            if (r.status === 200) {
+              const data = JSON.parse(r.body.toString("utf8"));
+              if (data.telemetry) { state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge; state.cells.updatedAt = Date.now(); }
+              pushCausalEvent("T1+T3+T4 ➔ T2", "AUTO-REGENESIS", `Re-embryonated 3D cells (R${reg}, ${SOLVENT_NAMES[sol]}, seed ${seed}) after collapse`);
+              computeDifferentials(); broadcastState();
+            }
+          } catch {}
+        }
+      } else if (alive > 0) {
+        zeroCellTicks = 0;
       }
-    } else if (alive > 0) {
-      zeroCellTicks = 0;
+    } finally {
+      cellsInFlight = false;
     }
   }, 900);
 
+  let waveInFlight = false;
   setInterval(async () => {
+    if (state.paused || waveInFlight) return;
     const mode = state.coupling.waveMode;
     if (mode !== "sine" && mode !== "adaptive") return;
-    state.coupling.wavePhase += 0.35;
-    if (mode === "sine") {
-      const vec = Array.from({ length: 13 }, (_, i) => Math.round(35 + 32 * Math.sin(state.coupling.wavePhase + i * 0.55)));
-      await applyUnifiedRestraints(vec, "dynamic-sine");
-    } else {
-      // Omniscient 4-Tier Chaos-Entropy-Health Adaptive Margin (bounded below cellular collapse)
-      const h = state.creatures.locked?.found ? Math.min(1, (Number(state.creatures.locked.health) || 35000) / 65535) : 0.7;
-      const tNorm = state.creatures.localHabitat ? Math.abs(state.creatures.localHabitat.tempPct - 50) / 50 : 0.2;
-      const chaos = state.differential.chaosLyapunov || 0.25;
-      const base = Math.round((1 - h) * 28 + tNorm * 18 + chaos * 18 + (state.differential.meanAbsDelta || 0) * 24);
-      const vec = Array.from({ length: 13 }, (_, i) =>
-        Math.max(0, Math.min(68, Math.round(base + 10 * Math.sin(state.coupling.wavePhase * 0.7 + i * 0.48))))
-      );
-      await applyUnifiedRestraints(vec, "4T-chaos-adaptive");
+    waveInFlight = true;
+    try {
+      state.coupling.wavePhase += 0.35;
+      if (mode === "sine") {
+        const vec = Array.from({ length: 13 }, (_, i) => Math.round(35 + 32 * Math.sin(state.coupling.wavePhase + i * 0.55)));
+        await applyUnifiedRestraints(vec, "dynamic-sine");
+      } else {
+        // Omniscient 4-Tier Chaos-Entropy-Health Adaptive Margin (bounded below cellular collapse)
+        const h = state.creatures.locked?.found ? Math.min(1, (Number(state.creatures.locked.health) || 35000) / 65535) : 0.7;
+        const tNorm = state.creatures.localHabitat ? Math.abs(state.creatures.localHabitat.tempPct - 50) / 50 : 0.2;
+        const chaos = state.differential.chaosLyapunov || 0.25;
+        const base = Math.round((1 - h) * 28 + tNorm * 18 + chaos * 18 + (state.differential.meanAbsDelta || 0) * 24);
+        const vec = Array.from({ length: 13 }, (_, i) =>
+          Math.max(0, Math.min(68, Math.round(base + 10 * Math.sin(state.coupling.wavePhase * 0.7 + i * 0.48))))
+        );
+        await applyUnifiedRestraints(vec, "4T-chaos-adaptive");
+      }
+    } finally {
+      waveInFlight = false;
     }
   }, 2400);
 }
 
+let omegaInFlight = false;
 async function pollOmegaBioFrostbite(feral = false) {
+  if (omegaInFlight) return false;
+  omegaInFlight = true;
+  state.omegaFeral = Boolean(feral);
   try {
     const r = await httpRequest(OMEGA_PORT, "GET", `/api/run?seed=2026001&mutant=0&feral=${feral ? 1 : 0}`, null, {}, 8000);
     if (r.status === 200) {
@@ -1281,13 +1432,21 @@ async function pollOmegaBioFrostbite(feral = false) {
     }
   } catch {
     state.engines.t2_omega = false;
+  } finally {
+    omegaInFlight = false;
   }
   return false;
 }
 
 function startOmegaPoller() {
   pollOmegaBioFrostbite(false);
-  setInterval(() => { pollOmegaBioFrostbite(false); }, 30000);
+  setInterval(() => {
+    if (state.paused) return;
+    // Only re-poll if offline/unpopulated or in live hardware feral mode (don't overwrite feral mode or burn CPU re-running static seed!)
+    if (!state.engines.t2_omega || !state.omega || state.omegaFeral) {
+      pollOmegaBioFrostbite(state.omegaFeral);
+    }
+  }, 30000);
 }
 
 /* ============================================================================
@@ -1624,22 +1783,68 @@ function rewriteProxyContent(kind, urlPath, text) {
     }
     if (cleanPath.startsWith("/app.js")) return text.replaceAll("'/api/", "'/proxy/micro/api/").replaceAll('"/api/', '"/proxy/micro/api/');
   }
+  if (kind === "omega") {
+    if (cleanPath === "/" || cleanPath === "/index.html") {
+      return text
+        .replaceAll('href="styles.css"', 'href="/proxy/omega/styles.css"')
+        .replaceAll('src="app.js"', 'src="/proxy/omega/app.js"');
+    }
+    if (cleanPath.startsWith("/app.js")) {
+      return text.replaceAll("`/api/", "`/proxy/omega/api/").replaceAll("'/api/", "'/proxy/omega/api/").replaceAll('"/api/', '"/proxy/omega/api/');
+    }
+  }
   return text;
 }
 
+const MAX_PROXY_REQ_BYTES = 2 * 1024 * 1024;
+const MAX_PROXY_RES_BYTES = 16 * 1024 * 1024;
+
+function sanitizeProxyHeaders(rawHeaders) {
+  const out = { ...rawHeaders };
+  for (const k of Object.keys(out)) {
+    const lk = k.toLowerCase();
+    if (lk === "x-frame-options") {
+      out[k] = "SAMEORIGIN";
+    } else if (lk === "content-security-policy" && typeof out[k] === "string") {
+      out[k] = out[k].replace(/frame-ancestors\s+'none'/gi, "frame-ancestors 'self'");
+    }
+  }
+  return out;
+}
+
 function proxyHttp(kind, targetPort, subPath, req, res) {
+  if (req.method !== "GET" && req.method !== "HEAD" && !isSafeLoopbackRequest(req, false)) {
+    res.writeHead(403, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Forbidden cross-origin proxy mutation" }));
+    return;
+  }
   const cleanSub = subPath.split("?")[0];
   const isSse = (kind === "micro" && cleanSub.startsWith("/api/events")) || (kind === "macro" && cleanSub.startsWith("/stream/"));
   const needsRewrite =
     (kind === "macro" && (cleanSub === "/" || cleanSub === "/viewer.html" || cleanSub.startsWith("/viewer_gl.js") || cleanSub.startsWith("/viewer_decode.js"))) ||
     (kind === "meso"  && (cleanSub === "/" || cleanSub === "/index.html" || cleanSub.startsWith("/app.js"))) ||
-    (kind === "micro" && (cleanSub === "/" || cleanSub === "/index.html" || cleanSub.startsWith("/app.js")));
+    (kind === "micro" && (cleanSub === "/" || cleanSub === "/index.html" || cleanSub.startsWith("/app.js"))) ||
+    (kind === "omega" && (cleanSub === "/" || cleanSub === "/index.html" || cleanSub.startsWith("/app.js")));
   const sniffInspect = kind === "macro" && cleanSub === "/api/inspect" && req.method === "POST";
-  const sniffCells = kind === "meso" && (cleanSub.startsWith("/api/step") || cleanSub.startsWith("/api/init") || cleanSub.startsWith("/api/action"));
+  const sniffCells = kind === "meso" && (cleanSub.startsWith("/api/step") || cleanSub.startsWith("/api/init") || cleanSub.startsWith("/api/action") || cleanSub.startsWith("/api/cmd"));
 
   const chunks = [];
-  req.on("data", (c) => chunks.push(c));
+  let reqBytes = 0;
+  let aborted = false;
+  req.on("data", (c) => {
+    if (aborted) return;
+    reqBytes += c.length;
+    if (reqBytes > MAX_PROXY_REQ_BYTES) {
+      aborted = true;
+      res.writeHead(413, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Proxy request body too large" }));
+      req.destroy();
+      return;
+    }
+    chunks.push(c);
+  });
   req.on("end", () => {
+    if (aborted) return;
     const reqBody = chunks.length ? Buffer.concat(chunks) : null;
     const headers = { Host: `127.0.0.1:${targetPort}`, Origin: `http://127.0.0.1:${targetPort}` };
     if (req.headers["content-type"]) headers["Content-Type"] = req.headers["content-type"];
@@ -1647,6 +1852,8 @@ function proxyHttp(kind, targetPort, subPath, req, res) {
     else if (req.method === "POST") headers["Content-Length"] = "0";
 
     const up = http.request({ host: "127.0.0.1", port: targetPort, method: req.method, path: subPath, headers }, (upRes) => {
+      upRes.on("error", () => { try { res.destroy(); } catch {} });
+      res.on("error", () => { try { up.destroy(); } catch {} });
       if (isSse) {
         const outH = { ...upRes.headers, "cache-control": "no-cache" }; delete outH["content-length"];
         res.writeHead(upRes.statusCode || 200, outH);
@@ -1656,25 +1863,39 @@ function proxyHttp(kind, targetPort, subPath, req, res) {
       }
       if (needsRewrite || sniffInspect || sniffCells) {
         const resChunks = [];
-        upRes.on("data", (c) => resChunks.push(c));
+        let resBytes = 0;
+        let resOverflow = false;
+        upRes.on("data", (c) => {
+          if (resOverflow) return;
+          resBytes += c.length;
+          if (resBytes > MAX_PROXY_RES_BYTES) {
+            resOverflow = true;
+            up.destroy();
+            if (!res.headersSent) { res.writeHead(502, { "Content-Type": "application/json" }); res.end(JSON.stringify({ error: "Upstream response exceeded cap" })); }
+            return;
+          }
+          resChunks.push(c);
+        });
         upRes.on("end", () => {
+          if (resOverflow) return;
           let buf = Buffer.concat(resChunks);
           if (needsRewrite && (upRes.statusCode || 0) === 200) buf = Buffer.from(rewriteProxyContent(kind, subPath, buf.toString("utf8")), "utf8");
-          if (sniffInspect && (upRes.statusCode || 0) === 200) { try { onCreatureInspect(JSON.parse(buf.toString("utf8")), "3D-dome-click", true); } catch {} }
+          if (sniffInspect && (upRes.statusCode || 0) === 200) { try { Promise.resolve(onCreatureInspect(JSON.parse(buf.toString("utf8")), "3D-dome-click", true)).catch(() => {}); } catch {} }
           if (sniffCells && (upRes.statusCode || 0) === 200) {
             try {
               const data = JSON.parse(buf.toString("utf8"));
               if (data.telemetry) { state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge; state.cells.updatedAt = Date.now(); state.engines.t2_cells = true; computeDifferentials(); broadcastState(); }
             } catch {}
           }
-          const outH = { ...upRes.headers, "content-length": String(buf.length), "cache-control": "no-store" }; delete outH["transfer-encoding"];
+          const outH = { ...sanitizeProxyHeaders(upRes.headers), "content-length": String(buf.length), "cache-control": "no-store" }; delete outH["transfer-encoding"];
           res.writeHead(upRes.statusCode || 200, outH);
           res.end(buf);
         });
         return;
       }
-      res.writeHead(upRes.statusCode || 200, { ...upRes.headers });
+      res.writeHead(upRes.statusCode || 200, sanitizeProxyHeaders(upRes.headers));
       upRes.pipe(res);
+      req.on("close", () => { if (!res.writableEnded) { try { up.destroy(); } catch {} } });
     });
     up.on("error", (err) => {
       if (!res.headersSent) { res.writeHead(502, { "Content-Type": "application/json" }); res.end(JSON.stringify({ error: `Upstream ${kind} (${targetPort}) unavailable: ${err.message}` })); }
@@ -1734,10 +1955,41 @@ const server = http.createServer(async (req, res) => {
   if (p.startsWith("/proxy/meso/"))  return proxyHttp("meso",  MESO_PORT,  "/" + p.slice("/proxy/meso/".length)  + u.search, req, res);
   if (p.startsWith("/proxy/micro/")) return proxyHttp("micro", MICRO_PORT, "/" + p.slice("/proxy/micro/".length) + u.search, req, res);
 
-  if (p === "/zeta-omega" || p === "/zeta-omega/") {
-    fs.readFile(PATHS.zetaHtml, (err, data) => {
-      if (err) { res.writeHead(404); res.end("Zeta-Omega dashboard not found"); return; }
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" }); res.end(data);
+  if (p === "/zeta-omega") { res.writeHead(302, { Location: "/zeta-omega/" }); res.end(); return; }
+  if (p.startsWith("/zeta-omega/")) {
+    let subRel;
+    try { subRel = decodeURIComponent(p.slice("/zeta-omega/".length)); } catch { res.writeHead(400); res.end("Bad path"); return; }
+    let targetPath;
+    if (!subRel || subRel === "index.html") {
+      targetPath = PATHS.zetaHtml;
+    } else if (/^[A-Za-z0-9_.-]+\.html$/i.test(subRel)) {
+      targetPath = path.resolve(ZETA_PKG_ROOT, "html", subRel);
+    } else if (/^(html|pdf|specs|excel|csv|reports|results)\//i.test(subRel)) {
+      targetPath = path.resolve(ZETA_PKG_ROOT, subRel);
+    } else {
+      res.writeHead(404); res.end("Not found"); return;
+    }
+    const pkgPrefix = ZETA_PKG_ROOT + path.sep;
+    if (!targetPath.startsWith(pkgPrefix)) { res.writeHead(403); res.end("Forbidden"); return; }
+    fs.readFile(targetPath, (err, data) => {
+      if (err) { res.writeHead(404); res.end("Zeta-Omega asset not found"); return; }
+      const ext = path.extname(targetPath).toLowerCase();
+      res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
+      res.end(data);
+    });
+    return;
+  }
+  // Also resolve root-relative sibling links (../pdf/..., ../specs/..., ../excel/..., ../reports/..., ../csv/..., ../results/...) opened from /zeta-omega/
+  if (/^\/(pdf|specs|excel|csv|reports|results)\//i.test(p)) {
+    let subRel;
+    try { subRel = decodeURIComponent(p.slice(1)); } catch { res.writeHead(400); res.end("Bad path"); return; }
+    const targetPath = path.resolve(ZETA_PKG_ROOT, subRel);
+    if (!targetPath.startsWith(ZETA_PKG_ROOT + path.sep)) { res.writeHead(403); res.end("Forbidden"); return; }
+    fs.readFile(targetPath, (err, data) => {
+      if (err) { res.writeHead(404); res.end("Asset not found"); return; }
+      const ext = path.extname(targetPath).toLowerCase();
+      res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
+      res.end(data);
     });
     return;
   }
@@ -1761,13 +2013,21 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "GET" && (p === "/api/stack/events" || p === "/api/triscale/events")) {
+    if (!isLoopbackHost(req.headers.host)) { res.writeHead(403); res.end("Forbidden"); return; }
+    if (sseClients.size >= 32) { res.writeHead(429); res.end("Too many SSE clients"); return; }
     res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" });
-    sseClients.add(res); broadcastState();
+    sseClients.add(res);
+    try { res.write(buildStatePayload()); } catch { sseClients.delete(res); }
     req.on("close", () => sseClients.delete(res));
     return;
   }
 
   if (req.method === "POST" && (p === "/api/stack/action" || p === "/api/triscale/action")) {
+    if (!isSafeLoopbackRequest(req, true)) {
+      res.writeHead(403, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Forbidden: requires loopback Origin/Host & application/json" }));
+      return;
+    }
     try {
       const body = await readJsonBody(req);
       const op = body.op;
@@ -1789,14 +2049,14 @@ const server = http.createServer(async (req, res) => {
       if (op === "ignite_genesis") {
         await spawnWildCosmos(body.genesis || body);
         if (body.syncLowerTiers) {
-          const reg = Math.max(0, Math.min(5, Number(body.cellRegime ?? state.coupling.activeRegime)));
-          const sol = Math.max(0, Math.min(3, Number(body.cellSolvent ?? state.coupling.activeSolvent)));
-          const seedVal = body.genesis?.lab ? (Number(body.genesis?.seed) || 42) : 0;
+          const reg = clampInt(body.cellRegime, 0, 5, state.coupling.activeRegime);
+          const sol = clampInt(body.cellSolvent, 0, 3, state.coupling.activeSolvent);
+          const seedVal = body.genesis?.lab ? clampInt(body.genesis?.seed, 0, 2147483647, 42) : 0;
           const meanR = Math.round(state.coupling.restraints.reduce((a, b) => a + b, 0) / 13);
           state.coupling.activeRegime = reg; state.coupling.activeSolvent = sol;
           await Promise.allSettled([
             httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "reset", regime: 1, seed: seedVal }),
-            httpRequest(MESO_PORT, "GET", `/api/init?regime=${reg}&solvent=${sol}&seed=${seedVal}&restraint=${meanR}&warmup=42`)
+            httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "init", regime: reg, solvent: sol, seed: seedVal, restraint: meanR, warmup: 42 })
           ]);
           pushCausalEvent("ALL 4 TIERS", "SYNC GENESIS", `Synchronized T1 DNA + T2 Cells (R${reg}, ${SOLVENT_NAMES[sol]}) with custom T3/T4 Cosmos`);
         }
@@ -1807,8 +2067,8 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (op === "live_macro_rates") {
-        const tps = Math.max(0, Math.min(1000, Math.round(Number(body.tps ?? currentGenesis.tps))));
-        const sps = Math.max(1, Math.min(60, Math.round(Number(body.sps ?? currentGenesis.sps))));
+        const tps = clampInt(body.tps, 0, 1000, currentGenesis.tps);
+        const sps = clampInt(body.sps, 1, 60, currentGenesis.sps);
         currentGenesis.tps = tps; currentGenesis.sps = sps;
         await Promise.allSettled([
           httpRequest(MACRO_PORT, "POST", "/api/cmd", { cmd: `tps ${tps}` }),
@@ -1826,7 +2086,7 @@ const server = http.createServer(async (req, res) => {
         await Promise.allSettled([
           httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "inoculate", arch: -1 }),
           transfectDnaToCells("sync-morph"),
-          triggerCellsAction("plume", { x: Math.floor(Math.random() * 32), y: Math.floor(Math.random() * 32) }, "T2 CELLS", "Morphogenesis nutrient pulse")
+          triggerCellsAction("plume", { x: Math.floor(nextHubRand() * 32), y: Math.floor(nextHubRand() * 32) }, "T2 CELLS", "Morphogenesis nutrient pulse")
         ]);
         if (state.creatures.roster.length > 1) {
           const curIdx = state.creatures.roster.findIndex((c) => c.uid === state.creatures.lockedUid);
@@ -1848,7 +2108,7 @@ const server = http.createServer(async (req, res) => {
         state.coupling.waveMode = "feral";
         await Promise.allSettled([
           httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: "reset", regime: 1, seed: 0 }),
-          httpRequest(MESO_PORT, "GET", `/api/init?regime=3&solvent=${state.coupling.activeSolvent}&seed=0&restraint=${meanR}&warmup=48`),
+          httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "init", regime: 3, solvent: state.coupling.activeSolvent, seed: 0, restraint: meanR, warmup: 48 }),
           pollOmegaBioFrostbite(true)
         ]);
         await spawnWildCosmos(body.preset || "hyperchaos");
@@ -1880,23 +2140,23 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (op === "cells_regime") {
-        const reg = Math.max(0, Math.min(5, Number(body.regime ?? 5)));
-        const sol = Math.max(0, Math.min(3, Number(body.solvent ?? state.coupling.activeSolvent)));
+        const reg = clampInt(body.regime, 0, 5, 5);
+        const sol = clampInt(body.solvent, 0, 3, state.coupling.activeSolvent);
         const seed = body.feral ? 0 : (state.creatures.lockedUid ? uidToSeed32(state.creatures.lockedUid) : 5000);
         const meanR = Math.round(state.coupling.restraints.reduce((a, b) => a + b, 0) / 13);
         state.coupling.activeRegime = reg; state.coupling.activeSolvent = sol;
-        const r = await httpRequest(MESO_PORT, "GET", `/api/init?regime=${reg}&solvent=${sol}&seed=${seed}&restraint=${meanR}&warmup=${reg === 5 ? 36 : 64}`);
+        const r = await httpRequest(MESO_PORT, "POST", "/api/cmd", { op: "init", regime: reg, solvent: sol, seed, restraint: meanR, warmup: reg === 5 ? 36 : 64 });
         if (r.status === 200) {
           const data = JSON.parse(r.body.toString("utf8"));
           if (data.telemetry) { state.cells.telemetry = data.telemetry; state.cells.bridge = data.bridge; state.cells.updatedAt = Date.now(); }
         }
-        pushCausalEvent("T2 CELLS v1.2", `REGIME ${reg}`, `Switched Cellulogonic Mecha to Regime ${reg} (${SOLVENT_NAMES[sol]})`);
+        pushCausalEvent("T2 CELLS v1.3", `REGIME ${reg}`, `Switched Cellulogonic Mecha to Regime ${reg} (${SOLVENT_NAMES[sol]})`);
         computeDifferentials(); broadcastState();
         res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true })); return;
       }
 
-      if (op === "env_solvent") { await syncEnvSolventToCells(Number(body.val ?? 0), "operator-override"); res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true })); return; }
-      if (op === "set_slice_z") { const maxZ = (rawCache.dims ? rawCache.dims[2] - 1 : 31); state.env.sliceZ = Math.max(0, Math.min(maxZ, Number(body.z) || 0)); broadcastState(); res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true })); return; }
+      if (op === "env_solvent") { await syncEnvSolventToCells(clampInt(body.val, 0, 3, 0), "operator-override"); res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true })); return; }
+      if (op === "set_slice_z") { const maxZ = (rawCache.dims ? rawCache.dims[2] - 1 : 31); state.env.sliceZ = clampInt(body.z, 0, maxZ, 0); broadcastState(); res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true })); return; }
       if (op === "restraints") { state.coupling.waveMode = body.mode || "manual"; if (Array.isArray(body.values)) await applyUnifiedRestraints(body.values, body.label || state.coupling.waveMode); res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true })); return; }
 
       if (op === "wave_mode") {
@@ -1916,8 +2176,8 @@ const server = http.createServer(async (req, res) => {
       if (op === "meso_pulse") {
         const subOp = body.action || "plume";
         const hasCoords = body.params && Number.isFinite(Number(body.params.x)) && Number.isFinite(Number(body.params.y));
-        const px = hasCoords ? Math.max(0, Math.min(31, Math.round(Number(body.params.x)))) : Math.floor(Math.random() * 32);
-        const py = hasCoords ? Math.max(0, Math.min(31, Math.round(Number(body.params.y)))) : Math.floor(Math.random() * 32);
+        const px = hasCoords ? clampInt(body.params.x, 0, 31, 16) : Math.floor(nextHubRand() * 32);
+        const py = hasCoords ? clampInt(body.params.y, 0, 31, 16) : Math.floor(nextHubRand() * 32);
         const params = subOp === "plume" ? { x: px, y: py } : (body.params || {});
         if (subOp === "plume") state.coupling.creaturePlumes++;
         const out = await triggerCellsAction(subOp, params, hasCoords ? "T4 ENV ➔ T2 CELLS" : "T3 ➔ T2 CELLS",
@@ -1936,13 +2196,14 @@ const server = http.createServer(async (req, res) => {
 
       if (op === "sync_pause") {
         const pause = Boolean(body.pause);
+        state.paused = pause;
         await Promise.allSettled([
           httpRequest(MACRO_PORT, "POST", "/api/cmd", { cmd: pause ? "pause" : "run" }),
           httpRequest(MICRO_PORT, "POST", "/api/cmd", { action: pause ? "pause" : "play" })
         ]);
-        pushCausalEvent("ALL 4 TIERS", pause ? "PAUSE" : "RESUME", pause ? "Paused engines" : "Resumed live execution");
+        pushCausalEvent("ALL 4 TIERS", pause ? "PAUSE" : "RESUME", pause ? "Paused all 4 tiers + T2/Wave/Omega pollers" : "Resumed live execution across all 4 tiers");
         broadcastState();
-        res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true })); return;
+        res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ ok: true, paused: state.paused })); return;
       }
 
       res.writeHead(400, { "Content-Type": "application/json" }); res.end(JSON.stringify({ error: "unknown op" }));
@@ -1965,12 +2226,17 @@ const server = http.createServer(async (req, res) => {
   }
   fs.readFile(fp, (err, data) => {
     if (err) { res.writeHead(404); res.end("Not found"); return; }
-    res.writeHead(200, { "Content-Type": MIME[path.extname(fp)] || "application/octet-stream", "Cache-Control": "no-store" });
+    res.writeHead(200, { "Content-Type": MIME[path.extname(fp)] || "application/octet-stream", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
     res.end(data);
   });
 });
 
 server.on("upgrade", (req, clientSock, head) => {
+  if (!isLoopbackHost(req.headers.host) || !isLoopbackOrigin(req.headers.origin)) {
+    try { clientSock.write("HTTP/1.1 403 Forbidden\r\n\r\n"); } catch {}
+    clientSock.destroy();
+    return;
+  }
   let u;
   try { u = new URL(req.url || "/", `http://127.0.0.1:${HUB_PORT}`); } catch { clientSock.destroy(); return; }
   if (u.pathname !== "/proxy/macro/ws") { clientSock.destroy(); return; }
@@ -1987,10 +2253,15 @@ server.on("upgrade", (req, clientSock, head) => {
 });
 
 async function shutdown() {
+  for (const r of sseClients) { try { r.end(); } catch {} }
+  sseClients.clear();
   if (macroChild) {
-    try { await httpRequest(MACRO_PORT, "POST", "/api/shutdown", {}, {}, 1000); } catch {}
+    const mc = macroChild;
+    macroChild = null;
+    await stopChildGracefully(mc, MACRO_PORT, 3500);
   }
-  for (const ch of children) { try { ch.kill(); } catch {} }
+  const rest = children.slice();
+  await Promise.allSettled(rest.map((ch) => stopChildGracefully(ch, null, 1500)));
   process.exit(0);
 }
 process.on("SIGINT", shutdown);
@@ -2004,12 +2275,12 @@ startOmegaPoller();
 
 server.listen(HUB_PORT, "127.0.0.1", () => {
   console.log(`\n================================================================================`);
-  console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v6.2 (128B DNA->CELLS · 13-VEC PARITY · 150 LEAN 4)`);
-  console.log(`    #6 ZETA-OMEGA 13-VEC ATLAS : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
+  console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v6.3 (128B DNA->CELLS · 13-VEC · 162 PURE LEAN 4)`);
+  console.log(`    #6 ZETA-OMEGA v3.2 ATLAS   : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
   console.log(`    #5 UNIFIED "SEE ALL" HUB   : http://127.0.0.1:${HUB_PORT}/`);
   console.log(`    #4 T3+T4 WILD COSMOS       : http://127.0.0.1:${MACRO_PORT}/ (${currentCosmosPreset})`);
-  console.log(`    #3 OMEGA v4.2 FRONTIER VM  : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 61 Lean 4)`);
-  console.log(`    #2 T2 CELLS v1.2.1         : http://127.0.0.1:${MESO_PORT}/ (58 Lean 4)`);
-  console.log(`    #1 T1 DNA AUTOPHAGE v1.1   : http://127.0.0.1:${MICRO_PORT}/ (31 Lean 4)`);
+  console.log(`    #3 OMEGA v5.0 FRONTIER VM  : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 66 Pure Lean 4)`);
+  console.log(`    #2 T2 CELLS v1.3           : http://127.0.0.1:${MESO_PORT}/ (58 Pure Lean 4)`);
+  console.log(`    #1 T1 DNA AUTOPHAGE v1.2   : http://127.0.0.1:${MICRO_PORT}/ (38 Pure Lean 4)`);
   console.log(`================================================================================\n`);
 });

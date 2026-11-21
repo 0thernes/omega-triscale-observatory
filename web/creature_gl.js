@@ -537,6 +537,7 @@ export class CreatureGLStudio {
     this.organPointCount = 0;
     this.organLineCount = 0;
     this.lastOrganKey = "";
+    this._lastOrganTick = -1;
 
     this._bindPointer();
     if (this.gl) {
@@ -850,8 +851,14 @@ export class CreatureGLStudio {
       gl.bindVertexArray(this.sphereVao);
       gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
 
-      // PASS 2: Real 3D Internal Organs + Brain Neural Nodes + Firing Axonal Filaments
-      this._rebuildOrgans(st, nowSec);
+      // PASS 2: Real 3D Internal Organs + Brain Neural Nodes + Firing Axonal Filaments (cached ~12 Hz, zero 60 FPS GC churn)
+      const organTick = Math.floor(nowSec * 12);
+      const organKey = `${st?.creatures?.locked?.uid || ""}:${st?.creatures?.locked?.parts || 0}:${st?.creatures?.locked?.neurons || 0}:${st?.cells?.telemetry?.active_axons || 0}:${Math.round(this._lerpElong * 20)}`;
+      if (organKey !== this.lastOrganKey || organTick !== this._lastOrganTick) {
+        this._rebuildOrgans(st, nowSec);
+        this.lastOrganKey = organKey;
+        this._lastOrganTick = organTick;
+      }
       gl.disable(gl.CULL_FACE);
       gl.useProgram(this.organProg);
       gl.uniformMatrix4fv(this.uo.uViewProj, false, vp);
