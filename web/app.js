@@ -1061,7 +1061,21 @@ function applyStackState(st) {
     ["P0–3", (env.solventDist || [0,0,0,0]).join("/")]
   ].map(([k, v]) => `<div class="ek"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join("");
 
-  // Omega v4.3 Frontier Telemetry Pill (:8791 — TB14 Bio-Frostbite + TB15 Deep Strata + TB16 Virtual-Cell AI)
+  // Noetic Organism Omega v1.0 Cognitive Pill (:8792 — M5–M10 · 14/14 Butlin · 10/10 Theories · 25/25 CQM · PCI*)
+  const noeticPill = $("pillNoetic");
+  if (noeticPill) {
+    const no = st.noetic;
+    if (no && no.summary) {
+      const ok = no.energy_residual_uq === 0 && no.second_law_violations === 0 && no.pci_clean;
+      noeticPill.className = ok ? "inet-pill ok" : "inet-pill";
+      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic B${esc(no.summary.butlin14_passed)}/14 · T${esc(no.summary.theories10_passed)}/10 · CQM${esc(no.summary.cqm25_passed)}/25 · PCI ${esc(Number(no.pci_star).toFixed(2))}</span>`;
+    } else if (st.engines?.t3_noetic) {
+      noeticPill.className = "inet-pill ok";
+      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic v1.0 · :8792 LIVE</span>`;
+    }
+  }
+
+  // Omega v5.0 Frontier Telemetry Pill (:8791 — TB14 Bio-Frostbite + TB15 Deep Strata + TB16 Virtual-Cell AI)
   const inetPill = $("pillBioInet");
   if (inetPill) {
     const t14 = st.omega?.tb14;

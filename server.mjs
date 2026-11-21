@@ -11,11 +11,12 @@ const RUNTIME_DIR = path.join(__dirname, "runtime");
 const MACRO_DATA_DIR = path.join(RUNTIME_DIR, "macro-wild-data");
 fs.mkdirSync(MACRO_DATA_DIR, { recursive: true });
 
-const HUB_PORT   = Number(process.env.TRISCALE_PORT || 8790);
-const MACRO_PORT = 8794; // Dedicated fresh Wild Biodiversity Asmodensius-Native relay!
-const OMEGA_PORT = 8791; // Tier 2+ (Cellular Engine Omega v5.0 · 16 Testbeds · 66 Pure Lean 4)
-const MESO_PORT  = 8788; // Tier 2 (Cells v1.3 Embryogenesis + GRN · 58 Pure Lean 4)
-const MICRO_PORT = 8787; // Tier 1 (DNA AUTOPHAGE v1.2 + Zeta-Omega 13-Vec · 38 Pure Lean 4)
+const HUB_PORT    = Number(process.env.TRISCALE_PORT || 8790);
+const MACRO_PORT  = 8794; // Dedicated fresh Wild Biodiversity Asmodensius-Native relay (read-only)!
+const NOETIC_PORT = 8792; // Tier 3/4 (Noetic Organism Omega v1.0 · M5–M10 · 14/10/25 · 24 Pure Lean 4)
+const OMEGA_PORT  = 8791; // Tier 2+ (Cellular Engine Omega v5.0 · 16 Testbeds · 66 Pure Lean 4)
+const MESO_PORT   = 8788; // Tier 2 (Cells v1.3 Embryogenesis + GRN · 58 Pure Lean 4)
+const MICRO_PORT  = 8787; // Tier 1 (DNA AUTOPHAGE v1.2 + Zeta-Omega 13-Vec · 38 Pure Lean 4)
 
 const PYTHON_BIN = [
   "C:\\Users\\Alexa\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
@@ -28,12 +29,13 @@ const ANTIGRAVITY_ROOT = path.resolve(__dirname, "..");
 const ZETA_PKG_ROOT = path.join(ANTIGRAVITY_ROOT, "alife-singularity-omega-package");
 
 const PATHS = {
-  macroRelay:  path.join(__dirname, "macro_wild_relay.py"),
-  macroEngine: "Z:\\[Vibe Coded (AI)]\\CLAUDECODE\\Asmodensius-Native\\build\\z\\az_live.exe",
-  omegaServer: path.join(ANTIGRAVITY_ROOT, "cellular-engine-omega", "web", "server.mjs"),
-  mesoServer:  path.join(ANTIGRAVITY_ROOT, "cellulogonic-mecha", "web", "server.mjs"),
-  microServer: path.join(ANTIGRAVITY_ROOT, "autophage", "web", "server.mjs"),
-  zetaHtml:    path.join(ZETA_PKG_ROOT, "html", "ALife_Singularity_SuperLife_Omega_Dashboard.html")
+  macroRelay:   path.join(__dirname, "macro_wild_relay.py"),
+  macroEngine:  "Z:\\[Vibe Coded (AI)]\\CLAUDECODE\\Asmodensius-Native\\build\\z\\az_live.exe",
+  noeticServer: path.join(ANTIGRAVITY_ROOT, "noetic-organism-omega", "web", "server.mjs"),
+  omegaServer:  path.join(ANTIGRAVITY_ROOT, "cellular-engine-omega", "web", "server.mjs"),
+  mesoServer:   path.join(ANTIGRAVITY_ROOT, "cellulogonic-mecha", "web", "server.mjs"),
+  microServer:  path.join(ANTIGRAVITY_ROOT, "autophage", "web", "server.mjs"),
+  zetaHtml:     path.join(ZETA_PKG_ROOT, "html", "ALife_Singularity_SuperLife_Omega_Dashboard.html")
 };
 
 const SOLVENT_NAMES = [
@@ -310,6 +312,9 @@ async function ensureAllEngines() {
   if (!(await checkPortOpen(MACRO_PORT)) && fs.existsSync(PATHS.macroRelay) && fs.existsSync(PATHS.macroEngine)) {
     macroChild = spawnEngine("T3+T4:Wild-cambrian", PYTHON_BIN, buildRelayArgs(currentGenesis));
   }
+  if (!(await checkPortOpen(NOETIC_PORT)) && fs.existsSync(PATHS.noeticServer)) {
+    spawnEngine("T3:NoeticMind", process.execPath, [PATHS.noeticServer], { PORT: String(NOETIC_PORT) });
+  }
   if (!(await checkPortOpen(OMEGA_PORT)) && fs.existsSync(PATHS.omegaServer)) {
     spawnEngine("T2+:OmegaBioFrostbite", process.execPath, [PATHS.omegaServer], { PORT: String(OMEGA_PORT) });
   }
@@ -320,10 +325,11 @@ async function ensureAllEngines() {
     spawnEngine("T1:Autophage", process.execPath, [PATHS.microServer], { AUTOPHAGE_PORT: String(MICRO_PORT) });
   }
   await Promise.all([
-    waitForPort(MACRO_PORT, "T3+T4 Wild Cambrian Cosmos", 25000),
-    waitForPort(OMEGA_PORT, "T2+ Cellular Engine Omega v5.0 (TB01-TB16 · 66 Pure Lean 4)", 12000),
-    waitForPort(MESO_PORT,  "T2 Cellulogonic Mecha v1.3 (58 Pure Lean 4)", 12000),
-    waitForPort(MICRO_PORT, "T1 AUTOPHAGE v1.2 / Zeta-Omega (38 Pure Lean 4)", 12000)
+    waitForPort(MACRO_PORT,  "T3+T4 Wild Cambrian Cosmos", 25000),
+    waitForPort(NOETIC_PORT, "T3/4 Noetic Organism Omega v1.0 (M5-M10 · 14/10/25 · 24 Pure Lean 4)", 12000),
+    waitForPort(OMEGA_PORT,  "T2+ Cellular Engine Omega v5.0 (TB01-TB16 · 66 Pure Lean 4)", 12000),
+    waitForPort(MESO_PORT,   "T2 Cellulogonic Mecha v1.3 (58 Pure Lean 4)", 12000),
+    waitForPort(MICRO_PORT,  "T1 AUTOPHAGE v1.2 / Zeta-Omega (38 Pure Lean 4)", 12000)
   ]);
 }
 
@@ -363,11 +369,12 @@ const rawCache = {
  * 4. Omniscient 4-Tier Stack State (T1 DNA · T2 CELLS · T3 CREATURES · T4 ENV)
  * ============================================================================ */
 const state = {
-  engines: { t1_dna: false, t2_cells: false, t2_omega: false, t3_creatures: false, t4_env: false },
+  engines: { t1_dna: false, t2_cells: false, t2_omega: false, t3_noetic: false, t3_creatures: false, t4_env: false },
   paused: false,
   omegaFeral: false,
   cosmosPreset: "cambrian",
   omega: null,
+  noetic: null,
   coupling: {
     autoCouple: true,
     envToCellsSolvent: true,
@@ -515,6 +522,7 @@ function buildStatePayload() {
       updatedAt: state.dna.updatedAt
     } : null,
     omega: state.omega,
+    noetic: state.noetic,
     differential: state.differential,
     events: state.events.slice(0, 24)
   })}\n\n`;
@@ -811,7 +819,8 @@ async function transfectDnaToCells(reason = "manual") {
       state.coupling.lastTransfectAt = Date.now();
       state.coupling.lastTransfectSig = a ? `0x${a.ribo_hex.slice(0, 8)}·GF(0x1${a.poly.toString(16)})` : "dna128";
       if (hex128) {
-        pushCausalEvent("T1 DNA ➔ T2 CELLS", "DNA-128B", `REAL 128B evolved genome (${hex128.slice(0, 12)}… · ${state.coupling.lastTransfectSig}) → T2 cells (${reason}) · ${data.bridge?.autophage_carriers ?? "?"} carriers`);
+        httpRequest(NOETIC_PORT, "POST", "/api/cmd", { op: "dna", hex: hex128 }).catch(() => {});
+        pushCausalEvent("T1 DNA ➔ T2+T3", "DNA-128B", `REAL 128B evolved genome (${hex128.slice(0, 12)}… · ${state.coupling.lastTransfectSig}) → T2 cells & T3 Noetic Mind (${reason}) · ${data.bridge?.autophage_carriers ?? "?"} carriers`);
       } else {
         pushCausalEvent("T1 DNA ➔ T2 CELLS", "SEED-HASH", `Seed fallback (${state.coupling.lastTransfectSig}, ${reason}) · ${data.bridge?.autophage_carriers ?? "?"} carriers`);
       }
@@ -1449,6 +1458,47 @@ function startOmegaPoller() {
   }, 30000);
 }
 
+let noeticInFlight = false;
+async function pollNoeticMind() {
+  if (noeticInFlight) return;
+  noeticInFlight = true;
+  try {
+    const [rSt, rE2] = await Promise.all([
+      httpRequest(NOETIC_PORT, "GET", "/api/state", null, {}, 5000),
+      state.noetic?.summary ? Promise.resolve(null) : httpRequest(NOETIC_PORT, "GET", "/api/e2", null, {}, 5000)
+    ]);
+    if (rSt.status === 200) {
+      const st = JSON.parse(rSt.body.toString("utf8"));
+      let summary = state.noetic?.summary || null;
+      if (rE2 && rE2.status === 200) {
+        const e2 = JSON.parse(rE2.body.toString("utf8"));
+        summary = e2.summary || null;
+      }
+      state.engines.t3_noetic = true;
+      state.noetic = {
+        version: st.version,
+        tick: st.tick,
+        pci_star: st.pci_star,
+        pci_clean: Boolean(st.pci_clean),
+        energy_residual_uq: st.energy_residual_uq,
+        second_law_violations: st.second_law_violations,
+        summary,
+        updatedAt: Date.now()
+      };
+      broadcastState();
+    }
+  } catch {
+    state.engines.t3_noetic = false;
+  } finally {
+    noeticInFlight = false;
+  }
+}
+
+function startNoeticPoller() {
+  pollNoeticMind();
+  setInterval(() => { if (!state.paused) pollNoeticMind(); }, 4000);
+}
+
 /* ============================================================================
  * 10. Reverse Proxy (Unified Dark Scientific Embed CSS)
  * ============================================================================ */
@@ -1946,14 +1996,16 @@ const server = http.createServer(async (req, res) => {
   }
   const p = u.pathname;
 
-  if (p === "/proxy/macro") { res.writeHead(302, { Location: "/proxy/macro/" }); res.end(); return; }
-  if (p === "/proxy/omega") { res.writeHead(302, { Location: "/proxy/omega/" }); res.end(); return; }
-  if (p === "/proxy/meso")  { res.writeHead(302, { Location: "/proxy/meso/" });  res.end(); return; }
-  if (p === "/proxy/micro") { res.writeHead(302, { Location: "/proxy/micro/" }); res.end(); return; }
-  if (p.startsWith("/proxy/macro/")) return proxyHttp("macro", MACRO_PORT, "/" + p.slice("/proxy/macro/".length) + u.search, req, res);
-  if (p.startsWith("/proxy/omega/")) return proxyHttp("omega", OMEGA_PORT, "/" + p.slice("/proxy/omega/".length) + u.search, req, res);
-  if (p.startsWith("/proxy/meso/"))  return proxyHttp("meso",  MESO_PORT,  "/" + p.slice("/proxy/meso/".length)  + u.search, req, res);
-  if (p.startsWith("/proxy/micro/")) return proxyHttp("micro", MICRO_PORT, "/" + p.slice("/proxy/micro/".length) + u.search, req, res);
+  if (p === "/proxy/macro")  { res.writeHead(302, { Location: "/proxy/macro/" });  res.end(); return; }
+  if (p === "/proxy/noetic") { res.writeHead(302, { Location: "/proxy/noetic/" }); res.end(); return; }
+  if (p === "/proxy/omega")  { res.writeHead(302, { Location: "/proxy/omega/" });  res.end(); return; }
+  if (p === "/proxy/meso")   { res.writeHead(302, { Location: "/proxy/meso/" });   res.end(); return; }
+  if (p === "/proxy/micro")  { res.writeHead(302, { Location: "/proxy/micro/" });  res.end(); return; }
+  if (p.startsWith("/proxy/macro/"))  return proxyHttp("macro",  MACRO_PORT,  "/" + p.slice("/proxy/macro/".length)  + u.search, req, res);
+  if (p.startsWith("/proxy/noetic/")) return proxyHttp("noetic", NOETIC_PORT, "/" + p.slice("/proxy/noetic/".length) + u.search, req, res);
+  if (p.startsWith("/proxy/omega/"))  return proxyHttp("omega",  OMEGA_PORT,  "/" + p.slice("/proxy/omega/".length)  + u.search, req, res);
+  if (p.startsWith("/proxy/meso/"))   return proxyHttp("meso",   MESO_PORT,   "/" + p.slice("/proxy/meso/".length)   + u.search, req, res);
+  if (p.startsWith("/proxy/micro/"))  return proxyHttp("micro",  MICRO_PORT,  "/" + p.slice("/proxy/micro/".length)  + u.search, req, res);
 
   if (p === "/zeta-omega") { res.writeHead(302, { Location: "/zeta-omega/" }); res.end(); return; }
   if (p.startsWith("/zeta-omega/")) {
@@ -2272,13 +2324,15 @@ startDnaSseWatcher();
 startAsmodensiusPollers();
 startCellsHeartbeatAndWaveEngine();
 startOmegaPoller();
+startNoeticPoller();
 
 server.listen(HUB_PORT, "127.0.0.1", () => {
   console.log(`\n================================================================================`);
-  console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v6.3 (128B DNA->CELLS · 13-VEC · 162 PURE LEAN 4)`);
-  console.log(`    #6 ZETA-OMEGA v3.2 ATLAS   : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
-  console.log(`    #5 UNIFIED "SEE ALL" HUB   : http://127.0.0.1:${HUB_PORT}/`);
-  console.log(`    #4 T3+T4 WILD COSMOS       : http://127.0.0.1:${MACRO_PORT}/ (${currentCosmosPreset})`);
+  console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v6.4 (6 REPOS · M5-M10 · 186 PURE LEAN 4)`);
+  console.log(`    #7 ZETA-OMEGA v3.3 ATLAS   : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
+  console.log(`    #6 UNIFIED "SEE ALL" HUB   : http://127.0.0.1:${HUB_PORT}/`);
+  console.log(`    #5 T3+T4 WILD COSMOS (RO)  : http://127.0.0.1:${MACRO_PORT}/ (${currentCosmosPreset})`);
+  console.log(`    #4 T3/4 NOETIC MIND v1.0   : http://127.0.0.1:${NOETIC_PORT}/ (M5-M10 · 14/10/25 · 24 Pure Lean 4)`);
   console.log(`    #3 OMEGA v5.0 FRONTIER VM  : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 66 Pure Lean 4)`);
   console.log(`    #2 T2 CELLS v1.3           : http://127.0.0.1:${MESO_PORT}/ (58 Pure Lean 4)`);
   console.log(`    #1 T1 DNA AUTOPHAGE v1.2   : http://127.0.0.1:${MICRO_PORT}/ (38 Pure Lean 4)`);
