@@ -12,7 +12,7 @@
     <div class="brand">
       <div class="sigil" aria-hidden="true"><span></span></div>
       <div class="brand-text">
-        <h1>OMEGA 4-TIER OBSERVATORY <span class="ver">v6.5.0 · 6 REPOS · 825/825 · 100M · 75 SUB · 1000 CUBE · 224 PURE LEAN 4</span></h1>
+        <h1>OMEGA 4-TIER OBSERVATORY <span class="ver">v6.6.0 · 7 REPOS · 825/825 · 100M · 75 SUB · 1000 CUBE · 240 PURE LEAN 4</span></h1>
       </div>
     </div>
 
@@ -38,22 +38,24 @@
       <div class="popover-wrap">
         <button id="btnLinksMenu" class="tbtn" title="Standalone engine endpoints & repositories">Links ▾</button>
         <div class="popover" id="linksPopover" hidden>
-          <div class="pop-title">All 7 Live Local Instruments (224 Pure Lean 4 · 825/825 C11 · 100M · 75 Sub · 1000 Cube)</div>
+          <div class="pop-title">All 8 Live Local Instruments (7 Repos · 240 Pure Lean 4 · Both Asmodensius Worlds)</div>
           <a href="http://127.0.0.1:8787/" target="_blank" rel="noopener"><i class="pip t1"></i>#1 · T1 AUTOPHAGE v1.3 DNA (42 Pure Lean) <span>:8787</span></a>
           <a href="http://127.0.0.1:8788/" target="_blank" rel="noopener"><i class="pip t2"></i>#2 · T2 Cellulogonic Mecha v1.4 (62 Pure Lean) <span>:8788</span></a>
           <a href="http://127.0.0.1:8791/" target="_blank" rel="noopener"><i class="pip omega"></i>#3 · Cellular Omega v5.1 (75 Sub · 1000 Cube · 72 Pure Lean) <span>:8791</span></a>
           <a href="http://127.0.0.1:8795/" target="_blank" rel="noopener"><i class="pip t3"></i>#4 · Noetic Organism Omega v2.0 (825/825 · 100M · 48 Pure Lean) <span>:8795</span></a>
-          <a href="http://127.0.0.1:8794/" target="_blank" rel="noopener"><i class="pip t4"></i>#5 · T3+T4 Wild Cambrian Cosmos (RO) <span>:8794</span></a>
-          <a href="http://127.0.0.1:8790/" target="_blank" rel="noopener"><i class="pip t3"></i>#6 · Massive "See All" 4-Tier Hub v6.5.0 <span>:8790</span></a>
-          <a href="http://127.0.0.1:8790/zeta-omega/" target="_blank" rel="noopener"><i class="pip omega"></i>#7 · Zeta-Omega v3.3 Atlas (18/18 Pkg Gates · 224 Lean 4) <span>/zeta-omega</span></a>
+          <a href="http://127.0.0.1:8794/" target="_blank" rel="noopener"><i class="pip t4"></i>#5 · T3+T4 Asmodensius World #1: WebGL2 3D Cosmos (16 Lean) <span>:8794</span></a>
+          <a href="http://127.0.0.1:8796/" target="_blank" rel="noopener"><i class="pip t4"></i>#6 · T3+T4 Asmodensius World #2: Native az_view &amp; Proof Bench <span>:8796</span></a>
+          <a href="http://127.0.0.1:8790/" target="_blank" rel="noopener"><i class="pip t3"></i>#7 · Massive "See All" 4-Tier Hub v6.6.0 <span>:8790</span></a>
+          <a href="http://127.0.0.1:8790/zeta-omega/" target="_blank" rel="noopener"><i class="pip omega"></i>#8 · Zeta-Omega v3.3 Atlas (18/18 Pkg Gates · 240 Lean 4) <span>/zeta-omega</span></a>
           <div class="pop-sep"></div>
-          <div class="pop-title">6 Unified Public Repositories (0thernes)</div>
+          <div class="pop-title">7 Unified Public Repositories (0thernes)</div>
           <a href="https://github.com/0thernes/autophage" target="_blank" rel="noopener">0thernes/autophage <span>↗</span></a>
           <a href="https://github.com/0thernes/cellulogonic-mecha" target="_blank" rel="noopener">0thernes/cellulogonic-mecha <span>↗</span></a>
           <a href="https://github.com/0thernes/cellular-engine-omega" target="_blank" rel="noopener">0thernes/cellular-engine-omega <span>↗</span></a>
           <a href="https://github.com/0thernes/noetic-organism-omega" target="_blank" rel="noopener">0thernes/noetic-organism-omega <span>↗</span></a>
           <a href="https://github.com/0thernes/omega-triscale-observatory" target="_blank" rel="noopener">0thernes/omega-triscale-observatory <span>↗</span></a>
           <a href="https://github.com/0thernes/alife-singularity-omega-package" target="_blank" rel="noopener">0thernes/alife-singularity-omega-package <span>↗</span></a>
+          <a href="https://github.com/0thernes/asmodensius-native" target="_blank" rel="noopener">0thernes/asmodensius-native <span>↗</span></a>
           <div class="pop-sep"></div>
           <div class="pop-keys">Keys: <code>1-4</code> Tier · <code>0</code> 4-Up · <code>Q</code> 2×2 · <code>R</code> Flip · <code>D</code> Deck · <code>T</code> Transfect · <code>N</code> Next</div>
         </div>
@@ -437,11 +439,13 @@
         </div>
         <div class="pane-tools">
           <i class="live-led" id="dotEnv"></i>
+          <button class="ibtn active" id="btnWorldToggle" title="Switch T4 iframe between Asmodensius World #1 (WebGL2 3D :8794) and World #2 (Native az_view Dashboard &amp; Proof Bench :8796)">W1:GL2</button>
           <button class="ibtn active" id="btnDomeZoom" title="Toggle Reef-Dive Close-Up Camera vs Wide Dome Orbit">Dive</button>
           <button class="ibtn active" id="btnDomeBioFx" title="Toggle Observer-Only Bio-FX ULTRA Multi-Shaders, 360-Raymarch & 320-Tri 3D Meshes (D7 zero-mutation)">Ultra</button>
           <button class="ibtn" id="btnToggleRadar" title="Toggle Voxel Field Inspector">Fields ▾</button>
           <button class="ibtn" data-focus="env" title="Fullscreen Tier 4 (Key 4)">⤢</button>
-          <a class="ibtn" href="http://127.0.0.1:8794/" target="_blank" rel="noopener" title="Open standalone Wild Cosmos :8794">↗</a>
+          <a class="ibtn" href="http://127.0.0.1:8794/" target="_blank" rel="noopener" title="Open Asmodensius World #1 (WebGL2 3D Cosmos :8794)">W1↗</a>
+          <a class="ibtn" href="http://127.0.0.1:8796/" target="_blank" rel="noopener" title="Open Asmodensius World #2 (Native az_view Live Dashboard &amp; Proof Bench :8796)">W2↗</a>
         </div>
       </header>
 

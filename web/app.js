@@ -253,6 +253,19 @@ $("btnEmbryo").addEventListener("click", () => postAction({ op: "cells_regime", 
 $("btnVivisect").addEventListener("click", () => postAction({ op: "micro_shock", action: "vivisect" }));
 $("selSolventQuick").addEventListener("change", (e) => postAction({ op: "env_solvent", val: Number(e.target.value) }));
 
+let macroWorldView = "gl2";
+const btnWorldToggle = $("btnWorldToggle");
+if (btnWorldToggle) {
+  btnWorldToggle.addEventListener("click", () => {
+    macroWorldView = macroWorldView === "gl2" ? "native" : "gl2";
+    btnWorldToggle.textContent = macroWorldView === "gl2" ? "W1:GL2" : "W2:az_view";
+    btnWorldToggle.classList.toggle("active", macroWorldView === "gl2");
+    $("frameMacro").src = macroWorldView === "gl2"
+      ? macroFrameUrl(`&r=${Date.now()}`)
+      : `/proxy/macro-live/?r=${Date.now()}`;
+  });
+}
+
 $("btnDomeBioFx").addEventListener("click", () => {
   domeBioFx = !domeBioFx;
   $("btnDomeBioFx").classList.toggle("active", domeBioFx);
