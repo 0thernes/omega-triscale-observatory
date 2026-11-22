@@ -1,11 +1,14 @@
-# HANDOFF.md — omega-triscale-observatory (v6.4.1) Cross-Model Snapshot (2026-11-21)
+# HANDOFF.md — omega-triscale-observatory (v6.5.0)
 
-- **Repository:** `omega-triscale-observatory` (`v6.4.1`) — Unified 7-Endpoint Observatory Hub + Reverse Proxy + DNA-128B->T2+T3 Stream
-- **Local Verified State:** Supervises :8787, :8788, :8791, :8795, :8794 (RO), :8790, :8790/zeta-omega/
-- **Unified 6-Repo Ecosystem Status (All Public on `github.com/0thernes`):**
-  - **Pure Lean 4 Theorems:** **`194 / 194`** (`38 + 58 + 66 + 32 = 194`, strictly `{propext, Classical.choice, Quot.sound}`, `0 sorry`, `0` warnings)
-  - **Clean-Slate v3.0 Release Gates:** **`13 / 13` PASS** (`GATE-01` Seed Firewall + `GATE-02,05,06,07,09-WSE12/Ring0,10,11` native C11 + `GATE-03,04,08,12,13`)
-  - **Compiled Mutants Caught:** **`35 / 35`** (`6 + 8 + 16 + 5`) + `5/5` Empirical Anti-LARP
-  - **Cognitive / CQM / WSE-12 (`noetic-organism-omega v1.1.0`):** `18/18` E1, `14/14` Butlin `[INDICATOR-ONLY]`, `10/10` Theories `[INDICATOR-ONLY]`, `25/25` CQM, `5/5` MIR, `12/12` Ring-0 WSE-12, `0 uq` drift
-  - **Master Package (`alife-singularity-omega-package v3.3.0-omega`):** **`18 / 18` Forensic Gates PASS**, Live `OVBS-52 = 92.05`, `748` FP64 Runs, `0`-mismatch `Z: <-> I:` SHA-256 parity
-- **Multi-Agent Handoff Rule:** See `AGENTS.md` (lock-free git workflow; never modify read-only `CLAUDECODE\Asmodensius-Native` while `WRITER.lock` is active).
+**Status:** Verified green on Win64 Clang (`-Wall -Wextra -Werror`) and Linux GCC (`-Wall -Wextra -Werror`), synced with all 6 connected public repositories on `main`.
+**Repo Scope:** Orchestrates all 6 public repos + read-only Asmodensius (:8794) + Zeta-Omega Atlas (/zeta-omega/)
+
+## Unified 6-Repo A-Life Singularity Omega Ecosystem (Clean-Slate v3.0 Complete)
+- **Workspace Root:** `Z:\[Vibe Coded (AI)]\ANTIGRAVITY\` (ReFS Dev Drive; mirror: `I:\A-Life God Plan\A-Life Master Folder Build`)
+- **Total Pure Lean 4 Theorems:** **`224 / 224`** (`42` `autophage v1.3.0` + `62` `cellulogonic-mecha v1.4.0` + `72` `cellular-engine-omega v5.1.0` + `48` `noetic-organism-omega v2.0.0`) strictly within `{propext, Classical.choice, Quot.sound}`, `0 sorry`, `0 admit`, `0 bv_decide`, `0 warnings`.
+- **Clean-Slate v3.0 Executable Checks:** **`825 / 825` individually executed in native C11 (`0` fail)** — `779` `EXECUTED_PASS`, `29` `EXECUTED_PASS_INDICATOR_ONLY` (ADR 0018 Rule-4 & Rule-6), `12` `NATIVE_RELEASE_GATE_PASS` (`L7_WSE12`), `5` `PASS_CLASSICAL_PARITY_DISCLOSED` (`F-092`, `N01`, `N02`, `N50`, `LIFE-L040-A5`, Policy P7).
+- **Bottom-Up Milestones:** **`100 / 100` (`M001..M100`, Stages `0..8`, First-15 Playable `LOCKED_PASS`, `0 uq` drift)**.
+- **Substrates & Hybrid Cube:** **`75 / 75` Substrates (`PM01..25`, `MF01..25`, `GW01..25`)** + **`1,000 / 1,000` Hybrid Cube (`661 [OK]`, `274 [ADAPT]`, `20 [OVER]`, `45 [EXCL]`, `935/935` active forward stability)**.
+- **Release & Forensic Gates:** **`13 / 13` Clean-Slate v3.0 Release Gates PASS**, **`35 / 35` Compiled Mutants Caught**, **`18 / 18` Package Forensic Gates PASS (`Z: <-> I:` 0-mismatch SHA-256)**, **`OVBS-52 = 92.05` (`STAGE_5_CONVERGED_SYNTHESIS`)**.
+- **External Boundary:** `Z:\[Vibe Coded (AI)]\CLAUDECODE\Asmodensius-Native` remains strictly read-only while `WRITER.lock` is active.
+- **PowerShell Rule:** Always use `-LiteralPath` on `Z:\[Vibe Coded (AI)]\...` paths.

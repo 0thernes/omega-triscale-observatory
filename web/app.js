@@ -1071,7 +1071,7 @@ function applyStackState(st) {
       noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic B${esc(no.summary.butlin14_passed)}/14 · T${esc(no.summary.theories10_passed)}/10 · CQM${esc(no.summary.cqm25_passed)}/25 · PCI ${esc(Number(no.pci_star).toFixed(2))}</span>`;
     } else if (st.engines?.t3_noetic) {
       noeticPill.className = "inet-pill ok";
-      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic v1.1 · :8795 LIVE</span>`;
+      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic v2.0 · :8795 LIVE</span>`;
     }
   }
 
@@ -1091,7 +1091,7 @@ function applyStackState(st) {
       inetPill.innerHTML = `<i class="status-led"></i><span>INet 5×SHA${levTxt}${vcTxt}</span>`;
     } else if (st.engines?.t2_omega) {
       inetPill.className = "inet-pill ok";
-      inetPill.innerHTML = `<i class="status-led"></i><span>Omega v5.0 · :8791 LIVE</span>`;
+      inetPill.innerHTML = `<i class="status-led"></i><span>Omega v5.1 · :8791 LIVE</span>`;
     }
   }
 
