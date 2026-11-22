@@ -144,6 +144,8 @@
         <option value="hyperbrain">Hyper-Brain</option>
         <option value="hyperchaos">Hyper-Chaos 512</option>
         <option value="megaswarm">Mega-Swarm 24K</option>
+        <option value="megagrowth">250K → 1M Growth</option>
+        <option value="million">1M Bare-Metal</option>
         <option value="abyss">Vent Abyss 220</option>
       </select>
       <button id="btnRespawnCosmos" class="wbtn t4-accent" title="Ignite selected preset cosmos on :8794">Respawn</button>
@@ -162,18 +164,41 @@
   <section class="genesis-drawer collapsed" id="genesisDrawer" aria-label="4-Tier Genesis, Population, Intelligence and Engine Flags">
     <div class="gen-col">
       <div class="gen-head">
-        <h3>1 · Population, Founders &amp; World Geometry</h3>
-        <span class="mono-dim" id="genActiveSummary">Wild · n=8,000 · cap=48,000 · 320 sp</span>
+        <h3>1 · Population (1–1M), Founders &amp; World Geometry</h3>
+        <span class="mono-dim" id="genActiveSummary">Wild · n=8,000 · cap=48,000 · 100 sp</span>
+      </div>
+      <div class="gen-pop-bar" aria-label="Founders population increment controls">
+        <span class="mono-dim">Step:</span>
+        <button type="button" class="pbtn" data-gen-step="100">100</button>
+        <button type="button" class="pbtn active" data-gen-step="1000">1k</button>
+        <button type="button" class="pbtn" data-gen-step="10000">10k</button>
+        <button type="button" class="pbtn" data-gen-step="100000">100k</button>
+        <button type="button" class="pbtn" id="btnGenDec">−1k</button>
+        <button type="button" class="pbtn" id="btnGenInc">+1k</button>
+        <button type="button" class="pbtn" data-gen-delta="-100000">−100k</button>
+        <button type="button" class="pbtn" data-gen-delta="-10000">−10k</button>
+        <button type="button" class="pbtn" data-gen-delta="-1000">−1k</button>
+        <button type="button" class="pbtn" data-gen-delta="-100">−100</button>
+        <button type="button" class="pbtn" data-gen-delta="100">+100</button>
+        <button type="button" class="pbtn" data-gen-delta="1000">+1k</button>
+        <button type="button" class="pbtn" data-gen-delta="10000">+10k</button>
+        <button type="button" class="pbtn" data-gen-delta="100000">+100k</button>
+        <button type="button" class="pbtn" data-gen-set="1">1</button>
+        <button type="button" class="pbtn" data-gen-set="100000">100k</button>
+        <button type="button" class="pbtn" data-gen-set="250000">250k</button>
+        <button type="button" class="pbtn" data-gen-set="1000000">1M</button>
       </div>
       <div class="gen-grid">
-        <label class="gfield"><span>Founders (--n)</span><input type="number" id="genN" min="64" max="250000" step="500" value="8000" /></label>
-        <label class="gfield"><span>Pop Cap (--cap)</span><input type="number" id="genCap" min="4096" max="1000000" step="4096" value="48000" /></label>
-        <label class="gfield" title="Note: Asmodensius-Native core/az_worldgen.c [DEMO-16] clamps initial founder species to WG_MAX_SPECIES=100; further clades radiate via live mutation"><span style="color:var(--t4)">Founder Species (≤100*)</span><input type="number" id="genSpecies" min="1" max="65535" step="16" value="100" /></label>
+        <label class="gfield"><span>Founders (--n, 1..1M)</span><input type="number" id="genN" min="1" max="1000000" step="1000" value="8000" /></label>
+        <label class="gfield"><span>Pop Cap (0=Auto)</span><input type="number" id="genCap" min="0" max="2000000" step="10000" value="0" /></label>
+        <label class="gfield" title="Asmodensius-Native core/az_worldgen.c [DEMO-16] enforces WG_MAX_SPECIES=100; further clades radiate via live mutation"><span style="color:var(--t4)">Founder Species (1–100)</span><input type="number" id="genSpecies" min="1" max="100" step="1" value="100" /></label>
         <label class="gfield"><span>Grid Volume</span>
           <select id="genGrid">
+            <option value="auto">Auto (Optimal for --n)</option>
             <option value="5,5,4">32×32×16 (Fast)</option>
             <option value="6,6,5" selected>64×64×32 (Cambrian)</option>
             <option value="7,6,5">128×64×32 (Vast)</option>
+            <option value="7,6,6">128×64×64 (1M Bare-Metal)</option>
             <option value="7,7,5">128×128×32 (Oceanic)</option>
           </select>
         </label>

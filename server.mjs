@@ -131,6 +131,14 @@ const GENESIS_PRESETS = {
   abyss: {
     preset: "abyss", n: 8000, cap: 48000, species: 100, grid: "6,6,5", tps: 14, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
     params: { BRAIN_FOUND_HID: 7, BRAIN_DENSITY: 156, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 200, FAMILY_SPACE: 16384, COLONY_FOUND: 16, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 224, LIFE_SIZE_MU: 24 }
+  },
+  megagrowth: {
+    preset: "megagrowth", n: 250000, cap: 1004096, species: 100, grid: "6,6,5", tps: 0, sps: 6, threads: 0, lesion: 0, lab: false, seed: 42,
+    params: { BRAIN_FOUND_HID: 5, BRAIN_DENSITY: 128, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 18 }
+  },
+  million: {
+    preset: "million", n: 1000000, cap: 1004096, species: 100, grid: "7,6,6", tps: 0, sps: 4, threads: 0, lesion: 0, lab: false, seed: 42,
+    params: { BRAIN_FOUND_HID: 5, BRAIN_DENSITY: 128, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 18 }
   }
 };
 let currentGenesis = structuredClone(GENESIS_PRESETS.cambrian);
@@ -228,6 +236,10 @@ function resetMacroCaches() {
   state.creatures.cladeSamples = new Map();
 }
 
+function autoCap(n) {
+  return n <= 250000 ? Math.min(1004096, n * 4 + 4096) : Math.max(n + 4096, 1004096);
+}
+
 function buildRelayArgs(cfg) {
   const args = [
     "-I", "-B", PATHS.macroRelay,
@@ -238,10 +250,11 @@ function buildRelayArgs(cfg) {
     "--n", String(cfg.n),
     "--cap", String(cfg.cap),
     "--species", String(cfg.species),
-    "--grid", String(cfg.grid),
+    "--grid", String(cfg.grid || "auto"),
     "--tps", String(cfg.tps),
     "--sps", String(cfg.sps),
     "--threads", String(cfg.threads),
+    "--kernels", "1",
     "--lesion", "0x" + ((Number(cfg.lesion) || 0) & 0x7fffff).toString(16)
   ];
   if (cfg.lab) {
@@ -269,14 +282,19 @@ async function spawnWildCosmos(presetOrCfg = "cambrian") {
       const baseKey = GENESIS_PRESETS[presetOrCfg?.preset] ? presetOrCfg.preset : "cambrian";
       const base = structuredClone(GENESIS_PRESETS[baseKey]);
       const rawGrid = String(presetOrCfg.grid || "");
-      const safeGrid = /^\d+,\d+,\d+$/.test(rawGrid)
-        ? rawGrid.split(",").map((g) => clampInt(g, 4, 8, 6)).join(",")
-        : base.grid;
+      const safeGrid = rawGrid.toLowerCase() === "auto"
+        ? "auto"
+        : (/^\d+,\d+,\d+$/.test(rawGrid)
+          ? rawGrid.split(",").map((g) => clampInt(g, 2, 8, 6)).join(",")
+          : base.grid);
+      const nVal = clampInt(presetOrCfg.n, 1, 1000000, base.n);
+      const rawCap = clampInt(presetOrCfg.cap, 0, 2000000, 0);
+      const capVal = rawCap > 0 ? Math.max(nVal, rawCap) : autoCap(nVal);
       cfg = {
         preset: baseKey,
-        n: clampInt(presetOrCfg.n, 64, 250000, base.n),
-        cap: clampInt(presetOrCfg.cap, 4096, 1000000, base.cap),
-        species: clampInt(presetOrCfg.species, 1, 100, base.species),
+        n: nVal,
+        cap: capVal,
+        species: Math.min(clampInt(presetOrCfg.species, 1, 100, base.species), nVal),
         grid: safeGrid,
         tps: clampInt(presetOrCfg.tps, 0, 1000, base.tps),
         sps: clampInt(presetOrCfg.sps, 1, 60, base.sps),
@@ -286,7 +304,6 @@ async function spawnWildCosmos(presetOrCfg = "cambrian") {
         seed: clampInt(presetOrCfg.seed, 0, 2147483647, base.seed),
         params: { ...base.params, ...(presetOrCfg.params && typeof presetOrCfg.params === "object" ? presetOrCfg.params : {}) }
       };
-      if (cfg.cap < cfg.n + 4096) cfg.cap = cfg.n + 4096;
     }
     currentCosmosPreset = cfg.preset;
     currentGenesis = cfg;
@@ -298,7 +315,7 @@ async function spawnWildCosmos(presetOrCfg = "cambrian") {
     }
     resetMacroCaches();
     macroChild = spawnEngine(`T3+T4:${cfg.lab ? "Lab" : "Wild"}-${cfg.preset}`, PYTHON_BIN, buildRelayArgs(cfg));
-    await waitForPort(MACRO_PORT, `T3+T4 ${cfg.lab ? "Lab" : "Wild"} ${cfg.preset.toUpperCase()} Cosmos`, 25000);
+    await waitForPort(MACRO_PORT, `T3+T4 ${cfg.lab ? "Lab" : "Wild"} ${cfg.preset.toUpperCase()} Cosmos`, 45000);
     pushCausalEvent(
       "T4+T3 GENESIS",
       `${cfg.lab ? "LAB" : "WILD"} ${cfg.preset.toUpperCase()}`,

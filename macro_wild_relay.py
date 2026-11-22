@@ -197,6 +197,60 @@ PRESETS = {
             "WORLDGEN_PATCHES": 10,
         },
     },
+    "megagrowth": {
+        "n": 250000,
+        "cap": 1004096,
+        "grid": "6,6,5",
+        "species": 100,
+        "tps": 0,
+        "sps": 6,
+        "threads": 0,
+        "lesion": 0,
+        "params": {
+            **NICHE_BASE,
+            "BRAIN_FOUND_HID": 5,
+            "BRAIN_DENSITY": 128,
+            "NEURO_RATE": 280,
+            "TIER1_LEARN_SHIFT": 15,
+            "EXPR_MUT_RATE": 320,
+            "GENE_NEW_RATE": 190,
+            "FAMILY_SPACE": 20480,
+            "COLONY_FOUND": 20,
+            "LIFE_SIZE_MU": 18,
+            "WORLDGEN_STYLES": 16,
+            "WORLDGEN_VARY_LOCI": 36,
+            "WORLDGEN_VARY_SIZE": 210,
+            "WORLDGEN_VENTS": 52,
+            "WORLDGEN_SEA_LEVEL": 164,
+        },
+    },
+    "million": {
+        "n": 1000000,
+        "cap": 1004096,
+        "grid": "7,6,6",
+        "species": 100,
+        "tps": 0,
+        "sps": 4,
+        "threads": 0,
+        "lesion": 0,
+        "params": {
+            **NICHE_BASE,
+            "BRAIN_FOUND_HID": 5,
+            "BRAIN_DENSITY": 128,
+            "NEURO_RATE": 280,
+            "TIER1_LEARN_SHIFT": 15,
+            "EXPR_MUT_RATE": 320,
+            "GENE_NEW_RATE": 190,
+            "FAMILY_SPACE": 20480,
+            "COLONY_FOUND": 20,
+            "LIFE_SIZE_MU": 18,
+            "WORLDGEN_STYLES": 16,
+            "WORLDGEN_VARY_LOCI": 36,
+            "WORLDGEN_VARY_SIZE": 210,
+            "WORLDGEN_VENTS": 52,
+            "WORLDGEN_SEA_LEVEL": 164,
+        },
+    },
 }
 
 
@@ -224,12 +278,20 @@ def load_viewer_server_module(demo_dir: Path):
     return vs
 
 
-def sanitize_grid(raw: str | None, fallback: str) -> str:
+def auto_cap(n: int) -> int:
+    if n <= 250000:
+        return min(1004096, n * 4 + 4096)
+    return max(n + 4096, 1004096)
+
+
+def sanitize_grid(raw: str | None, fallback: str | None) -> str | None:
+    if raw is not None and raw.strip().lower() == "auto":
+        return None
     if not raw or not re.fullmatch(r"\d+,\d+,\d+", raw):
         return fallback
     parts = [int(x) for x in raw.split(",")]
-    # Clamp each log2 grid bit-width to safe bounds [4..8] to prevent OOM in az_live.exe
-    clamped = [max(4, min(8, v)) for v in parts]
+    # Clamp each log2 grid bit-width to safe bounds [2..8] matching az_live
+    clamped = [max(2, min(8, v)) for v in parts]
     return f"{clamped[0]},{clamped[1]},{clamped[2]}"
 
 
@@ -275,6 +337,7 @@ def main():
     p.add_argument("--tps", type=int, default=None)
     p.add_argument("--sps", type=int, default=None)
     p.add_argument("--threads", type=int, default=None)
+    p.add_argument("--kernels", type=int, choices=(0, 1), default=1)
     p.add_argument("--lesion", type=str, default=None)
     p.add_argument("--lab", action="store_true")
     p.add_argument("--seed", type=int, default=None)
@@ -285,10 +348,11 @@ def main():
     vs = load_viewer_server_module(demo_dir)
 
     cfg = PRESETS[a.preset]
-    n_val = max(64, min(250000, a.n if a.n is not None else cfg["n"]))
-    cap_val = max(n_val + 4096, min(1000000, a.cap if a.cap is not None else cfg["cap"]))
-    sp_val = max(1, min(100, a.species if a.species is not None else cfg["species"]))
-    grid_val = sanitize_grid(a.grid, cfg["grid"])
+    n_val = max(1, min(1000000, a.n if a.n is not None else cfg["n"]))
+    raw_cap = a.cap if a.cap is not None else cfg["cap"]
+    cap_val = max(n_val, min(2000000, raw_cap)) if raw_cap else auto_cap(n_val)
+    sp_val = max(1, min(100, a.species if a.species is not None else cfg["species"], n_val))
+    grid_val = sanitize_grid(a.grid, cfg["grid"] if a.n is None else None)
     tps_val = max(0, min(1000, a.tps if a.tps is not None else cfg["tps"]))
     sps_val = max(1, min(60, a.sps if a.sps is not None else cfg["sps"]))
     threads_val = max(0, min(64, a.threads if a.threads is not None else cfg["threads"]))
@@ -307,14 +371,16 @@ def main():
     options = [
         "--n", str(n_val),
         "--cap", str(cap_val),
-        "--grid", grid_val,
         "--species", str(sp_val),
         "--param", param_str,
         "--sps", str(sps_val),
         "--tps", str(tps_val),
         "--threads", str(threads_val),
+        "--kernels", str(a.kernels),
         "--observer-ms", "500",
     ]
+    if grid_val:
+        options.extend(["--grid", grid_val])
     if lesion_val:
         options.extend(["--lesion", hex(lesion_val)])
     safe_seed = max(0, a.seed) if a.seed is not None else None

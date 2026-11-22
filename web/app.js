@@ -123,8 +123,10 @@ const CLIENT_GENESIS_PRESETS = {
   cambrian:   { n: 8000,  cap: 48000,  species: 100, grid: "6,6,5", tps: 14, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 6,  BRAIN_DENSITY: 148, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 14, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 162, LIFE_SIZE_MU: 22 } },
   hyperbrain: { n: 6000,  cap: 40000,  species: 100, grid: "6,6,5", tps: 12, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 12, BRAIN_DENSITY: 224, NEURO_RATE: 480, TIER1_LEARN_SHIFT: 12, EXPR_MUT_RATE: 280, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 36, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 48, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 24 } },
   hyperchaos: { n: 10000, cap: 65536,  species: 100, grid: "6,6,5", tps: 18, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 8,  BRAIN_DENSITY: 168, NEURO_RATE: 512, TIER1_LEARN_SHIFT: 13, EXPR_MUT_RATE: 640, GENE_NEW_RATE: 380, FAMILY_SPACE: 32768, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 48, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 158, LIFE_SIZE_MU: 22 } },
-  megaswarm:  { n: 24000, cap: 110000, species: 100, grid: "6,6,5", tps: 12, sps: 10, lesion: 0, params: { BRAIN_FOUND_HID: 5,  BRAIN_DENSITY: 128, NEURO_RATE: 300, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 360, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 24, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 56, WORLDGEN_SEA_LEVEL: 168, LIFE_SIZE_MU: 18 } },
-  abyss:      { n: 8000,  cap: 48000,  species: 100, grid: "6,6,5", tps: 14, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 7,  BRAIN_DENSITY: 156, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 200, FAMILY_SPACE: 16384, COLONY_FOUND: 16, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 224, LIFE_SIZE_MU: 24 } }
+  megaswarm:  { n: 24000,   cap: 110000,  species: 100, grid: "6,6,5", tps: 12, sps: 10, lesion: 0, params: { BRAIN_FOUND_HID: 5,  BRAIN_DENSITY: 128, NEURO_RATE: 300, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 360, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 24, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 56, WORLDGEN_SEA_LEVEL: 168, LIFE_SIZE_MU: 18 } },
+  megagrowth: { n: 250000,  cap: 1004096, species: 100, grid: "6,6,5", tps: 0,  sps: 6,  lesion: 0, params: { BRAIN_FOUND_HID: 5,  BRAIN_DENSITY: 128, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 18 } },
+  million:    { n: 1000000, cap: 1004096, species: 100, grid: "7,6,6", tps: 0,  sps: 4,  lesion: 0, params: { BRAIN_FOUND_HID: 5,  BRAIN_DENSITY: 128, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 18 } },
+  abyss:      { n: 8000,    cap: 48000,   species: 100, grid: "6,6,5", tps: 14, sps: 12, lesion: 0, params: { BRAIN_FOUND_HID: 7,  BRAIN_DENSITY: 156, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 200, FAMILY_SPACE: 16384, COLONY_FOUND: 16, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 224, LIFE_SIZE_MU: 24 } }
 };
 
 async function postAction(payload) {
@@ -375,6 +377,32 @@ $("btnToggleGenesis").addEventListener("click", () => {
   $("btnToggleGenesis").textContent = collapsed ? "⚙ Genesis & Flags ▾" : "⚙ Genesis & Flags ▴";
 });
 
+let genPopStep = 1000;
+function clampGenN(v) { const x = Math.round(Number(v)); return Number.isFinite(x) ? Math.max(1, Math.min(1000000, x)) : 8000; }
+function fmtStepShort(s) { return s >= 1000 ? `${s / 1000}k` : String(s); }
+function setGenPopStep(step) {
+  genPopStep = step;
+  $("genN").step = String(step);
+  document.querySelectorAll("[data-gen-step]").forEach((b) => b.classList.toggle("active", Number(b.dataset.genStep) === step));
+  $("btnGenDec").textContent = `−${fmtStepShort(step)}`;
+  $("btnGenInc").textContent = `+${fmtStepShort(step)}`;
+}
+function adjustGenN(delta) {
+  const next = clampGenN(numOr($("genN"), 8000) + delta);
+  $("genN").value = String(next);
+  if (next > 250000) $("genGrid").value = "7,6,6";
+}
+document.querySelectorAll("[data-gen-step]").forEach((b) => b.addEventListener("click", () => setGenPopStep(Number(b.dataset.genStep))));
+document.querySelectorAll("[data-gen-delta]").forEach((b) => b.addEventListener("click", () => adjustGenN(Number(b.dataset.genDelta))));
+document.querySelectorAll("[data-gen-set]").forEach((b) => b.addEventListener("click", () => {
+  const next = clampGenN(b.dataset.genSet);
+  $("genN").value = String(next);
+  if (next > 250000) $("genGrid").value = "7,6,6";
+  else if (next <= 100) $("genGrid").value = "auto";
+}));
+$("btnGenDec").addEventListener("click", () => adjustGenN(-genPopStep));
+$("btnGenInc").addEventListener("click", () => adjustGenN(genPopStep));
+
 $("btnFlagsAllOn").addEventListener("click", () => setLesionMask(0));
 $("btnFlagsZeroBrain").addEventListener("click", () => setLesionMask(1 << 0));
 $("btnFlagsZeroGrav").addEventListener("click", () => setLesionMask(1 << 14));
@@ -397,9 +425,9 @@ $("btnIgniteGenesis").addEventListener("click", async () => {
   for (const d of GEN_PARAM_DEFS) params[d.key] = numOr(genParamInputs[d.key], d.def);
   const genesis = {
     preset: $("selCosmosPreset").value,
-    n: numOr($("genN"), 8000),
-    cap: numOr($("genCap"), 48000),
-    species: numOr($("genSpecies"), 320),
+    n: clampGenN($("genN").value),
+    cap: numOr($("genCap"), 0),
+    species: Math.max(1, Math.min(100, numOr($("genSpecies"), 100))),
     grid: $("genGrid").value,
     tps: numOr($("genTps"), 14),
     sps: numOr($("genSps"), 12),
