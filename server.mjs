@@ -363,7 +363,7 @@ async function ensureAllEngines() {
     spawnEngine("T1:Autophage", process.execPath, [PATHS.microServer], { AUTOPHAGE_PORT: String(MICRO_PORT) });
   }
   await Promise.all([
-    waitForPort(MACRO_PORT,      "T3+T4 Asmodensius World #1 (WebGL2 3D Cosmos · 16 Pure Lean 4)", 25000),
+    waitForPort(MACRO_PORT,      "T3+T4 Asmodensius World #1 (WebGL2 3D Cosmos · 20 Pure Lean 4)", 25000),
     waitForPort(MACRO_LIVE_PORT, "T3+T4 Asmodensius World #2 (Native az_view Dashboard & Proof Bench)", 25000),
     waitForPort(NOETIC_PORT,     "T3/4 Noetic Organism Omega v2.0 (825/825 C11 · 100M · 13/13 CS-v3 · 48 Pure Lean 4)", 12000),
     waitForPort(OMEGA_PORT,      "T2+ Cellular Engine Omega v5.1 (TB01-TB16 · 75 Sub · 1000 Cube · 72 Pure Lean 4)", 12000),
@@ -2381,11 +2381,11 @@ startNoeticPoller();
 
 server.listen(HUB_PORT, "127.0.0.1", () => {
   console.log(`\n================================================================================`);
-  console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v6.6.0 (7 REPOS · 8 LIVE ENDPOINTS · 240 PURE LEAN 4)`);
+  console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v6.6.0 (7 REPOS · 8 LIVE ENDPOINTS · 244 PURE LEAN 4)`);
   console.log(`    #8 ZETA-OMEGA v3.3 ATLAS         : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
   console.log(`    #7 UNIFIED "SEE ALL" HUB         : http://127.0.0.1:${HUB_PORT}/`);
   console.log(`    #6 T3+T4 ASMODENSIUS WORLD #2    : http://127.0.0.1:${MACRO_LIVE_PORT}/ (Native az_view Dashboard & Proof Bench)`);
-  console.log(`    #5 T3+T4 ASMODENSIUS WORLD #1    : http://127.0.0.1:${MACRO_PORT}/ (WebGL2 3D Cosmos · ${currentCosmosPreset} · 16 Pure Lean 4)`);
+  console.log(`    #5 T3+T4 ASMODENSIUS WORLD #1    : http://127.0.0.1:${MACRO_PORT}/ (WebGL2 3D Cosmos · ${currentCosmosPreset} · 20 Pure Lean 4)`);
   console.log(`    #4 T3/4 NOETIC MIND v2.0         : http://127.0.0.1:${NOETIC_PORT}/ (825/825 C11 · 100M · 13/13 CS-v3 · 48 Pure Lean 4)`);
   console.log(`    #3 OMEGA v5.1 FRONTIER VM        : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 75 Sub · 1000 Cube · 72 Pure Lean 4)`);
   console.log(`    #2 T2 CELLS v1.4                 : http://127.0.0.1:${MESO_PORT}/ (62 Pure Lean 4)`);
