@@ -1071,7 +1071,7 @@ function applyStackState(st) {
       noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic B${esc(no.summary.butlin14_passed)}/14 · T${esc(no.summary.theories10_passed)}/10 · CQM${esc(no.summary.cqm25_passed)}/25 · PCI ${esc(Number(no.pci_star).toFixed(2))}</span>`;
     } else if (st.engines?.t3_noetic) {
       noeticPill.className = "inet-pill ok";
-      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic v1.0 · :8795 LIVE</span>`;
+      noeticPill.innerHTML = `<i class="status-led"></i><span>Noetic v1.1 · :8795 LIVE</span>`;
     }
   }
 
