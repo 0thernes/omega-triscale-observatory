@@ -215,6 +215,22 @@
       </div>
       <div class="gen-actions-row">
         <button id="btnApplyLiveRates" class="wbtn t2-accent" title="Apply TPS and Snap/s live right now without restarting the world">Apply Live Pace (No Restart)</button>
+        <label class="toggle-chip" title="AVX-VNNI brain twin + AVX2 bulk Philox + AVX2 kinematics (--kernels 1)">
+          <input type="checkbox" id="genKernels" checked />
+          <span>AVX2/VNNI</span>
+        </label>
+        <label class="toggle-chip" title="All 24 physical cores: 8 P-cores + 16 E-cores (--ecores)">
+          <input type="checkbox" id="genEcores" checked />
+          <span>24C (8P+16E)</span>
+        </label>
+        <label class="toggle-chip" title="DDR5 streaming software prefetch (--prefetch 1)">
+          <input type="checkbox" id="genPrefetch" checked />
+          <span>DDR5 PF</span>
+        </label>
+        <label class="toggle-chip" title="NVIDIA RTX 5070 Ti CUDA PTX live sparse brain offload (--gpu 1)">
+          <input type="checkbox" id="genGpu" />
+          <span>RTX GPU</span>
+        </label>
         <label class="toggle-chip" title="Also re-initialize Tier 1 DNA & Tier 2 Cells synchronously when igniting">
           <input type="checkbox" id="genSyncLower" checked />
           <span>Sync T1+T2</span>

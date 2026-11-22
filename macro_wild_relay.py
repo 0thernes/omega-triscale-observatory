@@ -338,6 +338,10 @@ def main():
     p.add_argument("--sps", type=int, default=None)
     p.add_argument("--threads", type=int, default=None)
     p.add_argument("--kernels", type=int, choices=(0, 1), default=1)
+    p.add_argument("--ecores", action="store_true")
+    p.add_argument("--gpu", type=int, choices=(0, 1), default=0)
+    p.add_argument("--prefetch", type=int, choices=(0, 1), default=1)
+    p.add_argument("--large-pages", action="store_true")
     p.add_argument("--lesion", type=str, default=None)
     p.add_argument("--lab", action="store_true")
     p.add_argument("--seed", type=int, default=None)
@@ -377,8 +381,14 @@ def main():
         "--tps", str(tps_val),
         "--threads", str(threads_val),
         "--kernels", str(a.kernels),
+        "--gpu", str(a.gpu),
+        "--prefetch", str(a.prefetch),
         "--observer-ms", "500",
     ]
+    if a.ecores:
+        options.append("--ecores")
+    if a.large_pages:
+        options.append("--large-pages")
     if grid_val:
         options.extend(["--grid", grid_val])
     if lesion_val:

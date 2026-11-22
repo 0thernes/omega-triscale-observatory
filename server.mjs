@@ -254,9 +254,13 @@ function buildRelayArgs(cfg) {
     "--tps", String(cfg.tps),
     "--sps", String(cfg.sps),
     "--threads", String(cfg.threads),
-    "--kernels", "1",
+    "--kernels", String(cfg.kernels === false || cfg.kernels === 0 ? 0 : 1),
+    "--gpu", String(cfg.gpu ? 1 : 0),
+    "--prefetch", String(cfg.prefetch === false || cfg.prefetch === 0 ? 0 : 1),
     "--lesion", "0x" + ((Number(cfg.lesion) || 0) & 0x7fffff).toString(16)
   ];
+  if (cfg.ecores !== false) args.push("--ecores");
+  if (cfg.largePages) args.push("--large-pages");
   if (cfg.lab) {
     args.push("--lab");
     if (Number.isFinite(Number(cfg.seed))) args.push("--seed", String(Math.max(0, Math.round(Number(cfg.seed)))));
@@ -299,6 +303,11 @@ async function spawnWildCosmos(presetOrCfg = "cambrian") {
         tps: clampInt(presetOrCfg.tps, 0, 1000, base.tps),
         sps: clampInt(presetOrCfg.sps, 1, 60, base.sps),
         threads: clampInt(presetOrCfg.threads, 0, 64, base.threads),
+        kernels: presetOrCfg.kernels !== false && presetOrCfg.kernels !== 0,
+        ecores: presetOrCfg.ecores !== false,
+        prefetch: presetOrCfg.prefetch !== false && presetOrCfg.prefetch !== 0,
+        gpu: Boolean(presetOrCfg.gpu),
+        largePages: Boolean(presetOrCfg.largePages),
         lesion: (clampInt(presetOrCfg.lesion, 0, 0x7fffff, base.lesion) >>> 0) & 0x7fffff,
         lab: Boolean(presetOrCfg.lab),
         seed: clampInt(presetOrCfg.seed, 0, 2147483647, base.seed),
