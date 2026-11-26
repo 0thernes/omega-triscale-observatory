@@ -8,37 +8,37 @@
       "id": "M1_PATH_TRAVERSAL_BYPASS",
       "description": "Disable directory-escape check in resolveSafePath",
       "killed": true,
-      "elapsed_ms": 1074
+      "elapsed_ms": 886
     },
     {
       "id": "M2_POPULATION_CLAMP_UNBOUNDED",
       "description": "Remove 1..1,000,000 Genesis founder population clamping",
       "killed": true,
-      "elapsed_ms": 1158
+      "elapsed_ms": 832
     },
     {
       "id": "M3_D7RO_OBSERVER_VIOLATION",
       "description": "Violate Asmodensius D7RO read-only observer boundary on T1->T3",
       "killed": true,
-      "elapsed_ms": 1436
+      "elapsed_ms": 950
     },
     {
       "id": "M4_OMNITEMPORAL_CAP_LEAK",
       "description": "Break <= 240 omnitemporal rolling history memory cap",
       "killed": true,
-      "elapsed_ms": 1438
+      "elapsed_ms": 954
     },
     {
       "id": "M5_CSRF_ORIGIN_BYPASS",
       "description": "Disable loopback Origin check in isSafeLoopbackRequest",
       "killed": true,
-      "elapsed_ms": 1237
+      "elapsed_ms": 844
     },
     {
       "id": "M6_ECORES_FLAG_DROPPED",
       "description": "Drop --ecores bare-metal 24C P+E scheduling flag in buildRelayArgs",
       "killed": true,
-      "elapsed_ms": 928
+      "elapsed_ms": 696
     }
   ]
 }

@@ -11,7 +11,7 @@ This document explicitly delineates what `omega-triscale-observatory` v6.7.0 **d
 | Tier 4 Bio-FX ULTRA Shaders (`server.mjs`) | Real GLSL ES 3.00 fragment/vertex shaders injected client-side outside `#ifdef PICK`. | **NOT** physical biochemical skin membranes, iridescence physics, or state changes inside `Asmodensius-Native`. |
 | Binomial Taxonomy (`web/taxonomy.js`) | Deterministic FNV-1a procedural Latinate labels derived from clade IDs, UIDs, and morphology ratios. | **NOT** phylogenetic cladistics or biological taxonomy recognized by ICZN/ICN. |
 | Noetic Header Pill (`B14/14 · T10/10 · CQM25/25`) | Real HTTP JSON telemetry proxied from local `:8795`. | Strictly **indicator-only** computational diagnostics; **NOT** evidence of phenomenal consciousness or sentience. |
-| Ecosystem Lean 4 Count (`244` upstream) | Sum of audited Lean 4 theorems reported by five sibling repositories. | **NOT** formally verifying `server.mjs`, `web/app.js`, or `macro_wild_relay.py` (this repo contains **0** Lean 4 files). |
+| Ecosystem Lean 4 Count (`327` upstream) | Sum of audited 6-kernel Lean 4.35.0 theorems reported by six formal sibling repositories. | **NOT** formally verifying `server.mjs`, `web/app.js`, or `macro_wild_relay.py` (this repo contains **0** Lean 4 files). |
 
 ## 2. Engineering & Experimental Limitations
 

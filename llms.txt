@@ -4,7 +4,7 @@
 
 - Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
 - Licenses: Apache-2.0 (code) / CC-BY-4.0 (white paper & docs)
-- Verification boundary: 0 local Lean 4 files (supervises 5 formal companion repos reporting 244 combined upstream Lean 4 theorems); 0/1,900 Mega-Atlas open problems retired.
+- Verification boundary: 0 local Lean 4 files (supervises 6 formal companion repos reporting 327 combined upstream 6-kernel Lean 4.35.0 theorems); 0/1,900 Mega-Atlas open problems retired.
 
 ## Core Entry Points
 - [README.md](README.md): Overview, 8-endpoint topology, Quickstart, Usage, verification boundaries

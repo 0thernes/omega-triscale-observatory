@@ -43,10 +43,10 @@ fs.mkdirSync(MACRO_DATA_DIR, { recursive: true });
 const HUB_PORT       = Number(process.env.TRISCALE_PORT || 8790);
 const MACRO_PORT     = 8794; // Repo #7 World #1: Asmodensius-Native WebGL2 3D Accelerated Cosmos (viewer_server.py)
 const MACRO_LIVE_PORT = 8796; // Repo #7 World #2: Asmodensius-Native Native az_view Live Dashboard & Proof Bench (live_server.py)
-const NOETIC_PORT    = 8795; // Repo #6: Noetic Organism Omega v2.0 (825/825 C11 · 100/100 M · 13/13 CS-v3 · 48 Pure Lean 4)
-const OMEGA_PORT     = 8791; // Repo #3: Cellular Engine Omega v5.1 (16 TB · 75 Sub · 1000 Cube · 72 Pure Lean 4)
-const MESO_PORT      = 8788; // Repo #2: Cellulogonic Mecha v1.4 (Embryogenesis + GRN · 62 Pure Lean 4)
-const MICRO_PORT     = 8787; // Repo #1: AUTOPHAGE v1.3 + Zeta-Omega 13-Vec (42 Pure Lean 4)
+const NOETIC_PORT    = 8795; // Repo #6: Noetic Organism Omega v2.1.0 (825/825 C11 · 100/100 M · 13/13 CS-v3 · 54 Pure Lean 4)
+const OMEGA_PORT     = 8791; // Repo #3: Cellular Engine Omega v5.2.0 (16 TB · 75 Sub · 1000 Cube · 89 Pure Lean 4)
+const MESO_PORT      = 8788; // Repo #2: Cellulogonic Mecha v1.5.0 (Embryogenesis + GRN · 70 Pure Lean 4)
+const MICRO_PORT     = 8787; // Repo #1: AUTOPHAGE v1.4.0 + Zeta-Omega 13-Vec (48 Pure Lean 4)
 
 const PYTHON_BIN = [
   "C:\\Users\\Alexa\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
@@ -255,12 +255,12 @@ async function ensureAllEngines() {
     spawnEngine("T1:Autophage", process.execPath, [PATHS.microServer], { AUTOPHAGE_PORT: String(MICRO_PORT) });
   }
   await Promise.all([
-    waitForPort(MACRO_PORT,      "T3+T4 Asmodensius World #1 (WebGL2 3D Cosmos · 20 Pure Lean 4)", 25000),
-    waitForPort(MACRO_LIVE_PORT, "T3+T4 Asmodensius World #2 (Native az_view Dashboard & Proof Bench)", 25000),
-    waitForPort(NOETIC_PORT,     "T3/4 Noetic Organism Omega v2.0 (825/825 C11 · 100M · 13/13 CS-v3 · 48 Pure Lean 4)", 12000),
-    waitForPort(OMEGA_PORT,      "T2+ Cellular Engine Omega v5.1 (TB01-TB16 · 75 Sub · 1000 Cube · 72 Pure Lean 4)", 12000),
-    waitForPort(MESO_PORT,       "T2 Cellulogonic Mecha v1.4 (62 Pure Lean 4)", 12000),
-    waitForPort(MICRO_PORT,      "T1 AUTOPHAGE v1.3 / Zeta-Omega (42 Pure Lean 4)", 12000)
+    waitForPort(MACRO_PORT,      "T3+T4 Asmodensius v1.1.0 World #1 (WebGL2 3D Cosmos · 30 Pure Lean 4)", 25000),
+    waitForPort(MACRO_LIVE_PORT, "T3+T4 Asmodensius v1.1.0 World #2 (Native az_view Dashboard & Proof Bench)", 25000),
+    waitForPort(NOETIC_PORT,     "T3/4 Noetic Organism Omega v2.1.0 (825/825 C11 · 100M · 13/13 CS-v3 · 54 Pure Lean 4)", 12000),
+    waitForPort(OMEGA_PORT,      "T2+ Cellular Engine Omega v5.2.0 (TB01-TB16 · 75 Sub · 1000 Cube · 89 Pure Lean 4)", 12000),
+    waitForPort(MESO_PORT,       "T2 Cellulogonic Mecha v1.5.0 (70 Pure Lean 4)", 12000),
+    waitForPort(MICRO_PORT,      "T1 AUTOPHAGE v1.4.0 / Zeta-Omega (48 Pure Lean 4)", 12000)
   ]);
 }
 
@@ -1903,15 +1903,15 @@ if (isMain) {
 
   server.listen(HUB_PORT, "127.0.0.1", () => {
     console.log(`\n================================================================================`);
-    console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v${OBSERVATORY_VERSION} (7 REPOS · 8 LIVE ENDPOINTS · 244 UPSTREAM PURE LEAN 4)`);
-    console.log(`    #8 ZETA-OMEGA v3.3 ATLAS         : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
+    console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v${OBSERVATORY_VERSION} (7 REPOS · 8 LIVE ENDPOINTS · 327 UPSTREAM PURE LEAN 4)`);
+    console.log(`    #8 ZETA-OMEGA v3.4.0 ATLAS       : http://127.0.0.1:${HUB_PORT}/zeta-omega/ (36 Pure Lean 4)`);
     console.log(`    #7 UNIFIED "SEE ALL" HUB         : http://127.0.0.1:${HUB_PORT}/`);
     console.log(`    #6 T3+T4 ASMODENSIUS WORLD #2    : http://127.0.0.1:${MACRO_LIVE_PORT}/ (Native az_view Dashboard & Proof Bench)`);
-    console.log(`    #5 T3+T4 ASMODENSIUS WORLD #1    : http://127.0.0.1:${MACRO_PORT}/ (WebGL2 3D Cosmos · ${currentCosmosPreset} · 20 Pure Lean 4)`);
-    console.log(`    #4 T3/4 NOETIC MIND v2.0         : http://127.0.0.1:${NOETIC_PORT}/ (825/825 C11 · 100M · 13/13 CS-v3 · 48 Pure Lean 4)`);
-    console.log(`    #3 OMEGA v5.1 FRONTIER VM        : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 75 Sub · 1000 Cube · 72 Pure Lean 4)`);
-    console.log(`    #2 T2 CELLS v1.4                 : http://127.0.0.1:${MESO_PORT}/ (62 Pure Lean 4)`);
-    console.log(`    #1 T1 DNA AUTOPHAGE v1.3         : http://127.0.0.1:${MICRO_PORT}/ (42 Pure Lean 4)`);
+    console.log(`    #5 T3+T4 ASMODENSIUS WORLD #1    : http://127.0.0.1:${MACRO_PORT}/ (WebGL2 3D Cosmos · ${currentCosmosPreset} · 30 Pure Lean 4)`);
+    console.log(`    #4 T3/4 NOETIC MIND v2.1.0       : http://127.0.0.1:${NOETIC_PORT}/ (825/825 C11 · 100M · 13/13 CS-v3 · 54 Pure Lean 4)`);
+    console.log(`    #3 OMEGA v5.2.0 FRONTIER VM      : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 75 Sub · 1000 Cube · 89 Pure Lean 4)`);
+    console.log(`    #2 T2 CELLS v1.5.0               : http://127.0.0.1:${MESO_PORT}/ (70 Pure Lean 4)`);
+    console.log(`    #1 T1 DNA AUTOPHAGE v1.4.0       : http://127.0.0.1:${MICRO_PORT}/ (48 Pure Lean 4)`);
     console.log(`================================================================================\n`);
   });
 }

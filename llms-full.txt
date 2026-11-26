@@ -9,7 +9,7 @@ FILE: llms.txt
 
 - Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
 - Licenses: Apache-2.0 (code) / CC-BY-4.0 (white paper & docs)
-- Verification boundary: 0 local Lean 4 files (supervises 5 formal companion repos reporting 244 combined upstream Lean 4 theorems); 0/1,900 Mega-Atlas open problems retired.
+- Verification boundary: 0 local Lean 4 files (supervises 6 formal companion repos reporting 327 combined upstream 6-kernel Lean 4.35.0 theorems); 0/1,900 Mega-Atlas open problems retired.
 
 ## Core Entry Points
 - [README.md](README.md): Overview, 8-endpoint topology, Quickstart, Usage, verification boundaries
@@ -50,14 +50,14 @@ Unified zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artific
 
 | # | Tier / Instrument | Biological & Computational Layer | Upstream Engine & Audits | Local Endpoint |
 |---|---|---|---|---|
-| **#1** | **Tier 1 · DNA (`10⁻⁹ m`)** | 256B x86-64 RWX Genomes, 8×8 F₂ Ribosomes, GF(2⁸), Real 128B Genome Export, Philox/Weismann Isolation | `AUTOPHAGE v1.3.0` (`0thernes/autophage` · 42 upstream Lean 4) | `http://127.0.0.1:8787/` |
-| **#2** | **Tier 2 · CELLS (`10⁻⁶ m`)** | True 3D Morphogens, Strict 4-Solvent Second Law, XPBD Dissipation, Carcass/Yolk Conservation, 128B DNA Ingest | `Cellulogonic Mecha v1.4.0` (`0thernes/cellulogonic-mecha` · 62 upstream Lean 4) | `http://127.0.0.1:8788/` |
-| **#3** | **Tier 2+ · DEEP STRATA & CUBE** | 16 Frontier Testbeds (`TB01`–`TB16`), 75 Substrates, 1,000-Cell Hybrid Cube | `Cellular Engine Omega v5.1.0` (`0thernes/cellular-engine-omega` · 72 upstream Lean 4) | `http://127.0.0.1:8791/` |
-| **#4** | **Tier 3/4 · COGNITIVE & CS-v3** | 825/825 Native C11 Checks (29 indicator-only, 5 classical-parity disclosed), 100 Milestones, 13 CS-v3 Gates | `Noetic Organism Omega v2.0.0` (`0thernes/noetic-organism-omega` · 48 upstream Lean 4) | `http://127.0.0.1:8795/` |
-| **#5** | **Tier 3+4 · ASMODENSIUS WORLD #1** | GPU WebGL2 3D Wild Cosmos (`macro_wild_relay.py`), Orbit/Dive, Voxels, Close-Ups, strict **`D7RO`** read-only | `Asmodensius-Native` (`0thernes/asmodensius-native` · 20 upstream Lean 4) | `http://127.0.0.1:8794/` |
+| **#1** | **Tier 1 · DNA (`10⁻⁹ m`)** | 256B x86-64 RWX Genomes, 8×8 F₂ Ribosomes, GF(2⁸), Real 128B Genome Export, Philox/Weismann Isolation | `AUTOPHAGE v1.4.0` (`0thernes/autophage` · 54 upstream Lean 4) | `http://127.0.0.1:8787/` |
+| **#2** | **Tier 2 · CELLS (`10⁻⁶ m`)** | True 3D Morphogens, Strict 4-Solvent Second Law, XPBD Dissipation, Carcass/Yolk Conservation, 128B DNA Ingest | `Cellulogonic Mecha v1.5.0` (`0thernes/cellulogonic-mecha` · 70 upstream Lean 4) | `http://127.0.0.1:8788/` |
+| **#3** | **Tier 2+ · DEEP STRATA & CUBE** | 16 Frontier Testbeds (`TB01`–`TB16`), 75 Substrates, 1,000-Cell Hybrid Cube | `Cellular Engine Omega v5.2.0` (`0thernes/cellular-engine-omega` · 89 upstream Lean 4) | `http://127.0.0.1:8791/` |
+| **#4** | **Tier 3/4 · COGNITIVE & CS-v3** | 825/825 Native C11 Checks (29 indicator-only, 5 classical-parity disclosed), 100 Milestones, 13 CS-v3 Gates | `Noetic Organism Omega v2.1.0` (`0thernes/noetic-organism-omega` · 54 upstream Lean 4) | `http://127.0.0.1:8795/` |
+| **#5** | **Tier 3+4 · ASMODENSIUS WORLD #1** | GPU WebGL2 3D Wild Cosmos (`macro_wild_relay.py`), Orbit/Dive, Voxels, Close-Ups, strict **`D7RO`** read-only | `Asmodensius-Native` (`0thernes/asmodensius-native` · 30 upstream Lean 4) | `http://127.0.0.1:8794/` |
 | **#6** | **Tier 3+4 · ASMODENSIUS WORLD #2** | Native `az_view` Live Dashboard & Proof Bench (`live_server.py`, toggleable via `W1:GL2` ⇄ `W2:az_view`) | `Asmodensius-Native` (`az_live.exe` + `az_run.exe`, **`D7RO`**) | `http://127.0.0.1:8796/` |
 | **#7** | **ALL 4 TIERS · MASSIVE HUB v6.7.0** | Unified Cockpit, 112-Trait Spectral Δ, 8-Axis `cosθ`, `<=240` Ring, Bare-Metal `1..1M` Studio, `/healthz` | `server.mjs` + `lib/observatory_core.mjs` (this repository) | `http://127.0.0.1:8790/` |
-| **#8** | **ZETA-OMEGA v3.3 ATLAS** | 21-Tab Static Archive (2,782 records, 18/18 upstream package forensic gates) | `alife-singularity-omega-package` via safe static proxy | `http://127.0.0.1:8790/zeta-omega/` |
+| **#8** | **ZETA-OMEGA v3.4.0 ATLAS** | 21-Tab Static Archive (2,782 records, 18/18 upstream package forensic gates) | `alife-singularity-omega-package` via safe static proxy | `http://127.0.0.1:8790/zeta-omega/` |
 
 ## Quickstart
 
@@ -104,7 +104,7 @@ See [`examples/README.md`](examples/README.md) and [`examples/verify_pipeline.mj
 
 ## Honest Verification Boundaries & Mega-Atlas Cross-Check
 
-- **Local vs. Upstream Proofs:** This repository contains **0 local Lean 4 files**. It is strictly an orchestration, reverse-proxy, and visualization instrument. Its own invariants (CSRF/CSWSH loopback guard, path-traversal defense, `1..1,000,000` clamping, `D7RO` zero-observer-interference, `<=240` ring cap, 112-trait spectral symmetry, Node↔Python relay parity) are audited by **12/12 Node tests** (including **250 seeded `prop_check` trials**), **5/5 Python relay tests** (**120 trials**), static lint, and **6/6 (100.0%) surgical mutation kills**. The `244` combined Lean 4 proofs referenced in the ecosystem header live in and are audited by their five respective upstream repositories.
+- **Local vs. Upstream Proofs:** This repository contains **0 local Lean 4 files**. It is strictly an orchestration, reverse-proxy, and visualization instrument. Its own invariants (CSRF/CSWSH loopback guard, path-traversal defense, `1..1,000,000` clamping, `D7RO` zero-observer-interference, `<=240` ring cap, 112-trait spectral symmetry, Node↔Python relay parity) are audited by **12/12 Node tests** (including **250 seeded `prop_check` trials**), **5/5 Python relay tests** (**120 trials**), static lint, and **6/6 (100.0%) surgical mutation kills**. The `327` combined 6-kernel Lean 4.35.0 proofs referenced in the ecosystem header live in and are audited by their six respective formal sibling repositories (`48 + 70 + 89 + 54 + 30 + 36`).
 - **Unsolved Problems Mega-Atlas Non-Retirement:** **`0 / 1,900` overarching Mega-Atlas open problems are solved or retired** by this repository. It serves solely as an observation and orchestration instrument supporting empirical study of `AI-045`, `SYS-009`, and `SYS-050`, each of which remains strictly **OPEN** (see [`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md)).
 - **Limitations & Indicator-Only Disclosures:** See [`LIMITATIONS.md`](LIMITATIONS.md) and [`CLAIMS.md`](CLAIMS.md) for full real-vs-metaphor boundaries (e.g., `chaosLyapunov` is a heuristic volatility index, not a maximal Lyapunov exponent; Tier 3 internal organs are count-driven projections; this preprint is not externally peer-reviewed).
 
@@ -193,7 +193,7 @@ Epistemic tiers:
 | **C6** | `program-audited` | Verification suite passes `12/12` Node tests, `5/5` Python tests, static lint (`0` errors across 11 files), and kills `6/6` (`100.0%`) planted surgical mutants in an isolated temporary workspace. | `npm test && npm run lint && npm run mutate` | `results/mutation_audit.json`, `scripts/run_mutation_audit.mjs` | Any test fails, any lint error appears, or any planted mutant survives (`killed < 6`). |
 | **C7** | `empirical` | Measured telemetry micro-benchmarks on Node `v25.8.2` (Win64 x64) average `0.0804 ms` for `computeDifferentialsCore` (`p95 = 0.2605 ms`) and `4.5210 ms` for `10,000`-creature binary `AZST` decoding (`p95 = 6.3211 ms`). | `npm run bench` | `results/benchmarks.json`, `docs/benchmarks.md` | Repeated runs on the reference machine show systematic regression beyond the documented performance budgets (`> 2 ms` diff / `> 30 ms` AZST decode). |
 | **C8** | `indicator-only` | `differential.chaosLyapunov` is a heuristic volatility/entropy index in `[0, 1]`, Tier 3 internal organs in `web/creature_gl.js` are count-driven projections, and Noetic header readouts are forwarded proxy indicators. | `cat LIMITATIONS.md` | `LIMITATIONS.md`, `web/creature_gl.js` | Falsified immediately if any active document claims these are physical Lyapunov exponents, voxel-accurate organs, or proof of sentience. |
-| **C9** | `upstream-linked` | This repository contains `0` local Lean 4 files; the 5 supervised formal sibling repositories report `244` combined upstream Lean 4 theorems (`42 + 62 + 72 + 48 + 20`) audited in their own repos. | Inspect `repo.yaml` & sibling repos | `README.md`, `docs/MEGA_ATLAS_CROSSCHECK.md` | Any local `.lean` file claimed without audit, or upstream counts drift without updating the registry table. |
+| **C9** | `upstream-linked` | This repository contains `0` local Lean 4 files; the 6 supervised formal sibling repositories report `327` combined upstream 6-kernel Lean 4.35.0 theorems (`48 + 70 + 89 + 54 + 30 + 36`) audited in their own repos. | Inspect `repo.yaml` & sibling repos | `README.md`, `docs/MEGA_ATLAS_CROSSCHECK.md` | Any local `.lean` file claimed without audit, or upstream counts drift without updating the registry table. |
 | **C10** | `open-conjecture` | Zero (`0 / 1,900`) overarching Mega-Atlas open problems (`AI-045`, `SYS-009`, `SYS-050`) are solved or retired by this instrument. | `cat docs/MEGA_ATLAS_CROSSCHECK.md` | `docs/MEGA_ATLAS_CROSSCHECK.md` | Falsified if any section claims retirement of an overarching Mega-Atlas open problem without independent peer-reviewed resolution. |
 
 
@@ -214,7 +214,7 @@ This document explicitly delineates what `omega-triscale-observatory` v6.7.0 **d
 | Tier 4 Bio-FX ULTRA Shaders (`server.mjs`) | Real GLSL ES 3.00 fragment/vertex shaders injected client-side outside `#ifdef PICK`. | **NOT** physical biochemical skin membranes, iridescence physics, or state changes inside `Asmodensius-Native`. |
 | Binomial Taxonomy (`web/taxonomy.js`) | Deterministic FNV-1a procedural Latinate labels derived from clade IDs, UIDs, and morphology ratios. | **NOT** phylogenetic cladistics or biological taxonomy recognized by ICZN/ICN. |
 | Noetic Header Pill (`B14/14 · T10/10 · CQM25/25`) | Real HTTP JSON telemetry proxied from local `:8795`. | Strictly **indicator-only** computational diagnostics; **NOT** evidence of phenomenal consciousness or sentience. |
-| Ecosystem Lean 4 Count (`244` upstream) | Sum of audited Lean 4 theorems reported by five sibling repositories. | **NOT** formally verifying `server.mjs`, `web/app.js`, or `macro_wild_relay.py` (this repo contains **0** Lean 4 files). |
+| Ecosystem Lean 4 Count (`327` upstream) | Sum of audited 6-kernel Lean 4.35.0 theorems reported by six formal sibling repositories. | **NOT** formally verifying `server.mjs`, `web/app.js`, or `macro_wild_relay.py` (this repo contains **0** Lean 4 files). |
 
 ## 2. Engineering & Experimental Limitations
 

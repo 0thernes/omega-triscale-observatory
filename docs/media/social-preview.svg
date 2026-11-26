@@ -29,27 +29,27 @@
   <g font-family="ui-monospace,Consolas,monospace">
     <rect x="64" y="236" width="272" height="148" rx="10" fill="#101826" stroke="#4ea8de" stroke-width="2"/>
     <text x="84" y="268" fill="#4ea8de" font-size="15" font-weight="700">T1 · 10⁻⁹ m · DNA</text>
-    <text x="84" y="298" fill="#eef2f7" font-size="19" font-weight="700">AUTOPHAGE v1.3</text>
+    <text x="84" y="298" fill="#eef2f7" font-size="19" font-weight="700">AUTOPHAGE v1.4</text>
     <text x="84" y="326" fill="#94a3b8" font-size="14">127.0.0.1:8787 (SSE)</text>
-    <text x="84" y="352" fill="#94a3b8" font-size="13">128B Genome · 42 Lean*</text>
+    <text x="84" y="352" fill="#94a3b8" font-size="13">128B Genome · 48 Lean*</text>
 
     <rect x="358" y="236" width="272" height="148" rx="10" fill="#101826" stroke="#36b89a" stroke-width="2"/>
     <text x="378" y="268" fill="#36b89a" font-size="15" font-weight="700">T2 / T2+ · 10⁻⁶ m · CELLS</text>
     <text x="378" y="298" fill="#eef2f7" font-size="19" font-weight="700">Cellulogonic + Omega</text>
     <text x="378" y="326" fill="#94a3b8" font-size="14">:8788 &amp; :8791 (HTTP)</text>
-    <text x="378" y="352" fill="#94a3b8" font-size="13">75 Sub · 1000 Cube · 134 Lean*</text>
+    <text x="378" y="352" fill="#94a3b8" font-size="13">75 Sub · 1000 Cube · 159 Lean*</text>
 
     <rect x="652" y="236" width="272" height="148" rx="10" fill="#101826" stroke="#e06c75" stroke-width="2"/>
     <text x="672" y="268" fill="#e06c75" font-size="15" font-weight="700">T3 · 10⁻² m · ORGANISMS</text>
     <text x="672" y="298" fill="#eef2f7" font-size="19" font-weight="700">Noetic + GL2 Studio</text>
     <text x="672" y="326" fill="#94a3b8" font-size="14">:8795 &amp; :8790 (WebGL2)</text>
-    <text x="672" y="352" fill="#94a3b8" font-size="13">825 C11 · 48 Lean* · 12 Skins</text>
+    <text x="672" y="352" fill="#94a3b8" font-size="13">825 C11 · 54 Lean* · 12 Skins</text>
 
     <rect x="946" y="236" width="270" height="148" rx="10" fill="#101826" stroke="#d99b38" stroke-width="2" stroke-dasharray="6,4"/>
     <text x="966" y="268" fill="#d99b38" font-size="15" font-weight="700">T3+4 · 10¹ m · D7RO</text>
     <text x="966" y="298" fill="#eef2f7" font-size="19" font-weight="700">Asmodensius W1 &amp; W2</text>
     <text x="966" y="326" fill="#94a3b8" font-size="14">:8794 GL2 &amp; :8796 az_view</text>
-    <text x="966" y="352" fill="#d99b38" font-size="13">Strict Read-Only · 20 Lean*</text>
+    <text x="966" y="352" fill="#d99b38" font-size="13">Strict Read-Only · 30 Lean*</text>
   </g>
 
   <rect x="64" y="418" width="1152" height="114" rx="10" fill="#0c1522" stroke="#2d435f" stroke-width="1.5"/>

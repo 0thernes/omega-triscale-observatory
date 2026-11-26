@@ -12,7 +12,7 @@
 - **Build Standard v1.2.0 (`scripts/Audit-Repo.ps1`):** `100.0%` Structure / `100.0%` Completion / `100.0%` Core.
 
 ## Honest Epistemic Boundaries
-- **0 local Lean 4 files:** This repository is strictly a visualization, reverse-proxy, and orchestration instrument. The `244` combined upstream Lean 4 proofs (`42` `autophage` + `62` `cellulogonic-mecha` + `72` `cellular-engine-omega` + `48` `noetic-organism-omega` + `20` `asmodensius-native`) live in and are audited by their respective sibling repositories.
+- **0 local Lean 4 files:** This repository is strictly a visualization, reverse-proxy, and orchestration instrument. The `327` combined upstream 6-kernel Lean 4.35.0 proofs (`48` `autophage` + `70` `cellulogonic-mecha` + `89` `cellular-engine-omega` + `54` `noetic-organism-omega` + `30` `asmodensius-native` + `36` `alife-singularity-omega-package`) live in and are audited by their respective sibling repositories.
 - **Mega-Atlas Non-Retirement:** `0 / 1,900` overarching open problems in `0thernes/unsolved-problems-mega-atlas` are solved or retired (`docs/MEGA_ATLAS_CROSSCHECK.md`).
 - **PowerShell Rule:** Always pass `-LiteralPath` on `Z:\[Vibe Coded (AI)]\...` paths.
 - **Daemon Hygiene:** Never leave `server.mjs` running after automated tests.

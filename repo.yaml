@@ -91,7 +91,7 @@ items:
   B19: {status: done}  # Concurrency and race testing (serialized macroSpawnLock + in-flight poller guards + ephemeral HTTP client isolation) [advanced]
   B20: {status: done}  # Numeric and floating-point stability (NaN/Infinity guards, [0,1] clamping, cosine zero-norm guard, Shannon zero-total guard) [advanced]
   B21: {status: done}  # Failure injection (offline/stale engines -> DEGRADED, observerFail -> ALERT, truncated AZST -> null, bad JSON -> 400) [advanced]
-  B22: {status: n/a, note: "Zero local Lean 4 files (formal: false); upstream companion repos hold 244 audited Lean 4 proofs (DEVIATIONS.md D1)."}
+  B22: {status: n/a, note: "Zero local Lean 4 files (formal: false); six formal companion repos hold 327 audited 6-kernel Lean 4.35.0 proofs (DEVIATIONS.md D1)."}
   B23: {status: n/a, note: "No separate TLA+/Alloy model (formal: false); D7RO & clamping invariants verified by prop_check and 6/6 mutation audit."}
   B24: {status: n/a, note: "Orchestration/UI instrument implemented in zero-dependency Node.js ESM, Python 3, and WebGL2 (formal: false)."}
   B25: {status: n/a, note: "Zero C/C++/Rust runtime code (formal: false, native: false)."}

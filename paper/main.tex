@@ -11,6 +11,7 @@
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{placeins}
+\PassOptionsToPackage{obeyspaces}{url}
 \usepackage{xurl}
 \usepackage[hidelinks,colorlinks=true,linkcolor=blue!60!black,citecolor=teal!70!black,urlcolor=blue!70!black]{hyperref}
 
@@ -47,7 +48,7 @@ Multi-scale Artificial Life research pipelines spanning molecular replicators, c
 
 Architecturally, the observatory enforces four auditable engineering guarantees: (i) a strict render-only observer boundary (\code{D7RO}) preventing live T1/T2 state writes into \code{Asmodensius-Native} while preserving shader \code{\#ifdef PICK} hit-testing; (ii) a fail-closed loopback HTTP/WebSocket CSRF/CSWSH and path-traversal security perimeter; (iii) bounded bare-metal Windows launch controls ($1$--$1{,}000{,}000$ founders, $23$-bit lesion bitmask, \code{AVX2/VNNI}, \code{24C P+E}, \code{DDR5} prefetch, \code{RTX 5070 Ti CUDA PTX}, large pages) differentially verified between Node and Python; and (iv) a deterministic 112-trait spectral differential, 8-axis biophysical cosine coherence, and rolling $\le 240$-sample omnitemporal ring buffer. Automated verification passes $12/12$ Node integration/property/metamorphic tests ($250$ seeded \code{prop\_check} trials), $5/5$ Python relay tests ($120$ seeded trials), static lint hygiene, and $6/6$ ($100.0\%$) surgical mutation kills.
 
-\emph{Honest epistemic and peer-review boundary:} This technical architecture preprint has not undergone formal external peer review. The observatory is strictly a visualization, telemetry, and process-orchestration instrument; it contains $0$ local Lean~4 proof files (upstream formal proofs live in five sibling repositories) and retires zero ($0 / 1{,}900$) overarching open problems in the \emph{Unsolved Problems Mega-Atlas}.
+\emph{Honest epistemic and peer-review boundary:} This technical architecture preprint has not undergone formal external peer review. The observatory is strictly a visualization, telemetry, and process-orchestration instrument; it contains $0$ local Lean~4 proof files (upstream formal proofs live in six formal sibling repositories) and retires zero ($0 / 1{,}900$) overarching open problems in the \emph{Unsolved Problems Mega-Atlas}.
 \end{abstract}
 
 \maketitle
@@ -82,7 +83,7 @@ C5 & \tagpa & Conservation gate fails closed (\tcode{ALERT} on any residual or \
 C6 & \tagpa & Automated suite passes $12/12$ Node tests ($250$ \tcode{prop\_check}), $5/5$ Python tests ($120$ trials), static lint, and $6/6$ ($100\%$) surgical mutants killed. & \tcode{scripts/run_mutation_audit.mjs}, \tcode{results/mutation_audit.json} & Any test failure or surviving planted mutant. \\
 C7 & \tagem & Measured local Node~v25.8.2 latency averages $0.0804\text{ ms}$ for differentials and $4.5210\text{ ms}$ for $10{,}000$-creature binary \tcode{AZST} decoding. & \tcode{scripts/benchmark_observatory.mjs}, \tcode{results/benchmarks.json} & Re-run on reference host diverges outside variance. \\
 C8 & \tagio & Volatility index \tcode{chaosLyapunov} and count-driven T3 organ meshes are heuristic visualization indicators, not Lyapunov exponents or anatomical coordinates. & \tcode{LIMITATIONS.md}, \tcode{web/creature_gl.js} & Claiming physical/Lyapunov equivalence without proof. \\
-C9 & \tagul & Repo contains $0$ local Lean~4 files; supervised sibling repos report $244$ combined upstream Lean~4 theorems audited in their own repos. & \tcode{README.md}, \tcode{docs/MEGA_ATLAS_CROSSCHECK.md} & Upstream repo audit count changes without sync. \\
+C9 & \tagul & Repo contains $0$ local Lean~4 files; six formal sibling repos report $327$ combined upstream 6-kernel Lean~4.35.0 theorems audited in their own repos. & \tcode{README.md}, \tcode{docs/MEGA_ATLAS_CROSSCHECK.md} & Upstream repo audit count changes without sync. \\
 C10 & \tagoc & Zero ($0 / 1{,}900$) overarching Mega-Atlas open problems (\tcode{AI-045}, \tcode{SYS-009}, \tcode{SYS-050}) are solved or retired by this instrument. & \tcode{docs/MEGA_ATLAS_CROSSCHECK.md} & Peer-reviewed resolution of a parent Atlas ID. \\
 \bottomrule
 \end{tabularx}
@@ -106,10 +107,10 @@ Figure~\ref{fig:arch} illustrates the topology of the observatory. A single loop
   arr/.style={-{Latex[length=2mm]}, semithick, draw=black!75},
   darr/.style={-{Latex[length=2mm]}, semithick, dashed, draw=orange!75!black}
 ]
-  \node[box, text width=2.45cm] (t1) {\textbf{\#1 T1 DNA}\\AUTOPHAGE v1.3\\\tcode{:8787} (SSE)};
-  \node[box, right=of t1, text width=2.55cm] (t2) {\textbf{\#2 T2 Cells}\\Cellulogonic v1.4\\\tcode{:8788} (HTTP)};
-  \node[box, right=of t2, text width=2.55cm] (t2p) {\textbf{\#3 T2+ Frontier}\\Omega v5.1 (75 Sub)\\\tcode{:8791} (HTTP)};
-  \node[box, right=of t2p, text width=2.65cm] (t3n) {\textbf{\#4 T3/4 Mind}\\Noetic v2.0 (825 C11)\\\tcode{:8795} (HTTP)};
+  \node[box, text width=2.45cm] (t1) {\textbf{\#1 T1 DNA}\\AUTOPHAGE v1.4\\\tcode{:8787} (SSE)};
+  \node[box, right=of t1, text width=2.55cm] (t2) {\textbf{\#2 T2 Cells}\\Cellulogonic v1.5\\\tcode{:8788} (HTTP)};
+  \node[box, right=of t2, text width=2.55cm] (t2p) {\textbf{\#3 T2+ Frontier}\\Omega v5.2 (75 Sub)\\\tcode{:8791} (HTTP)};
+  \node[box, right=of t2p, text width=2.65cm] (t3n) {\textbf{\#4 T3/4 Mind}\\Noetic v2.1 (825 C11)\\\tcode{:8795} (HTTP)};
 
   \node[hub, below=9mm of t2, xshift=16mm, text width=6.2cm] (hub) {\textbf{\#7 OMEGA 4-Tier Observatory Hub v6.7.0} (\tcode{server.mjs :8790})\\
     Loopback CSRF/CSWSH Guard $\cdot$ \tcode{lib/observatory\_core.mjs} $\cdot$ \tcode{/healthz} $\cdot$ SSE \tcode{/api/stack/events}\\
@@ -144,14 +145,14 @@ Figure~\ref{fig:arch} illustrates the topology of the observatory. A single loop
 \toprule
 \textbf{\#} & \textbf{Tier} & \textbf{Local Endpoint} & \textbf{Supervised Instrument / Upstream Repo} & \textbf{Transport} & \textbf{Policy} \\
 \midrule
-1 & T1 ($10^{-9}\text{ m}$) & \tcode{127.0.0.1:8787} & \tcode{AUTOPHAGE v1.3} (\tcode{0thernes/autophage}) & HTTP + SSE & Read/Cmd \\
-2 & T2 ($10^{-6}\text{ m}$) & \tcode{127.0.0.1:8788} & \tcode{Cellulogonic Mecha v1.4} (\tcode{cellulogonic-mecha}) & HTTP JSON & Read/Cmd \\
-3 & T2+ & \tcode{127.0.0.1:8791} & \tcode{Cellular Engine Omega v5.1} (\tcode{cellular-engine-omega}) & HTTP JSON & Read/Poll \\
-4 & T3/4 & \tcode{127.0.0.1:8795} & \tcode{Noetic Organism Omega v2.0} (\tcode{noetic-organism-omega}) & HTTP JSON & Read/DNA \\
-5 & T3+4 W1 & \tcode{127.0.0.1:8794} & \tcode{Asmodensius-Native} WebGL2 (\tcode{asmodensius-native}) & AZST + WS & \textbf{D7RO} \\
-6 & T3+4 W2 & \tcode{127.0.0.1:8796} & \tcode{Asmodensius-Native} \tcode{az\_view} (\tcode{asmodensius-native}) & HTTP Proxy & \textbf{D7RO} \\
+1 & T1 ($10^{-9}\text{ m}$) & \tcode{127.0.0.1:8787} & \tcode{AUTOPHAGE v1.4.0} (\tcode{0thernes/autophage}) & HTTP + SSE & Read/Cmd \\
+2 & T2 ($10^{-6}\text{ m}$) & \tcode{127.0.0.1:8788} & \tcode{Cellulogonic Mecha v1.5.0} (\tcode{cellulogonic-mecha}) & HTTP JSON & Read/Cmd \\
+3 & T2+ & \tcode{127.0.0.1:8791} & \tcode{Cellular Engine Omega v5.2.0} (\tcode{cellular-engine-omega}) & HTTP JSON & Read/Poll \\
+4 & T3/4 & \tcode{127.0.0.1:8795} & \tcode{Noetic Organism Omega v2.1.0} (\tcode{noetic-organism-omega}) & HTTP JSON & Read/DNA \\
+5 & T3+4 W1 & \tcode{127.0.0.1:8794} & \tcode{Asmodensius-Native v1.1.0} WebGL2 (\tcode{asmodensius-native}) & AZST + WS & \textbf{D7RO} \\
+6 & T3+4 W2 & \tcode{127.0.0.1:8796} & \tcode{Asmodensius-Native v1.1.0} \tcode{az\_view} (\tcode{asmodensius-native}) & HTTP Proxy & \textbf{D7RO} \\
 7 & Hub & \tcode{127.0.0.1:8790} & \tcode{OMEGA Observatory v6.7.0} (this repository) & HTTP, SSE, WS & Supervisor \\
-8 & Atlas & \tcode{:8790/zeta-omega/} & \tcode{Zeta-Omega v3.3} (\tcode{alife-singularity-omega-package}) & Static Safe & Read-Only \\
+8 & Atlas & \tcode{:8790/zeta-omega/} & \tcode{Zeta-Omega v3.4.0} (\tcode{alife-singularity-omega-package}) & Static Safe & Read-Only \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -266,7 +267,7 @@ Upstream cognitive-indicator readouts displayed on the \code{Noetic} header pill
 \label{sec:limitations}
 
 \begin{enumerate}[leftmargin=1.5em,itemsep=2pt]
-  \item \emph{Orchestrator, Not Formal Prover:} \code{omega-triscale-observatory} contains $0$ Lean~4 proof files. While its header references $244$ combined upstream Lean~4 proofs across five supervised repositories, those theorems are checked in their respective repositories, not by \code{server.mjs}.
+  \item \emph{Orchestrator, Not Formal Prover:} \code{omega-triscale-observatory} contains $0$ Lean~4 proof files. While its header references $327$ combined upstream 6-kernel Lean~4.35.0 proofs across six formal sibling repositories ($48 + 70 + 89 + 54 + 30 + 36$), those theorems are checked in their respective repositories, not by \code{server.mjs}.
   \item \emph{Indicator-Only Volatility Metric:} The field \code{differential.chaosLyapunov} is a bounded $[0,1]$ heuristic combining rolling telemetry step jumps and Shannon entropies; it is \emph{not} a mathematically valid maximal Lyapunov exponent.
   \item \emph{Count-Driven Internal Organ Projection:} Tier~3 WebGL2 internal organ meshes in \code{web/creature\_gl.js} are procedurally synthesized from live scalar counts (\code{parts}, \code{neurons}, \code{tiles}, \code{active\_axons}) rather than per-organ 3D physical coordinates, which \code{/api/inspect} does not export.
   \item \emph{Observer-Only Bio-FX Cosmetic Layer:} Proxy-injected multi-skins and surface undulations alter client-side rendering only and do not represent physical biochemical membranes inside \code{az\_live.exe}.
