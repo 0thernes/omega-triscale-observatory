@@ -6,7 +6,7 @@ Canonical cross-mapping of `omega-triscale-observatory` v6.7.0 against **`0thern
 
 > **`0 / 1,900` overarching open problems in the Unsolved Problems Mega-Atlas are solved or retired by `omega-triscale-observatory` v6.7.0.**
 
-This repository is strictly a multi-scale visualization, reverse-proxy, telemetry-metrology, and process-orchestration instrument. It contains **0 local Lean 4 formal proofs** (the `244` combined upstream Lean 4 theorems belong to five supervised companion repositories and verify finite discrete engine invariants, not overarching open problems).
+This repository is strictly a multi-scale visualization, reverse-proxy, telemetry-metrology, and process-orchestration instrument. It contains **0 local Lean 4 formal proofs** (the `327` combined upstream Lean 4 theorems belong to six supervised companion repositories and, as reported there, verify finite discrete engine invariants, not overarching open problems).
 
 ## Supported Empirical Observation Scope (Parent Problems Strictly OPEN)
 

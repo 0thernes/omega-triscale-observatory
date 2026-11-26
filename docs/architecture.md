@@ -25,5 +25,5 @@
 ## 3. Data Flow & Observer Independence (`D7RO`)
 
 - **Allowed Write Paths:** T1 → T2 (`DNA-128B` transfection), T4/T3 → T2 (habitat solvent sync, nutrient plume, shock), Operator → T1+T2 (13-vector restraint parity).
-- **Strictly Forbidden Write Paths (`D7RO`):** T1 → T3, T1 → T4, T2 → T3, T2 → T4. `computeDifferentialsCore` hard-codes `{ m: "D7RO", s: 0 }` for all four cells, verified by automated tests and mutation kill `M3_D7RO_OBSERVER_VIOLATION`.
+- **Strictly Forbidden Write Paths (`D7RO`):** T1 → T3, T1 → T4, T2 → T3, T2 → T4. `computeDifferentialsCore` hard-codes `{ m: "D7RO", s: 0 }` for all four displayed cells; automated tests and mutation kill `M3_D7RO_OBSERVER_VIOLATION` check that constant. That the hub sends no T1/T2-derived data to `:8794` rests on code inspection; no automated test records that traffic.
 - **Client-Only Bio-FX:** Proxy shader injection into `/proxy/macro/viewer_gl.js` modifies rendering strictly outside `#ifdef PICK` blocks, leaving GPU picking and engine state untouched.

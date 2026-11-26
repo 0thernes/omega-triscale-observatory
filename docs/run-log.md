@@ -14,6 +14,6 @@ Chronological audit trail of verified local execution runs for `omega-triscale-o
 | 3 | `node scripts/lint_check.mjs` | **PASS** | `9` JS/MJS + `2` Python targets, `0` errors |
 | 4 | `node scripts/run_mutation_audit.mjs` | **PASS** | `6/6` (`100.0%`) planted surgical mutants killed (`M1`..`M6`), saved to `results/mutation_audit.json` |
 | 5 | `node scripts/benchmark_observatory.mjs` | **PASS** | `computeDifferentialsCore` `0.0804 ms` mean; `decodeAzstCreaturesCore` (10k) `4.5210 ms` mean; saved to `results/benchmarks.json` |
-| 6 | `python scripts/check_citations.py` | **PASS** | `13` BibTeX entries, `16/16` live URLs & DOIs verified (`HTTP 200` / `DOI OK (200)`) |
+| 6 | `python scripts/check_citations.py` | **PASS** | `13` BibTeX entries, `16/16` URLs & DOIs reachable (`HTTP 200` / `DOI OK (200)`); reachability only: the `bedau1998` DOI resolves to a different chapter (Crossref check 2026-11-26, see `ERRATA.md`) |
 | 7 | `python scripts/build_paper.py` | **PASS** | `0` Overfull `\hbox`, `0` undefined refs/citations; frozen `dist/Donahue_2026_omega_triscale_observatory.pdf` + clean-room verified `dist/arxiv_submission.tar.gz` |
 | 8 | `pwsh -NoProfile -File scripts/Audit-Repo.ps1` | **PASS** | `100.0%` Structure / `100.0%` Completion / `100.0%` Core (`0` fails, `0` partials, `0` unknowns, `0` placeholders) |

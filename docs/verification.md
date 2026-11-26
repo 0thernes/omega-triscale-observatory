@@ -1,6 +1,6 @@
 # Verification Architecture (`docs/verification.md`)
 
-`omega-triscale-observatory` v6.7.0 implements a multi-layer automated verification strategy covering every critical security, numeric, cross-language, and observer-isolation invariant with **zero external test frameworks** (pure Node.js `node:test` + Python `unittest`).
+`omega-triscale-observatory` v6.7.0 implements a multi-layer automated test strategy (example-based and seeded-random tests, not proofs) for its security, numeric, cross-language and display invariants, with **zero external test frameworks** (pure Node.js `node:test` + Python `unittest`).
 
 ## Verification Layers
 
@@ -16,12 +16,13 @@
 4. **Metamorphic, Golden & Observer-Isolation Tests (`B08`/`B14`):**
    - 112-trait spectral delta swap antisymmetry (`dna <-> cells`), constant-shift invariance inside `[0, 1]`, and clamping against unclamped `[0..7]` inputs.
    - Omnitemporal ring cap `<= 240` across `320` consecutive pushes; fail-closed conservation gate (`VERIFIED` / `ALERT` / `DEGRADED`).
-   - Unconditional `D7RO` (`s: 0`) enforcement on `matrix4x4[0..1][2..3]` and `#ifdef PICK` preservation in `injectMacroBioFx`.
+   - Constant `D7RO` (`s: 0`) cells on `matrix4x4[0..1][2..3]` and `#ifdef PICK` preservation in `injectMacroBioFx` (no test records the hub's traffic to `:8794`).
+   - Not tested: the `DEGRADED` result for an offline required tier, and the WebSocket `upgrade` handler wiring.
    - Deterministic `AZST` binary creature decoding and deterministic `web/taxonomy.js` outputs.
 5. **Cross-Language Differential Oracle (`B11`/`B12`):**
-   - Feeds identical extreme & nominal configurations through Node `normalizeGenesisConfig` + `buildRelayArgs` and invokes `python macro_wild_relay.py --dry-run` as an independent cross-language oracle, verifying 100% agreement across every clamped field and hardware flag.
+   - Normalizes 3 extreme and nominal configurations with Node `normalizeGenesisConfig`, passes `buildRelayArgs(norm)` to `python macro_wild_relay.py --dry-run`, and checks that both sides agree on every field and hardware flag for those 3 cases. Because Python receives already-normalized inputs, raw-input clamping is not compared across the two languages.
 6. **Surgical Mutation Testing (`scripts/run_mutation_audit.mjs` — `B13`):**
-   - Copies the repo into an isolated `os.tmpdir()` directory, plants 6 targeted logic regressions (`M1`..`M6`), executes the full Node test suite against each mutant, verifies **6/6 (100.0%)** killed, and removes the temporary directory cleanly.
+   - Copies the repo into an isolated `os.tmpdir()` directory, plants 6 hand-written logic regressions (`M1`..`M6`, all in `lib/observatory_core.mjs`), executes the full Node test suite against each mutant, checks that **6/6** are killed, and removes the temporary directory. This is a kill rate for these six mutants, not a mutation score for `server.mjs` or the metric arithmetic.
 7. **Live Citation & Clean-Room White Paper Verification:**
-   - `scripts/check_citations.py`: live HTTP/DOI Handle REST verification of all 16 URLs/DOIs in `paper/refs.bib`.
+   - `scripts/check_citations.py`: live HTTP/DOI Handle REST reachability check of all 16 URLs/DOIs in `paper/refs.bib`. Reachability does not show that a DOI names the cited work: on 2026-11-26 a Crossref check found that the `bedau1998` DOI (`10.7551/mitpress/1428.003.0028`) resolves to a different chapter (see `ERRATA.md`).
    - `scripts/build_paper.py`: Tectonic compilation failing on ANY Overfull `\hbox`, undefined ref/citation, or missing character, followed by deterministic `arxiv_submission.tar.gz` clean-room rebuild.

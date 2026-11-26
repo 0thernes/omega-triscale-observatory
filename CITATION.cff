@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this multi-scale observatory, reverse-proxy metrology architecture, verification suite, or white paper, please cite it as below."
-title: "OMEGA 4-Tier Multi-Scale Observatory (v6.7.0): Render-Only Observer Isolation, Loopback Reverse-Proxy Telemetry, and Automated Verification Across Eight Local Artificial-Life Endpoints"
+title: "OMEGA 4-Tier Multi-Scale Observatory (v6.7.0): A Loopback Reverse-Proxy Telemetry Hub with a Render-Only Observer Convention and Automated Tests Across Eight Local Artificial-Life Endpoints"
 version: "6.7.0"
 date-released: "2026-11-25"
 type: software
@@ -27,9 +27,12 @@ keywords:
 abstract: >-
   Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life
   observatory supervising eight local endpoints across seven public repositories on
-  127.0.0.1:8790. Enforces strict render-only D7 observer isolation (D7RO), loopback
-  CSRF/CSWSH and path-traversal security boundaries, bounded bare-metal 1..1,000,000
-  population controls differentially verified between Node and Python, 112-trait spectral
-  differentials with <=240 omnitemporal history ring capping, and 6/6 (100.0%) surgical
-  mutation-kill coverage. Strictly a visualization and orchestration instrument; retires
-  0/1,900 overarching Mega-Atlas open problems.
+  127.0.0.1:8790. The displayed T1/T2-to-T3/T4 coupling cells are fixed at D7RO with
+  strength 0; no code path writing T1/T2 data into Asmodensius was found by inspection,
+  but no automated test checks this. Automated example-based and seeded-random tests
+  cover loopback CSRF/CSWSH request predicates, path-traversal rejection, 1..1,000,000
+  population clamping (compared between Node and Python on normalized inputs), 112-trait
+  spectral differentials and a <=240-sample history ring; 6/6 hand-planted regression
+  mutants in lib/observatory_core.mjs are killed. These are tests, not proofs; the
+  repository contains no Lean code. It is a visualization and orchestration instrument
+  and retires 0/1,900 Mega-Atlas open problems.

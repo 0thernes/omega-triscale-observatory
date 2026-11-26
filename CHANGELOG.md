@@ -3,6 +3,15 @@
 All notable changes to `omega-triscale-observatory` are documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
+## [Unreleased] - 2026-11-26
+
+### Changed (documentation only; no code, test, paper or version change)
+- Narrowed claims to match an independent statement audit of commit `bbe4da9` ([audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md)). `D7RO` is now described as constant display cells, with the no-write-path result marked as code inspection, not a test. "100% mutation-verified metrology" is now "6/6 planted regression mutants in `lib/observatory_core.mjs` killed". Tests are no longer called proofs or verification of every invariant.
+- Marked untested parts in `CLAIMS.md` C1, C2 and C5: WebSocket `upgrade` handler wiring, the `DEGRADED`-on-offline case, and Node↔Python parity on normalized inputs only.
+- Replaced the stale `244` / five-repository upstream Lean figure with `327` / six in `docs/faq.md`, `docs/MEGA_ATLAS_CROSSCHECK.md` and `docs/adr/0001-architecture-and-verification-boundaries.md`.
+- Corrected the "16/16 live-verified" citation wording: the checker tests reachability only, and the `bedau1998` DOI resolves to a different chapter. This also corrects the same phrase in the `[6.7.0]` entry below.
+- Added a dated `ERRATA.md` section for errors in the frozen paper and bibliography, and a list of known test-coverage gaps.
+
 ## [6.7.0] - 2026-11-25
 
 ### Added
