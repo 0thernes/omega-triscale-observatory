@@ -1,0 +1,14 @@
+OMEGA 4-Tier Multi-Scale Observatory (omega-triscale-observatory)
+Copyright 2026 Alexander Stephen Donahue
+ORCID: 0009-0006-8168-9648
+Affiliation: Independent Researcher, Spokane, WA, USA
+Contact: 0_0@0thernes.art | https://0thernes.art
+Repository: https://github.com/0thernes/omega-triscale-observatory
+
+This product is dual-licensed:
+- Source code, scripts, tests, and CI workflows: Apache License, Version 2.0 (LICENSE)
+- White paper, PDFs, documentation, figures, and diagrams: Creative Commons Attribution 4.0 International (LICENSE-DOCS)
+
+Portions of the repository quality checklist and audit tooling (`scripts/Audit-Repo.ps1`,
+`scripts/audit-repo.sh`, `scripts/audit-checks.tsv`, `repo-standard.schema.json`) follow
+the Build Standard for LLMs v1.2.0.

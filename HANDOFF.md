@@ -1,14 +1,18 @@
-# HANDOFF.md — omega-triscale-observatory (v6.6.0)
+# HANDOFF.md — OMEGA 4-Tier Multi-Scale Observatory (v6.7.0)
 
-**Status:** Verified green on Win64 Clang (`-Wall -Wextra -Werror`) and Linux GCC (`-Wall -Wextra -Werror`), synced with all 7 connected public repositories on `main`.
-**Repo Scope:** Orchestrates all 6 public repos + read-only Asmodensius (:8794) + Zeta-Omega Atlas (/zeta-omega/)
+**Status:** Verified green on Windows 11 x64 (`Node v25.8.2`, `Python 3.12.10`, `Tectonic 0.17.0`) and cross-platform CI (`ubuntu-latest` + `windows-latest`), synced on `main`.
+**Repo Scope:** Zero-dependency Node.js ESM + Python 3 + WebGL 2.0 cockpit supervising **8 live local endpoints across 7 public repositories** (`:8787`, `:8788`, `:8791`, `:8795`, `:8794`, `:8796`, `:8790`, `:8790/zeta-omega/`).
 
-## Unified 7-Repo A-Life Singularity Omega Ecosystem (Clean-Slate v3.0 Complete)
-- **Workspace Root:** `Z:\[Vibe Coded (AI)]\ANTIGRAVITY\` (ReFS Dev Drive; mirror: `I:\A-Life God Plan\A-Life Master Folder Build`)
-- **Total Pure Lean 4 Theorems:** **`240 / 240`** (`42` `autophage v1.3.0` + `62` `cellulogonic-mecha v1.4.0` + `72` `cellular-engine-omega v5.1.0` + `48` `noetic-organism-omega v2.0.0` + `16` `asmodensius-native`) strictly within `{propext, Classical.choice, Quot.sound}`, `0 sorry`, `0 admit`, `0 bv_decide`, `0 warnings`.
-- **Clean-Slate v3.0 Executable Checks:** **`825 / 825` individually executed in native C11 (`0` fail)** — `779` `EXECUTED_PASS`, `29` `EXECUTED_PASS_INDICATOR_ONLY` (ADR 0018 Rule-4 & Rule-6), `12` `NATIVE_RELEASE_GATE_PASS` (`L7_WSE12`), `5` `PASS_CLASSICAL_PARITY_DISCLOSED` (`F-092`, `N01`, `N02`, `N50`, `LIFE-L040-A5`, Policy P7).
-- **Bottom-Up Milestones:** **`100 / 100` (`M001..M100`, Stages `0..8`, First-15 Playable `LOCKED_PASS`, `0 uq` drift)**.
-- **Substrates & Hybrid Cube:** **`75 / 75` Substrates (`PM01..25`, `MF01..25`, `GW01..25`)** + **`1,000 / 1,000` Hybrid Cube (`661 [OK]`, `274 [ADAPT]`, `20 [OVER]`, `45 [EXCL]`, `935/935` active forward stability)**.
-- **Release & Forensic Gates:** **`13 / 13` Clean-Slate v3.0 Release Gates PASS**, **`35 / 35` Compiled Mutants Caught**, **`18 / 18` Package Forensic Gates PASS (`Z: <-> I:` 0-mismatch SHA-256)**, **`OVBS-52 = 92.05` (`STAGE_5_CONVERGED_SYNTHESIS`)**.
-- **External Boundary:** `Z:\[Vibe Coded (AI)]\CLAUDECODE\Asmodensius-Native` is now actively upgraded, unlocked, verified (`76/76` ctest, `16` Pure Lean 4, both visual worlds `:8794` & `:8796`), and pushed publicly to `https://github.com/0thernes/asmodensius-native`.
-- **PowerShell Rule:** Always use `-LiteralPath` on `Z:\[Vibe Coded (AI)]\...` paths.
+## Verified v6.7.0 Local Baseline (This Repository)
+- **Node Verification Suite (`npm test`):** `12/12` PASS (syntax audit, `VERSION`/identity check, `1..1,000,000` clamping, bare-metal hardware flags, path-traversal + CSRF/CSWSH negative security tests, live ephemeral HTTP contract tests including `/healthz`, `250` seeded `prop_check` trials, metamorphic 112-trait spectral invariance, `<= 240` omnitemporal cap, `D7RO` zero-observer-interference, `#ifdef PICK` shader preservation, binary AZST decode, and Node↔Python `--dry-run` differential parity).
+- **Python Relay Suite (`python -m unittest discover -s tests -v`):** `5/5` PASS (`120` seeded randomized trials + subprocess `--dry-run`).
+- **Static Lint & Hygiene (`npm run lint`):** `0` errors across `9` JS/MJS + `2` Python targets.
+- **Surgical Mutation Audit (`npm run mutate`):** `6/6` (`100.0%`) planted logic regressions killed in an isolated temp workspace.
+- **White Paper & Bibliography:** `16/16` live-verified citation URLs/DOIs (`13` entries); Tectonic AMS-LaTeX PDF (`dist/Donahue_2026_omega_triscale_observatory.pdf`) with `0` Overfull `\hbox`, `0` undefined refs/citations, and clean-room verified `dist/arxiv_submission.tar.gz`.
+- **Build Standard v1.2.0 (`scripts/Audit-Repo.ps1`):** `100.0%` Structure / `100.0%` Completion / `100.0%` Core.
+
+## Honest Epistemic Boundaries
+- **0 local Lean 4 files:** This repository is strictly a visualization, reverse-proxy, and orchestration instrument. The `244` combined upstream Lean 4 proofs (`42` `autophage` + `62` `cellulogonic-mecha` + `72` `cellular-engine-omega` + `48` `noetic-organism-omega` + `20` `asmodensius-native`) live in and are audited by their respective sibling repositories.
+- **Mega-Atlas Non-Retirement:** `0 / 1,900` overarching open problems in `0thernes/unsolved-problems-mega-atlas` are solved or retired (`docs/MEGA_ATLAS_CROSSCHECK.md`).
+- **PowerShell Rule:** Always pass `-LiteralPath` on `Z:\[Vibe Coded (AI)]\...` paths.
+- **Daemon Hygiene:** Never leave `server.mjs` running after automated tests.

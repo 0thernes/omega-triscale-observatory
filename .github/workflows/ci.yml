@@ -1,0 +1,126 @@
+name: CI — Verification, Mutation Audit, Paper & Provenance
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Node.js Test Suite (Contract, HTTP, 250 prop_check, Metamorphic, Differential)
+        run: npm test
+
+      - name: Python Relay Unittest Suite (120 Randomized Trials)
+        run: python -m unittest discover -s tests -v
+
+      - name: Static Syntax, Security, Determinism & Identity Lint
+        run: npm run lint
+
+      - name: Surgical Mutation Audit (6/6 Mutants)
+        run: npm run mutate
+
+      - name: Deterministic Micro-Benchmarks (Report-Only)
+        run: npm run bench
+
+      - name: Offline BibTeX Citation Syntax Audit
+        run: python scripts/check_citations.py --offline
+
+      - name: Build Standard v1.2.0 Repository Audit
+        shell: pwsh
+        run: pwsh -NoProfile -File scripts/Audit-Repo.ps1
+
+  security-scan:
+    name: Security Scan (gitleaks + Python static check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret Scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Report-Only Ruff & Mypy Check
+        continue-on-error: true
+        run: |
+          pip install --quiet ruff==0.11.12 mypy==1.15.0
+          ruff check macro_wild_relay.py tests/test_relay.py scripts/build_paper.py scripts/check_citations.py
+          mypy --ignore-missing-imports macro_wild_relay.py scripts/build_paper.py scripts/check_citations.py
+
+  paper-and-provenance:
+    name: Tectonic PDF, Clean-Room arXiv & SLSA Provenance
+    runs-on: ubuntu-latest
+    needs: [verify]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Tectonic
+        uses: wtfjoke/setup-tectonic@v3
+
+      - name: Compile AMS-LaTeX White Paper & Clean-Room Verify arXiv Tarball
+        run: python scripts/build_paper.py
+
+      - name: Generate SHA256SUMS Manifest
+        run: |
+          sha256sum \
+            VERSION \
+            package.json \
+            lib/observatory_core.mjs \
+            server.mjs \
+            macro_wild_relay.py \
+            dist/Donahue_2026_omega_triscale_observatory.pdf \
+            dist/arxiv_submission.tar.gz > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Attest Build Provenance (SLSA)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dist/Donahue_2026_omega_triscale_observatory.pdf
+            dist/arxiv_submission.tar.gz
+            SHA256SUMS
+
+      - name: Upload Frozen Paper & Checksums Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-triscale-observatory-v6.7.0-dist
+          path: |
+            dist/Donahue_2026_omega_triscale_observatory.pdf
+            dist/arxiv_submission.tar.gz
+            SHA256SUMS
+            results/mutation_audit.json
+            results/benchmarks.json

@@ -12,7 +12,7 @@
     <div class="brand">
       <div class="sigil" aria-hidden="true"><span></span></div>
       <div class="brand-text">
-        <h1>OMEGA 4-TIER OBSERVATORY <span class="ver">v6.6.0 · 7 REPOS · 825/825 · 100M · 75 SUB · 1000 CUBE · 244 PURE LEAN 4</span></h1>
+        <h1>OMEGA 4-TIER OBSERVATORY <span class="ver">v6.7.0 · 7 REPOS · 8 ENDPOINTS · 825/825 · 100M · 75 SUB · 1000 CUBE · 244 PURE LEAN 4</span></h1>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
       <a class="inet-pill" id="pillBioInet" href="http://127.0.0.1:8791/" target="_blank" rel="noopener" title="Open Cellular Engine Omega v5.1 — TB01-16, 75 Substrates, 1,000-Cell Hybrid Cube & 72 Pure Lean 4 Proofs">
         <i class="status-led"></i><span>Omega v5.1 · syncing…</span>
       </a>
-      <div class="proof-pill ok" id="pillConservation" title="Live thermodynamic & observer-independence invariant verification across all 4 tiers">
+      <div class="proof-pill ok" id="pillConservation" role="status" aria-live="polite" title="Live thermodynamic & observer-independence invariant verification across all 4 tiers">
         <i class="status-led"></i><span>0 amu · 0 uq · 0 2nd · 0 Obs</span>
       </div>
 
@@ -36,16 +36,16 @@
       <button id="btnToggleDeck" class="tbtn active" title="Toggle Metrology & Differential Lab Deck (Key D)">Lab Deck ▾</button>
 
       <div class="popover-wrap">
-        <button id="btnLinksMenu" class="tbtn" title="Standalone engine endpoints & repositories">Links ▾</button>
+        <button id="btnLinksMenu" class="tbtn" aria-haspopup="true" title="Standalone engine endpoints & repositories">Links ▾</button>
         <div class="popover" id="linksPopover" hidden>
           <div class="pop-title">All 8 Live Local Instruments (7 Repos · 244 Pure Lean 4 · Both Asmodensius Worlds)</div>
           <a href="http://127.0.0.1:8787/" target="_blank" rel="noopener"><i class="pip t1"></i>#1 · T1 AUTOPHAGE v1.3 DNA (42 Pure Lean) <span>:8787</span></a>
           <a href="http://127.0.0.1:8788/" target="_blank" rel="noopener"><i class="pip t2"></i>#2 · T2 Cellulogonic Mecha v1.4 (62 Pure Lean) <span>:8788</span></a>
           <a href="http://127.0.0.1:8791/" target="_blank" rel="noopener"><i class="pip omega"></i>#3 · Cellular Omega v5.1 (75 Sub · 1000 Cube · 72 Pure Lean) <span>:8791</span></a>
           <a href="http://127.0.0.1:8795/" target="_blank" rel="noopener"><i class="pip t3"></i>#4 · Noetic Organism Omega v2.0 (825/825 · 100M · 48 Pure Lean) <span>:8795</span></a>
-          <a href="http://127.0.0.1:8794/" target="_blank" rel="noopener"><i class="pip t4"></i>#5 · T3+T4 Asmodensius World #1: WebGL2 3D Cosmos (16 Lean) <span>:8794</span></a>
+          <a href="http://127.0.0.1:8794/" target="_blank" rel="noopener"><i class="pip t4"></i>#5 · T3+T4 Asmodensius World #1: WebGL2 3D Cosmos (20 Lean) <span>:8794</span></a>
           <a href="http://127.0.0.1:8796/" target="_blank" rel="noopener"><i class="pip t4"></i>#6 · T3+T4 Asmodensius World #2: Native az_view &amp; Proof Bench <span>:8796</span></a>
-          <a href="http://127.0.0.1:8790/" target="_blank" rel="noopener"><i class="pip t3"></i>#7 · Massive "See All" 4-Tier Hub v6.6.0 <span>:8790</span></a>
+          <a href="http://127.0.0.1:8790/" target="_blank" rel="noopener"><i class="pip t3"></i>#7 · Massive "See All" 4-Tier Hub v6.7.0 <span>:8790</span></a>
           <a href="http://127.0.0.1:8790/zeta-omega/" target="_blank" rel="noopener"><i class="pip omega"></i>#8 · Zeta-Omega v3.3 Atlas (18/18 Pkg Gates · 244 Lean 4) <span>/zeta-omega</span></a>
           <div class="pop-sep"></div>
           <div class="pop-title">7 Unified Public Repositories (0thernes)</div>
@@ -364,7 +364,7 @@
           <a class="ibtn" href="http://127.0.0.1:8787/" target="_blank" rel="noopener" title="Open standalone :8787">↗</a>
         </div>
       </header>
-      <iframe id="frameMicro" src="/proxy/micro/?embed=1" title="Tier 1: AUTOPHAGE v1.2 x86-64 Genetic Engine"></iframe>
+      <iframe id="frameMicro" src="/proxy/micro/?embed=1" title="Tier 1: AUTOPHAGE v1.3 x86-64 Genetic Engine"></iframe>
     </section>
 
     <!-- TIER 2: CELLS (10^-6 m) -->
@@ -377,7 +377,7 @@
         </div>
         <div class="pane-tools">
           <i class="live-led" id="dotCells"></i>
-          <select id="selSolventQuick" class="mini-sel" title="Planetary / Xenocellular Solvent">
+          <select id="selSolventQuick" class="mini-sel" aria-label="Planetary / Xenocellular Solvent" title="Planetary / Xenocellular Solvent">
             <option value="0">H₂O</option>
             <option value="1">Titan</option>
             <option value="2">Vent</option>
@@ -387,7 +387,7 @@
           <a class="ibtn" href="http://127.0.0.1:8788/" target="_blank" rel="noopener" title="Open standalone :8788">↗</a>
         </div>
       </header>
-      <iframe id="frameMeso" src="/proxy/meso/?embed=1" title="Tier 2: Cellulogonic Mecha v1.3 3D Cellular Observatory"></iframe>
+      <iframe id="frameMeso" src="/proxy/meso/?embed=1" title="Tier 2: Cellulogonic Mecha v1.4 3D Cellular Observatory"></iframe>
     </section>
 
     <!-- TIER 3: CREATURES (10^-2 m) -->

@@ -1,0 +1,21 @@
+# OMEGA 4-Tier Multi-Scale Observatory (v6.7.0)
+
+> Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 local cockpit supervising 8 live Artificial Life endpoints across 7 public repositories on 127.0.0.1:8790 with strict render-only D7RO observer isolation, loopback CSRF/CSWSH & path-traversal defenses, bounded bare-metal 1..1,000,000 controls, and 6/6 (100%) surgical mutation verification.
+
+- Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
+- Licenses: Apache-2.0 (code) / CC-BY-4.0 (white paper & docs)
+- Verification boundary: 0 local Lean 4 files (supervises 5 formal companion repos reporting 244 combined upstream Lean 4 theorems); 0/1,900 Mega-Atlas open problems retired.
+
+## Core Entry Points
+- [README.md](README.md): Overview, 8-endpoint topology, Quickstart, Usage, verification boundaries
+- [AGENTS.md](AGENTS.md): Canonical engineering rules (Build Standard v1.2.0, R1-R8, 10 finding classes)
+- [CLAIMS.md](CLAIMS.md): Numbered claims ledger with epistemic tiers and explicit refutation conditions
+- [LIMITATIONS.md](LIMITATIONS.md): Threats to validity and real-vs-metaphor boundaries
+- [REPLICATION.md](REPLICATION.md): Clean-clone replication protocol and dated log
+- [docs/architecture.md](docs/architecture.md): 4-tier 8-endpoint reverse-proxy and telemetry architecture
+- [docs/threat-model.md](docs/threat-model.md): STRIDE security analysis
+- [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Non-retirement accounting (AI-045, SYS-009, SYS-050 remain OPEN)
+- [paper/main.tex](paper/main.tex): AMS-LaTeX architecture white paper (frozen PDF in dist/Donahue_2026_omega_triscale_observatory.pdf)
+- [lib/observatory_core.mjs](lib/observatory_core.mjs): Pure deterministic core logic
+- [server.mjs](server.mjs): Loopback HTTP/SSE/WebSocket Hub (:8790) + /healthz
+- [macro_wild_relay.py](macro_wild_relay.py): Read-only Asmodensius-Native relay (:8794) with --dry-run

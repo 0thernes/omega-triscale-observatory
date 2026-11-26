@@ -1,0 +1,22 @@
+# Hardening Log (`HARDENING_LOG.md`)
+
+Chronological engineering log of the v6.6.0 → v6.7.0 3-cycle hardening pass on `omega-triscale-observatory`. Every finding is classified using exactly one of the 10 Build Standard v1.2.0 finding classes (`bug`, `error`, `issue`, `problem`, `concern`, `dilemma`, `conflict`, `gap`, `hole`, `blindspot`).
+
+## Cycle 1 — Static & Security Architecture Audit (2026-11-25)
+
+1. **`error` (Stale/inconsistent versions & C11 compiler copy-paste):** `HANDOFF.md` falsely claimed Win64 Clang/Linux GCC C11 compilation; `web/app.js` Export JSON hardcoded `v6.3` / `162 PURE LEAN 4`; `web/index.html` mixed `v6.6.0` / `244` with `16 Lean`, `AUTOPHAGE v1.2`, `Cellulogonic v1.3`; `CLAUDE.md` said `v6.5.0`; GitHub About said `v6.2` / `150`. **Fixed:** Unified all references cleanly to `v6.7.0` and separated `0` local Lean files from `244` upstream companion proofs.
+2. **`hole` (Path traversal & query parameter boundaries):** Static serving in `server.mjs` relied on raw `startsWith`, lacked NUL-byte/UNC/drive-letter checks, and `/api/stack/shape/:clade` + `/api/stack/env-slice?z=` silently coerced malformed inputs instead of returning HTTP `400`. **Fixed:** Implemented canonical `resolveSafePath`, `validateCladeParam`, and `validateSliceZParam` in `lib/observatory_core.mjs` with negative HTTP tests.
+3. **`bug` (Genesis hardware checkbox hydration):** `populateGenesisForm(cfg)` in `web/app.js` failed to sync `genKernels`, `genEcores`, `genPrefetch`, and `genGpu` checkboxes on hydration. **Fixed:** Added explicit checkbox synchronization.
+4. **`issue` (Untestable top-level side effects in `server.mjs` & `macro_wild_relay.py`):** Importing `server.mjs` unconditionally launched child engines and bound port `8790`; `macro_wild_relay.py` required `Asmodensius-Native/demo/viewer_server.py` on disk before validating arguments. **Fixed:** Factored pure core into `lib/observatory_core.mjs`, guarded `server.mjs` startup behind `isMain` + `--no-engines`, added `GET /healthz`, and added `macro_wild_relay.py --dry-run`.
+
+## Cycle 2 — Automated Verification, Property, Differential & Mutation Hardening (2026-11-25)
+
+5. **`gap` (Zero automated test or mutation coverage):** Repository had zero automated tests, no `package.json`/lockfile, no linter, and no mutation harness. **Fixed:** Added `package.json`, `package-lock.json`, `jsconfig.json`, `requirements.txt`, `tests/test_observatory.mjs` (12 suites, 250 `prop_check` trials, live ephemeral HTTP contract tests, Node↔Python differential parity), `tests/test_relay.py` (5 suites, 120 trials), `scripts/lint_check.mjs`, `scripts/run_mutation_audit.mjs` (6/6 = 100% killed), and `scripts/benchmark_observatory.mjs`.
+6. **`bug` (Lint false-positive on explanatory comment):** First run of `scripts/lint_check.mjs` flagged `Math.random()` inside a comment in `server.mjs`. **Fixed:** Stripped comments prior to regex matching in `lint_check.mjs` so only executable calls are flagged.
+
+## Cycle 3 — White Paper, Citation Audit & Build Standard v1.2.0 Compliance (2026-11-25)
+
+7. **`gap` (No architecture white paper or verified bibliography):** Authored `paper/main.tex` (`amsart`, TikZ 4-tier 8-endpoint diagram, Playbook v1.3 sections) + `paper/refs.bib` (13 primary citations, 16/16 live URLs & DOIs verified), `scripts/build_paper.py`, and `scripts/check_citations.py`.
+8. **`issue` (Two Overfull `\hbox` warnings on initial Tectonic compile):** Caught automatically by `scripts/build_paper.py` on lines 155 and 209–210 of `paper/main.tex`. **Fixed:** Tightened inline code/table breaks to achieve `0` Overfull `\hbox`, `0` undefined refs/citations, and clean-room verified `dist/arxiv_submission.tar.gz`.
+9. **`problem` (Affiliations & dual-license compliance):** Ensured zero `0thernes LLC` occurrences across all active code, docs, citations, `.zenodo.json`, paper, and GitHub metadata; instituted Apache-2.0 (`LICENSE`) + CC-BY-4.0 (`LICENSE-DOCS`).
+10. **`blindspot` (Multi-platform CI & Mega-Atlas non-retirement):** Added cross-platform (`ubuntu-latest` + `windows-latest`) informational CI workflow with `SHA256SUMS`, build provenance attestation, and secret scanning, plus explicit `docs/MEGA_ATLAS_CROSSCHECK.md` affirming `0/1,900` overarching problems retired.

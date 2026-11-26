@@ -8,6 +8,7 @@ coexist across all 3D habitats without rapid monoculture collapse.
 """
 import argparse
 import importlib.util
+import json
 import os
 import re
 import shutil
@@ -15,6 +16,7 @@ import signal
 import threading
 from pathlib import Path
 
+RELAY_VERSION = "6.7.0"
 DEFAULT_ASMO_ROOT = Path(r"Z:\[Vibe Coded (AI)]\CLAUDECODE\Asmodensius-Native")
 ASMO_ENGINE = DEFAULT_ASMO_ROOT / "build" / "z" / "az_live.exe"
 MAX_RETAINED_RUNS = 5
@@ -324,7 +326,7 @@ def parse_param_string(raw: str) -> dict:
     return out
 
 
-def main():
+def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Omega 4-Tier Wild Biodiversity Relay for Asmodensius-Native")
     p.add_argument("--port", type=int, default=8794)
     p.add_argument("--preset", choices=list(PRESETS.keys()), default="cambrian")
@@ -346,11 +348,11 @@ def main():
     p.add_argument("--lab", action="store_true")
     p.add_argument("--seed", type=int, default=None)
     p.add_argument("--param", type=str, default="")
-    a = p.parse_args()
+    p.add_argument("--dry-run", action="store_true", help="Emit resolved JSON config and engine CLI options without launching")
+    return p
 
-    demo_dir = resolve_asmo_demo(a.engine)
-    vs = load_viewer_server_module(demo_dir)
 
+def resolve_relay_options(a: argparse.Namespace) -> tuple[dict, list[str]]:
     cfg = PRESETS[a.preset]
     n_val = max(1, min(1000000, a.n if a.n is not None else cfg["n"]))
     raw_cap = a.cap if a.cap is not None else cfg["cap"]
@@ -393,15 +395,50 @@ def main():
         options.extend(["--grid", grid_val])
     if lesion_val:
         options.extend(["--lesion", hex(lesion_val)])
-    safe_seed = max(0, a.seed) if a.seed is not None else None
+    safe_seed = max(0, min(2147483647, a.seed)) if a.seed is not None else None
     if a.lab:
         options.append("--lab")
         if safe_seed is not None:
             options.extend(["--seed", str(safe_seed)])
 
+    resolved = {
+        "version": RELAY_VERSION,
+        "preset": a.preset,
+        "n": n_val,
+        "cap": cap_val,
+        "species": sp_val,
+        "grid": grid_val,
+        "tps": tps_val,
+        "sps": sps_val,
+        "threads": threads_val,
+        "kernels": int(a.kernels),
+        "ecores": bool(a.ecores),
+        "gpu": int(a.gpu),
+        "prefetch": int(a.prefetch),
+        "large_pages": bool(a.large_pages),
+        "lesion": lesion_val,
+        "lab": bool(a.lab),
+        "seed": safe_seed,
+        "param_count": len(merged_params),
+    }
+    return resolved, options
+
+
+def main():
+    a = build_parser().parse_args()
+    resolved, options = resolve_relay_options(a)
+
+    if a.dry_run:
+        print(json.dumps({"config": resolved, "options": options}, sort_keys=True))
+        return
+
+    demo_dir = resolve_asmo_demo(a.engine)
+    vs = load_viewer_server_module(demo_dir)
+
     data_dir = a.data_dir.resolve()
     prune_old_run_dirs(data_dir, keep_latest=MAX_RETAINED_RUNS)
 
+    safe_seed = resolved["seed"]
     mode_lbl = f"LAB(seed={safe_seed})" if a.lab else f"WILD {a.preset.upper()}"
     app = vs.App(a.port, data_dir)
     with vs.ThreadingHTTPServer(("127.0.0.1", a.port), vs.handler(app)) as server:
@@ -415,8 +452,8 @@ def main():
         try:
             app.start(a.engine.resolve(), options)
             print(
-                f"Serving {mode_lbl} cosmos ({sp_val} species, grid {grid_val}, "
-                f"n={n_val}, cap={cap_val}, tps={tps_val}, lesion={hex(lesion_val)}) "
+                f"Serving {mode_lbl} cosmos ({resolved['species']} species, grid {resolved['grid']}, "
+                f"n={resolved['n']}, cap={resolved['cap']}, tps={resolved['tps']}, lesion={hex(resolved['lesion'])}) "
                 f"on http://127.0.0.1:{a.port}/ (run {app.run_id})",
                 flush=True,
             )

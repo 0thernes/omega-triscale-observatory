@@ -1,14 +1,84 @@
-# OMEGA 4-TIER STACK OBSERVATORY v6.6.0 (`7 REPOS · 8 LIVE ENDPOINTS · BOTH ASMODENSIUS VISUAL WORLDS · 825/825 C11 · 100M · 75 SUB · 1000 CUBE · 240 PURE LEAN 4`)
+# OMEGA 4-Tier Multi-Scale Observatory (v6.7.0)
 
-Unified real-time 4-tier Artificial Life cockpit supervising **ALL 8 LIVE LOCAL INSTRUMENTS** across all **7 connected public repositories** simultaneously on http://127.0.0.1:8790/ (**`240` combined Pure Lean 4 Formal Proofs strictly within `[propext, Classical.choice, Quot.sound]` — `42` `autophage` + `62` `cellulogonic-mecha` + `72` `cellular-engine-omega` + `48` `noetic-organism-omega` + `16` `asmodensius-native`, `0 sorryAx`, `0` custom/SAT axioms, `0 warnings`**):
+Unified zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life cockpit supervising **8 live local endpoints across 7 public repositories** on `http://127.0.0.1:8790/` with strict render-only `D7RO` observer isolation, loopback CSRF/CSWSH security boundaries, bounded bare-metal `1..1,000,000` controls, and 100% surgical mutation-verified metrology.
 
-| # | Tier / Instrument | Biological & Computational Layer | Native Engine / Formal Proofs | Standalone Live URL |
+[![Version](https://img.shields.io/badge/version-6.7.0-0e8a16.svg)](VERSION)
+[![Status](https://img.shields.io/badge/status-active-2ea44f.svg)](ROADMAP.md)
+[![Code License](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
+[![Docs License](https://img.shields.io/badge/docs%20%26%20paper-CC--BY--4.0-teal.svg)](LICENSE-DOCS)
+[![Tests](https://img.shields.io/badge/tests-12%20Node%20%2B%205%20Python%20PASS-brightgreen.svg)](tests/test_observatory.mjs)
+[![Mutation](https://img.shields.io/badge/mutation-6%2F6%20(100%25)-brightgreen.svg)](results/mutation_audit.json)
+[![Build Standard](https://img.shields.io/badge/build--standard-v1.2.0-informational.svg)](repo.yaml)
+
+> **Maintenance status:** `status: active` · **Author:** Alexander Stephen Donahue (`Independent Researcher, Spokane, WA, USA`, ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)) · **White Paper:** [`dist/Donahue_2026_omega_triscale_observatory.pdf`](dist/Donahue_2026_omega_triscale_observatory.pdf) *(not externally peer-reviewed)*
+
+![OMEGA 4-Tier Multi-Scale Observatory Architecture Card](docs/media/social-preview.svg)
+
+## Supervised 4-Tier, 8-Endpoint Topology (7 Public Repositories)
+
+| # | Tier / Instrument | Biological & Computational Layer | Upstream Engine & Audits | Local Endpoint |
 |---|---|---|---|---|
-| **#1** | **Tier 1 · DNA (`10⁻⁹ m`)** | 256B x86-64 RWX Genomes, 8×8 F₂ Ribosomes, GF(2⁸), Real 128B Genome Export, Philox/Weismann Isolation | `AUTOPHAGE v1.3.0` (`autophage.exe` · **42 Pure Lean 4 Proofs** · 18/18 Gates · 6/6 Mutants) | http://127.0.0.1:8787/ |
-| **#2** | **Tier 2 · CELLS (`10⁻⁶ m`)** | True 3D Morphogens, Strict 4-Solvent Second Law, XPBD Dissipation, Carcass/Yolk Conservation, Lipschitz 128B DNA Ingest | `Cellulogonic Mecha v1.4.0` (`cellulogonic.exe` · **62 Pure Lean 4 Proofs** · 24/24 Gates · 8/8 Mutants) | http://127.0.0.1:8788/ |
-| **#3** | **Tier 2+ · DEEP STRATA, 75 SUBSTRATES & 1,000-CELL CUBE** | 16 Frontier Testbeds (`TB01`–`TB16`) + **75/75 Substrates** (`PM01..25`, `MF01..25`, `GW01..25`) + **1,000/1,000 Hybrid Cube** (`661 [OK] / 274 [ADAPT] / 20 [OVER] / 45 [EXCL]`) | `Cellular Engine Omega v5.1.0` (`omega_cell.exe` · **72 Pure Lean 4 Proofs** · 54/54 Gates · 16/16 Mutants) | http://127.0.0.1:8791/ |
-| **#4** | **Tier 3/4 · WHOLE-ORGANISM COGNITIVE & CLEAN-SLATE v3.0** | **825/825 Native C11 Checks** (`0` Fail, `29` Indicator-Only, `5` Honest Parity Disclosed), **100/100 Milestones**, **13/13 CS-v3 Release Gates**, Ring-0 WSE-12, XPBD, b1.58, Blackiston | `Noetic Organism Omega v2.0.0` (`noetic_engine.exe` · **48 Pure Lean 4 Proofs** · 10/10 Unit+Mut · 5/5 Anti-LARP) | http://127.0.0.1:8795/ |
-| **#5** | **Tier 3+4 · ASMODENSIUS VISUAL WORLD #1 (WebGL2 3D)** | Interactive GPU WebGL2 3D Wild Cambrian Cosmos (`viewer.html` + upgraded native multi-color `viewer_gl.js`), Orbit/Fly/Follow, Close-Ups, Voxels, Field Slices, Creature Inspector | `Asmodensius-Native` (`build\z\az_live.exe` · **76/76 ctest** · **16 Pure Lean 4 Proofs** · active read-write Repo #7!) | http://127.0.0.1:8794/ |
-| **#6** | **Tier 3+4 · ASMODENSIUS VISUAL WORLD #2 (Native `az_view`)** | Engine-Rendered `az_view` Live Dashboard (`live.html` + `live_server.py --autostart`), 240 World Parameters, 112-Trait Census, Proof Checks (`az_run`), Full Test Suite (`ctest`) | `Asmodensius-Native` (`build\z\az_live.exe` + `az_run.exe`, toggleable inside Hub via `W1:GL2` / `W2:az_view`!) | http://127.0.0.1:8796/ |
-| **#7** | **ALL 4 TIERS · MASSIVE "SEE ALL" HUB v6.6.0** | Unified 4-Tier Cockpit + Dual Asmodensius World Switcher (`W1:GL2` ⇄ `W2:az_view`) + Real 128B DNA→Cells + Atomic `T1:13 · T2:13` Parity + Loopback CSRF/CSWSH Perimeter | `server.mjs` (supervises all 8 local endpoints cleanly) | http://127.0.0.1:8790/ |
-| **#8** | **ZETA-OMEGA v3.3-OMEGA SINGULARITY ATLAS** | 21-Tab Omniscient Observatory (`2,782` unified records, 75 Substrates, 10×10×10 Cube, 24 Gradients, 36 Contrasts, 30 Adjacents, 18/18 Package Forensic Gates) | Served via Hub `/zeta-omega/` (synced byte-for-byte with `I:\A-Life God Plan\A-Life Master Folder Build`) | http://127.0.0.1:8790/zeta-omega/ |
+| **#1** | **Tier 1 · DNA (`10⁻⁹ m`)** | 256B x86-64 RWX Genomes, 8×8 F₂ Ribosomes, GF(2⁸), Real 128B Genome Export, Philox/Weismann Isolation | `AUTOPHAGE v1.3.0` (`0thernes/autophage` · 42 upstream Lean 4) | `http://127.0.0.1:8787/` |
+| **#2** | **Tier 2 · CELLS (`10⁻⁶ m`)** | True 3D Morphogens, Strict 4-Solvent Second Law, XPBD Dissipation, Carcass/Yolk Conservation, 128B DNA Ingest | `Cellulogonic Mecha v1.4.0` (`0thernes/cellulogonic-mecha` · 62 upstream Lean 4) | `http://127.0.0.1:8788/` |
+| **#3** | **Tier 2+ · DEEP STRATA & CUBE** | 16 Frontier Testbeds (`TB01`–`TB16`), 75 Substrates, 1,000-Cell Hybrid Cube | `Cellular Engine Omega v5.1.0` (`0thernes/cellular-engine-omega` · 72 upstream Lean 4) | `http://127.0.0.1:8791/` |
+| **#4** | **Tier 3/4 · COGNITIVE & CS-v3** | 825/825 Native C11 Checks (29 indicator-only, 5 classical-parity disclosed), 100 Milestones, 13 CS-v3 Gates | `Noetic Organism Omega v2.0.0` (`0thernes/noetic-organism-omega` · 48 upstream Lean 4) | `http://127.0.0.1:8795/` |
+| **#5** | **Tier 3+4 · ASMODENSIUS WORLD #1** | GPU WebGL2 3D Wild Cosmos (`macro_wild_relay.py`), Orbit/Dive, Voxels, Close-Ups, strict **`D7RO`** read-only | `Asmodensius-Native` (`0thernes/asmodensius-native` · 20 upstream Lean 4) | `http://127.0.0.1:8794/` |
+| **#6** | **Tier 3+4 · ASMODENSIUS WORLD #2** | Native `az_view` Live Dashboard & Proof Bench (`live_server.py`, toggleable via `W1:GL2` ⇄ `W2:az_view`) | `Asmodensius-Native` (`az_live.exe` + `az_run.exe`, **`D7RO`**) | `http://127.0.0.1:8796/` |
+| **#7** | **ALL 4 TIERS · MASSIVE HUB v6.7.0** | Unified Cockpit, 112-Trait Spectral Δ, 8-Axis `cosθ`, `<=240` Ring, Bare-Metal `1..1M` Studio, `/healthz` | `server.mjs` + `lib/observatory_core.mjs` (this repository) | `http://127.0.0.1:8790/` |
+| **#8** | **ZETA-OMEGA v3.3 ATLAS** | 21-Tab Static Archive (2,782 records, 18/18 upstream package forensic gates) | `alife-singularity-omega-package` via safe static proxy | `http://127.0.0.1:8790/zeta-omega/` |
+
+## Quickstart
+
+Requires **Node.js >= 22** and **Python >= 3.12** (zero `npm install` or `pip install` needed).
+
+```bash
+git clone https://github.com/0thernes/omega-triscale-observatory.git
+cd omega-triscale-observatory
+
+# 1. Run all automated verification, property, differential, lint, and mutation tests
+npm test
+python -m unittest discover -s tests -v
+npm run lint
+npm run mutate
+
+# 2. Launch standalone UI & health endpoint (no sibling repositories required)
+npm run start:standalone
+# Visit http://127.0.0.1:8790/ and http://127.0.0.1:8790/healthz
+
+# 3. Launch full 4-tier 8-endpoint supervisor (when companion repos are cloned as siblings)
+npm start
+```
+
+## Usage
+
+### Dry-Run Bare-Metal Relay CLI (Cross-Platform, Safe)
+
+```bash
+python macro_wild_relay.py --preset million --data-dir ./runtime/dry \
+  --n 1000000 --cap 0 --species 100 --kernels 1 --ecores --gpu 1 --prefetch 1 --large-pages --dry-run
+```
+
+### Programmatic Core Import (`lib/observatory_core.mjs`)
+
+```js
+import { normalizeGenesisConfig, buildRelayArgs, computeDifferentialsCore, createInitialState } from "./lib/observatory_core.mjs";
+
+const cfg = normalizeGenesisConfig({ preset: "million", n: 1_000_000, ecores: true, gpu: true, prefetch: true });
+console.log(cfg.n, cfg.cap, buildRelayArgs(cfg).includes("--ecores"));
+// -> 1000000 1004096 true
+```
+
+See [`examples/README.md`](examples/README.md) and [`examples/verify_pipeline.mjs`](examples/README.md) for runnable end-to-end examples.
+
+## Honest Verification Boundaries & Mega-Atlas Cross-Check
+
+- **Local vs. Upstream Proofs:** This repository contains **0 local Lean 4 files**. It is strictly an orchestration, reverse-proxy, and visualization instrument. Its own invariants (CSRF/CSWSH loopback guard, path-traversal defense, `1..1,000,000` clamping, `D7RO` zero-observer-interference, `<=240` ring cap, 112-trait spectral symmetry, Node↔Python relay parity) are audited by **12/12 Node tests** (including **250 seeded `prop_check` trials**), **5/5 Python relay tests** (**120 trials**), static lint, and **6/6 (100.0%) surgical mutation kills**. The `244` combined Lean 4 proofs referenced in the ecosystem header live in and are audited by their five respective upstream repositories.
+- **Unsolved Problems Mega-Atlas Non-Retirement:** **`0 / 1,900` overarching Mega-Atlas open problems are solved or retired** by this repository. It serves solely as an observation and orchestration instrument supporting empirical study of `AI-045`, `SYS-009`, and `SYS-050`, each of which remains strictly **OPEN** (see [`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md)).
+- **Limitations & Indicator-Only Disclosures:** See [`LIMITATIONS.md`](LIMITATIONS.md) and [`CLAIMS.md`](CLAIMS.md) for full real-vs-metaphor boundaries (e.g., `chaosLyapunov` is a heuristic volatility index, not a maximal Lyapunov exponent; Tier 3 internal organs are count-driven projections; this preprint is not externally peer-reviewed).
+
+## Documentation & Paper
+
+- White Paper (AMS-LaTeX PDF): [`dist/Donahue_2026_omega_triscale_observatory.pdf`](dist/Donahue_2026_omega_triscale_observatory.pdf) · Source: [`paper/main.tex`](paper/main.tex) · Clean-room arXiv tarball: [`dist/arxiv_submission.tar.gz`](dist/arxiv_submission.tar.gz)
+- Claims & Falsification Ledger: [`CLAIMS.md`](CLAIMS.md) · Limitations: [`LIMITATIONS.md`](LIMITATIONS.md) · Replication: [`REPLICATION.md`](REPLICATION.md)
+- Architecture, Threat Model, Benchmarks, Operations, FAQ & Glossary: [`docs/index.md`](docs/index.md)
+- Dual License: Code under [Apache-2.0](LICENSE) · Paper, Docs & Figures under [CC-BY-4.0](LICENSE-DOCS)

@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this multi-scale observatory, reverse-proxy metrology architecture, verification suite, or white paper, please cite it as below."
+title: "OMEGA 4-Tier Multi-Scale Observatory (v6.7.0): Render-Only Observer Isolation, Loopback Reverse-Proxy Telemetry, and Automated Verification Across Eight Local Artificial-Life Endpoints"
+version: "6.7.0"
+date-released: "2026-11-25"
+type: software
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+repository-code: "https://github.com/0thernes/omega-triscale-observatory"
+url: "https://github.com/0thernes/omega-triscale-observatory"
+authors:
+  - family-names: "Donahue"
+    given-names: "Alexander Stephen"
+    orcid: "https://orcid.org/0009-0006-8168-9648"
+    affiliation: "Independent Researcher, Spokane, WA, USA"
+    email: "0_0@0thernes.art"
+keywords:
+  - "artificial life"
+  - "multi-scale observatory"
+  - "observer independence"
+  - "reverse proxy"
+  - "WebGL2"
+  - "telemetry metrology"
+  - "mutation testing"
+  - "property-based testing"
+abstract: >-
+  Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life
+  observatory supervising eight local endpoints across seven public repositories on
+  127.0.0.1:8790. Enforces strict render-only D7 observer isolation (D7RO), loopback
+  CSRF/CSWSH and path-traversal security boundaries, bounded bare-metal 1..1,000,000
+  population controls differentially verified between Node and Python, 112-trait spectral
+  differentials with <=240 omnitemporal history ring capping, and 6/6 (100.0%) surgical
+  mutation-kill coverage. Strictly a visualization and orchestration instrument; retires
+  0/1,900 overarching Mega-Atlas open problems.

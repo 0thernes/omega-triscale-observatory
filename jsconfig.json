@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "strict": true
+  },
+  "include": [
+    "lib/**/*.mjs",
+    "scripts/**/*.mjs",
+    "tests/**/*.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    "runtime",
+    "paper/build"
+  ]
+}

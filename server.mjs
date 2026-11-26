@@ -1,11 +1,40 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2026 Alexander Stephen Donahue
 import http from "node:http";
 import net from "node:net";
 import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import {
+  OBSERVATORY_VERSION,
+  SOLVENT_NAMES,
+  GENESIS_PRESETS,
+  createSplitMix32,
+  clampInt,
+  isLoopbackHost,
+  isLoopbackOrigin,
+  isSafeLoopbackRequest,
+  resolveSafePath,
+  validateCladeParam,
+  validateSliceZParam,
+  autoCap,
+  normalizeGenesisConfig,
+  buildRelayArgs as buildRelayArgsCore,
+  shannonBits,
+  rollingVariance,
+  deriveDnaSeed32 as deriveDnaSeed32Core,
+  uidToSeed32,
+  sanitizeProxyHeaders,
+  createInitialState,
+  computeDifferentialsCore,
+  decodeAzstCreaturesCore,
+  sampleLocalHabitatCore
+} from "./lib/observatory_core.mjs";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const SERVER_START_MS = Date.now();
 const WEB_DIR = path.join(__dirname, "web");
 const RUNTIME_DIR = path.join(__dirname, "runtime");
 const MACRO_DATA_DIR = path.join(RUNTIME_DIR, "macro-wild-data");
@@ -41,13 +70,6 @@ const PATHS = {
   zetaHtml:       path.join(ZETA_PKG_ROOT, "html", "ALife_Singularity_SuperLife_Omega_Dashboard.html")
 };
 
-const SOLVENT_NAMES = [
-  "0 · Terran Aqueous H2O",
-  "1 · Titan Cryo CH4/N2",
-  "2 · Hydrothermal GDGT",
-  "3 · Venusian H2SO4"
-];
-
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".js":   "application/javascript; charset=utf-8",
@@ -67,43 +89,7 @@ const MIME = {
 };
 
 /* Deterministic seeded SplitMix32 PRNG (replaces non-reproducible Math.random() calls) */
-let hubRngState = 0x5EED6301 >>> 0;
-function nextHubRand() {
-  hubRngState = (hubRngState + 0x9E3779B9) >>> 0;
-  let z = hubRngState;
-  z = Math.imul(z ^ (z >>> 16), 0x85EBCA6B) >>> 0;
-  z = Math.imul(z ^ (z >>> 13), 0xC2B2AE35) >>> 0;
-  return ((z ^ (z >>> 16)) >>> 0) / 4294967296;
-}
-
-function clampInt(val, lo, hi, fallback) {
-  const n = Number(val);
-  if (!Number.isFinite(n)) return fallback;
-  return Math.max(lo, Math.min(hi, Math.round(n)));
-}
-
-/* Strict Loopback Host / Origin / Sec-Fetch-Site Guard (defeats cross-site CSRF & CSWSH) */
-function isLoopbackHost(hostHdr) {
-  if (!hostHdr || typeof hostHdr !== "string") return false;
-  return /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/i.test(hostHdr.trim());
-}
-
-function isLoopbackOrigin(originHdr) {
-  if (!originHdr || typeof originHdr !== "string") return true;
-  return /^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/i.test(originHdr.trim());
-}
-
-function isSafeLoopbackRequest(req, requireJson = false) {
-  if (!isLoopbackHost(req.headers.host)) return false;
-  if (req.headers.origin && !isLoopbackOrigin(req.headers.origin)) return false;
-  const sfs = String(req.headers["sec-fetch-site"] || "").toLowerCase();
-  if (sfs && sfs !== "same-origin" && sfs !== "same-site" && sfs !== "none") return false;
-  if (requireJson) {
-    const ct = String(req.headers["content-type"] || "").toLowerCase();
-    if (!ct.includes("application/json")) return false;
-  }
-  return true;
-}
+const nextHubRand = createSplitMix32(0x5EED6301);
 
 /* ============================================================================
  * 1. Child Native Engine Supervisor (With Live Hot-Respawn & Clean Tree Reaping)
@@ -111,37 +97,7 @@ function isSafeLoopbackRequest(req, requireJson = false) {
 const children = [];
 let macroChild = null;
 let currentCosmosPreset = "cambrian";
-const GENESIS_PRESETS = {
-  cambrian: {
-    preset: "cambrian", n: 8000, cap: 48000, species: 100, grid: "6,6,5", tps: 14, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
-    params: { BRAIN_FOUND_HID: 6, BRAIN_DENSITY: 148, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 14, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 162, LIFE_SIZE_MU: 22 }
-  },
-  hyperbrain: {
-    preset: "hyperbrain", n: 6000, cap: 40000, species: 100, grid: "6,6,5", tps: 12, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
-    params: { BRAIN_FOUND_HID: 12, BRAIN_DENSITY: 224, NEURO_RATE: 480, TIER1_LEARN_SHIFT: 12, EXPR_MUT_RATE: 280, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 36, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 48, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 24 }
-  },
-  hyperchaos: {
-    preset: "hyperchaos", n: 10000, cap: 65536, species: 100, grid: "6,6,5", tps: 18, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
-    params: { BRAIN_FOUND_HID: 8, BRAIN_DENSITY: 168, NEURO_RATE: 512, TIER1_LEARN_SHIFT: 13, EXPR_MUT_RATE: 640, GENE_NEW_RATE: 380, FAMILY_SPACE: 32768, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 48, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 158, LIFE_SIZE_MU: 22 }
-  },
-  megaswarm: {
-    preset: "megaswarm", n: 24000, cap: 110000, species: 100, grid: "6,6,5", tps: 12, sps: 10, threads: 0, lesion: 0, lab: false, seed: 42,
-    params: { BRAIN_FOUND_HID: 5, BRAIN_DENSITY: 128, NEURO_RATE: 300, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 360, GENE_NEW_RATE: 220, FAMILY_SPACE: 24576, COLONY_FOUND: 24, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 56, WORLDGEN_SEA_LEVEL: 168, LIFE_SIZE_MU: 18 }
-  },
-  abyss: {
-    preset: "abyss", n: 8000, cap: 48000, species: 100, grid: "6,6,5", tps: 14, sps: 12, threads: 0, lesion: 0, lab: false, seed: 42,
-    params: { BRAIN_FOUND_HID: 7, BRAIN_DENSITY: 156, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 14, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 200, FAMILY_SPACE: 16384, COLONY_FOUND: 16, WORLDGEN_VARY_LOCI: 38, WORLDGEN_VENTS: 64, WORLDGEN_SEA_LEVEL: 224, LIFE_SIZE_MU: 24 }
-  },
-  megagrowth: {
-    preset: "megagrowth", n: 250000, cap: 1004096, species: 100, grid: "6,6,5", tps: 0, sps: 6, threads: 0, lesion: 0, lab: false, seed: 42,
-    params: { BRAIN_FOUND_HID: 5, BRAIN_DENSITY: 128, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 18 }
-  },
-  million: {
-    preset: "million", n: 1000000, cap: 1004096, species: 100, grid: "7,6,6", tps: 0, sps: 4, threads: 0, lesion: 0, lab: false, seed: 42,
-    params: { BRAIN_FOUND_HID: 5, BRAIN_DENSITY: 128, NEURO_RATE: 280, TIER1_LEARN_SHIFT: 15, EXPR_MUT_RATE: 320, GENE_NEW_RATE: 190, FAMILY_SPACE: 20480, COLONY_FOUND: 20, WORLDGEN_VARY_LOCI: 36, WORLDGEN_VENTS: 52, WORLDGEN_SEA_LEVEL: 164, LIFE_SIZE_MU: 18 }
-  }
-};
-let currentGenesis = structuredClone(GENESIS_PRESETS.cambrian);
+let currentGenesis = normalizeGenesisConfig("cambrian");
 
 function checkPortOpen(port, timeoutMs = 400) {
   return new Promise((resolve) => {
@@ -236,84 +192,20 @@ function resetMacroCaches() {
   state.creatures.cladeSamples = new Map();
 }
 
-function autoCap(n) {
-  return n <= 250000 ? Math.min(1004096, n * 4 + 4096) : Math.max(n + 4096, 1004096);
-}
-
 function buildRelayArgs(cfg) {
-  const args = [
-    "-I", "-B", PATHS.macroRelay,
-    "--port", String(MACRO_PORT),
-    "--preset", cfg.preset,
-    "--data-dir", MACRO_DATA_DIR,
-    "--engine", PATHS.macroEngine,
-    "--n", String(cfg.n),
-    "--cap", String(cfg.cap),
-    "--species", String(cfg.species),
-    "--grid", String(cfg.grid || "auto"),
-    "--tps", String(cfg.tps),
-    "--sps", String(cfg.sps),
-    "--threads", String(cfg.threads),
-    "--kernels", String(cfg.kernels === false || cfg.kernels === 0 ? 0 : 1),
-    "--gpu", String(cfg.gpu ? 1 : 0),
-    "--prefetch", String(cfg.prefetch === false || cfg.prefetch === 0 ? 0 : 1),
-    "--lesion", "0x" + ((Number(cfg.lesion) || 0) & 0x7fffff).toString(16)
-  ];
-  if (cfg.ecores !== false) args.push("--ecores");
-  if (cfg.largePages) args.push("--large-pages");
-  if (cfg.lab) {
-    args.push("--lab");
-    if (Number.isFinite(Number(cfg.seed))) args.push("--seed", String(Math.max(0, Math.round(Number(cfg.seed)))));
-  }
-  if (cfg.params && typeof cfg.params === "object") {
-    const pairs = Object.entries(cfg.params)
-      .filter(([k, v]) => /^[A-Z0-9_]+$/.test(k) && Number.isFinite(Number(v)))
-      .map(([k, v]) => `${k}=${Math.round(Number(v))}`);
-    if (pairs.length) args.push("--param", pairs.join(","));
-  }
-  return args;
+  return buildRelayArgsCore(cfg, {
+    macroRelay: PATHS.macroRelay,
+    macroPort: MACRO_PORT,
+    macroDataDir: MACRO_DATA_DIR,
+    macroEngine: PATHS.macroEngine
+  });
 }
 
 let macroSpawnLock = Promise.resolve();
 
 async function spawnWildCosmos(presetOrCfg = "cambrian") {
   const run = async () => {
-    let cfg;
-    if (typeof presetOrCfg === "string") {
-      const key = GENESIS_PRESETS[presetOrCfg] ? presetOrCfg : "cambrian";
-      cfg = structuredClone(GENESIS_PRESETS[key]);
-    } else {
-      const baseKey = GENESIS_PRESETS[presetOrCfg?.preset] ? presetOrCfg.preset : "cambrian";
-      const base = structuredClone(GENESIS_PRESETS[baseKey]);
-      const rawGrid = String(presetOrCfg.grid || "");
-      const safeGrid = rawGrid.toLowerCase() === "auto"
-        ? "auto"
-        : (/^\d+,\d+,\d+$/.test(rawGrid)
-          ? rawGrid.split(",").map((g) => clampInt(g, 2, 8, 6)).join(",")
-          : base.grid);
-      const nVal = clampInt(presetOrCfg.n, 1, 1000000, base.n);
-      const rawCap = clampInt(presetOrCfg.cap, 0, 2000000, 0);
-      const capVal = rawCap > 0 ? Math.max(nVal, rawCap) : autoCap(nVal);
-      cfg = {
-        preset: baseKey,
-        n: nVal,
-        cap: capVal,
-        species: Math.min(clampInt(presetOrCfg.species, 1, 100, base.species), nVal),
-        grid: safeGrid,
-        tps: clampInt(presetOrCfg.tps, 0, 1000, base.tps),
-        sps: clampInt(presetOrCfg.sps, 1, 60, base.sps),
-        threads: clampInt(presetOrCfg.threads, 0, 64, base.threads),
-        kernels: presetOrCfg.kernels !== false && presetOrCfg.kernels !== 0,
-        ecores: presetOrCfg.ecores !== false,
-        prefetch: presetOrCfg.prefetch !== false && presetOrCfg.prefetch !== 0,
-        gpu: Boolean(presetOrCfg.gpu),
-        largePages: Boolean(presetOrCfg.largePages),
-        lesion: (clampInt(presetOrCfg.lesion, 0, 0x7fffff, base.lesion) >>> 0) & 0x7fffff,
-        lab: Boolean(presetOrCfg.lab),
-        seed: clampInt(presetOrCfg.seed, 0, 2147483647, base.seed),
-        params: { ...base.params, ...(presetOrCfg.params && typeof presetOrCfg.params === "object" ? presetOrCfg.params : {}) }
-      };
-    }
+    const cfg = normalizeGenesisConfig(presetOrCfg);
     currentCosmosPreset = cfg.preset;
     currentGenesis = cfg;
 
@@ -407,92 +299,7 @@ const rawCache = {
 /* ============================================================================
  * 4. Omniscient 4-Tier Stack State (T1 DNA · T2 CELLS · T3 CREATURES · T4 ENV)
  * ============================================================================ */
-const state = {
-  engines: { t1_dna: false, t2_cells: false, t2_omega: false, t3_noetic: false, t3_creatures: false, t4_env: false },
-  paused: false,
-  omegaFeral: false,
-  cosmosPreset: "cambrian",
-  omega: null,
-  noetic: null,
-  coupling: {
-    autoCouple: true,
-    envToCellsSolvent: true,
-    reseedOnLock: false,
-    antiMonoculture: true,
-    monocultureRenewals: 0,
-    waveMode: "manual",
-    wavePhase: 0,
-    restraints: new Array(13).fill(0),
-    activeSolvent: 0,
-    activeRegime: 5,
-    transfections: 0,
-    envSolventSwitches: 0,
-    creaturePlumes: 0,
-    creatureShocks: 0,
-    lastTransfectAt: 0,
-    lastTransfectSig: "",
-    lastMacroActionAt: 0,
-    lastEnvSyncAt: 0,
-    lastApexKey: ""
-  },
-  env: {
-    runId: null, tick: 0, dims: [0, 0, 0], wild: true, observerFail: 0,
-    lightVec: [0, 0, 1], daylightPct: 0, meanTemp: 0, maxTemp: 0,
-    ventCount: 0, ventMeanTemp: 0, sunPeriods: [0, 0],
-    solventDist: [0, 0, 0, 0], vents: [], sliceZ: 8, updatedAt: 0
-  },
-  creatures: {
-    population: 0,
-    clades: 0,
-    activeClades: 0,
-    shapesCached: 0,
-    cladeEntropyBits: 0,
-    hueEntropyBits: 0,
-    hueSpectrum24: new Array(24).fill(0),
-    aggregation: { singular: 0, clustered: 0, globular: 0, meanRadius: 0, stdRadius: 0 },
-    topClades: [],
-    roster: [],
-    cladeSamples: new Map(), // clade -> uid (internal, not serialized directly)
-    lockedUid: null,
-    lockedVisual: null,
-    locked: null,
-    prevLocked: null,
-    localHabitat: null,
-    lastSnapSeq: -1,
-    updatedAt: 0
-  },
-  cells: { telemetry: null, bridge: null, updatedAt: 0 },
-  dna: { ready: null, frame: null, updatedAt: 0 },
-  differential: {
-    cosineCoherence: 0,
-    meanAbsDelta: 0,
-    rmsDelta: 0,
-    maxAbsDelta: 0,
-    maxDeltaIdx: 0,
-    vitalityMargin: 0,
-    velocityDelta: 0,
-    chaosLyapunov: 0,
-    varOvi: 0,
-    varCovi: 0,
-    varDelta: 0,
-    varCladeH: 0,
-    entropyVelocity: 0,
-    backlashTotal: 0,
-    conservationOk: false,
-    conservationState: "DEGRADED",
-    signedDelta112: new Array(112).fill(0),
-    gradientSlope111: new Array(111).fill(0),
-    // 4x4 Omniscient Coupling Matrix [source 0..3][target 0..3]: { mode, strength }
-    matrix4x4: [
-      [{ m: "SELF", s: 1 }, { m: "LIVE", s: 0.9 }, { m: "D7RO", s: 0.35 }, { m: "D7RO", s: 0.25 }],
-      [{ m: "SYNC", s: 0.7 }, { m: "SELF", s: 1 }, { m: "D7RO", s: 0.65 }, { m: "D7RO", s: 0.30 }],
-      [{ m: "LIVE", s: 0.6 }, { m: "LIVE", s: 0.85 }, { m: "SELF", s: 1 }, { m: "LIVE", s: 0.95 }],
-      [{ m: "LIVE", s: 0.55 }, { m: "LIVE", s: 0.9 }, { m: "LIVE", s: 0.95 }, { m: "SELF", s: 1 }]
-    ],
-    history: [] // rolling 240 omnitemporal snapshots
-  },
-  events: []
-};
+const state = createInitialState();
 
 const sseClients = new Set();
 
@@ -579,58 +386,7 @@ function broadcastState() {
  * 5. Tier 4 Environment Sampling at Tier 3 Creature (x, y, z)
  * ============================================================================ */
 function sampleLocalHabitat(posVal, lockedVis = null) {
-  if (!rawCache.dims || !rawCache.fields) return null;
-  const [gx, gy, gz] = rawCache.dims;
-  let fx = 0.5, fy = 0.5, fz = 0.5;
-  if (Array.isArray(posVal) && posVal.length >= 3) {
-    fx = Number(posVal[0]); fy = Number(posVal[1]); fz = Number(posVal[2]);
-    const mx = Math.max(Math.abs(fx), Math.abs(fy), Math.abs(fz));
-    if (mx > Math.max(gx, gy, gz) * 1.5) { fx /= 65536; fy /= 65536; fz /= 65536; }
-    else if (mx > 1.0) { fx /= Math.max(1, gx); fy /= Math.max(1, gy); fz /= Math.max(1, gz); }
-  } else if (lockedVis) {
-    fx = lockedVis.x / Math.max(1, gx); fy = lockedVis.y / Math.max(1, gy); fz = lockedVis.z / Math.max(1, gz);
-  }
-  fx = Math.max(0, Math.min(0.9999, fx));
-  fy = Math.max(0, Math.min(0.9999, fy));
-  fz = Math.max(0, Math.min(0.9999, fz));
-  const ix = Math.max(0, Math.min(gx - 1, Math.floor(fx * gx)));
-  const iy = Math.max(0, Math.min(gy - 1, Math.floor(fy * gy)));
-  const iz = Math.max(0, Math.min(gz - 1, Math.floor(fz * gz)));
-  const n = gx * gy;
-  const xy = iy * gx + ix;
-  const j = (iz * n + xy) * 4;
-  const f = rawCache.fields;
-  if (j + 3 >= f.length) return null;
-
-  const solventPhase = f[j] & 3;
-  const light = f[j + 1];
-  const temp = f[j + 2];
-  const substrate = f[j + 3];
-  const rockH = rawCache.heights ? Number((rawCache.heights[xy] / 256).toFixed(2)) : 0;
-  const waterH = rawCache.water ? Number((rawCache.water[xy] / 256).toFixed(2)) : 0;
-
-  let minVentDist = 999;
-  for (const v of rawCache.vents) {
-    const dist = Math.hypot(v.x - ix, v.y - iy, v.z - iz);
-    if (dist < minVentDist) minVentDist = dist;
-  }
-
-  let recommendedSolvent = solventPhase;
-  if (minVentDist < 6 || temp > 205) recommendedSolvent = 2;
-  else if (temp < 45)                recommendedSolvent = 1;
-  else if (solventPhase === 3)       recommendedSolvent = 3;
-  else                               recommendedSolvent = 0;
-
-  return {
-    vx: ix, vy: iy, vz: iz,
-    fracPos: [Number(fx.toFixed(3)), Number(fy.toFixed(3)), Number(fz.toFixed(3))],
-    solventPhase, light, lightPct: Math.round((light / 255) * 100),
-    temp, tempPct: Math.round((temp / 255) * 100),
-    substrate, rockH, waterH, submerged: iz < waterH,
-    nearestVentDist: Number(minVentDist.toFixed(1)),
-    recommendedSolvent,
-    recommendedSolventName: SOLVENT_NAMES[recommendedSolvent]
-  };
+  return sampleLocalHabitatCore(rawCache, posVal, lockedVis);
 }
 
 function buildEnvSlicePayload(zLayerReq = null) {
@@ -662,186 +418,15 @@ function buildEnvSlicePayload(zLayerReq = null) {
 /* ============================================================================
  * 6. Omniscient / Omnitemporal Differential, Variance & Chaos Analytics
  * ============================================================================ */
-function rollingVariance(arr) {
-  if (arr.length < 2) return 0;
-  const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
-  return arr.reduce((s, x) => s + (x - mean) * (x - mean), 0) / arr.length;
-}
-
 function computeDifferentials() {
-  const dnaT   = state.dna.frame?.traits112;
-  const cellsT = state.cells.bridge?.traits112;
-  const d = state.differential;
-  const prevMean = d.meanAbsDelta || 0;
-  const prevH = d.history.length ? d.history[d.history.length - 1].cladeH : state.creatures.cladeEntropyBits;
-
-  // 1. Raw 112-element projections (clamped to [0,1] to guard upstream Cellulogonic unclamped [0..7] slots).
-  //    NOTE: T1 DNA [0..111] (opcodes/ribo/assembly) and T2 Cells [0..111] (biophys/operon hash) have
-  //    heterogeneous index semantics, so cross-tier cosine coherence is computed on the aligned 8-axis vector below!
-  if (Array.isArray(dnaT) && dnaT.length === 112 && Array.isArray(cellsT) && cellsT.length === 112) {
-    let sumAbs = 0, sumSq = 0, maxAbs = 0, maxIdx = 0;
-    const signed = new Array(112);
-    for (let i = 0; i < 112; i++) {
-      const a = Math.max(0, Math.min(1, Number(dnaT[i]) || 0));
-      const b = Math.max(0, Math.min(1, Number(cellsT[i]) || 0));
-      const diff = b - a, ad = Math.abs(diff);
-      signed[i] = Number(diff.toFixed(4));
-      sumAbs += ad; sumSq += diff * diff;
-      if (ad > maxAbs) { maxAbs = ad; maxIdx = i; }
-    }
-    const grad = new Array(111);
-    for (let i = 0; i < 111; i++) grad[i] = Number((signed[i + 1] - signed[i]).toFixed(4));
-    d.meanAbsDelta = Number((sumAbs / 112).toFixed(4));
-    d.rmsDelta = Number(Math.sqrt(sumSq / 112).toFixed(4));
-    d.maxAbsDelta = Number(maxAbs.toFixed(4));
-    d.maxDeltaIdx = maxIdx;
-    d.velocityDelta = Number((d.meanAbsDelta - prevMean).toFixed(4));
-    d.signedDelta112 = signed;
-    d.gradientSlope111 = grad;
-  }
-
-  // 2. Semantically Aligned 8-Axis Biophysical Cosine Coherence (apples-to-apples T1 DNA vs T2 Cells!)
-  const f1 = state.dna.frame;
-  const ct = state.cells.telemetry;
-  if (f1 && ct) {
-    const b1 = Array.isArray(f1.backlash) ? f1.backlash.reduce((x, y) => x + y, 0) : 0;
-    const b2 = Array.isArray(ct.backlash) ? ct.backlash.reduce((x, y) => x + y, 0) : 0;
-    const v1 = [
-      Math.max(0, Math.min(1, (Number(f1.ovi) || 0) / 100)),
-      Math.max(0, Math.min(1, (Number(f1.alive) || 0) / 1024)),
-      Math.max(0, Math.min(1, (Number(f1.apex?.assembly) || 0) / 40)),
-      Math.max(0, Math.min(1, (Number(f1.lineages) || 0) / 128)),
-      Math.max(0, Math.min(1, (Number(f1.apex?.holobiont) || 0) / 256)),
-      Math.max(0, Math.min(1, (Number(f1.apex?.causal_len) || 0) / 64)),
-      Math.max(0, Math.min(1, (Number(f1.entropy) || 0) / 8)),
-      Math.max(0, Math.min(1, Math.log1p(b1) / 10))
-    ];
-    const v2 = [
-      Math.max(0, Math.min(1, (Number(ct.covi) || 0) / 100)),
-      Math.max(0, Math.min(1, (Number(ct.alive) || 0) / 1024)),
-      Math.max(0, Math.min(1, (Number(ct.assembly_index) || 0) / 40)),
-      Math.max(0, Math.min(1, (Number(ct.distinct_lineages) || 0) / 128)),
-      Math.max(0, Math.min(1, (Number(ct.max_tissue) || 0) / 64)),
-      Math.max(0, Math.min(1, (Number(ct.active_loci) || 0) / 16)),
-      Math.max(0, Math.min(1, (Number(ct.mean_mt_ghz) || 0) / 12)),
-      Math.max(0, Math.min(1, Math.log1p(b2) / 10))
-    ];
-    let dot = 0, nA = 0, nB = 0;
-    for (let k = 0; k < 8; k++) { dot += v1[k] * v2[k]; nA += v1[k] * v1[k]; nB += v2[k] * v2[k]; }
-    d.cosineCoherence = (nA > 1e-9 && nB > 1e-9) ? Number((dot / (Math.sqrt(nA) * Math.sqrt(nB))).toFixed(4)) : 0;
-  }
-
-  const covi = state.cells.telemetry?.covi ?? 0;
-  const ovi  = state.dna.frame?.ovi ?? 0;
-  d.vitalityMargin = Number((covi - ovi).toFixed(2));
-  d.backlashTotal = (state.cells.telemetry?.backlash?.reduce((a, b) => a + b, 0) ?? 0) +
-                    (state.dna.frame?.backlash?.reduce((a, b) => a + b, 0) ?? 0);
-
-  const now = Date.now();
-  const hasDna   = Boolean(state.engines.t1_dna && state.dna.frame?.ledger && (now - state.dna.updatedAt < 15000));
-  const hasCells = Boolean(state.engines.t2_cells && state.cells.telemetry && (now - state.cells.updatedAt < 15000));
-  const hasMacro = Boolean(state.engines.t4_env && (now - state.creatures.updatedAt < 15000));
-  const cellsAlert = Boolean(state.cells.telemetry && (state.cells.telemetry.mass_res !== 0 || state.cells.telemetry.energy_res !== 0 || state.cells.telemetry.second_law !== 0));
-  const dnaAlert   = Boolean(state.dna.frame?.ledger && (state.dna.frame.ledger.int_res !== 0 || state.dna.frame.ledger.second_law_v !== 0));
-  const obsAlert   = state.env.observerFail !== 0;
-  if (cellsAlert || dnaAlert || obsAlert) {
-    d.conservationState = "ALERT";
-    d.conservationOk = false;
-  } else if (hasDna && hasCells && hasMacro) {
-    d.conservationState = "VERIFIED";
-    d.conservationOk = true;
-  } else {
-    d.conservationState = "DEGRADED";
-    d.conservationOk = false;
-  }
-
-  const lk = state.creatures.locked;
-  const hab = state.creatures.localHabitat;
-  d.entropyVelocity = Number((state.creatures.cladeEntropyBits - prevH).toFixed(4));
-
-  d.history.push({
-    t: Date.now(),
-    ovi, covi,
-    coh: d.cosineCoherence,
-    delta: d.meanAbsDelta,
-    ghz: state.cells.telemetry?.mean_mt_ghz ?? 0,
-    cEnergy: lk?.found ? Number(lk.energy) || 0 : 0,
-    cHealth: lk?.found ? Number(lk.health) || 0 : 0,
-    envTemp: hab ? hab.tempPct : state.env.meanTemp,
-    envLight: hab ? hab.lightPct : state.env.daylightPct,
-    cladeH: state.creatures.cladeEntropyBits,
-    hueH: state.creatures.hueEntropyBits,
-    activeClades: state.creatures.activeClades,
-    backlash: d.backlashTotal
-  });
-  if (d.history.length > 240) d.history.shift();
-
-  // Rolling 32-sample omnitemporal variance & cross-tier Volatility/Entropy Index (0..1; not a true Lyapunov exponent)
-  const win = d.history.slice(-32);
-  d.varOvi    = Number(rollingVariance(win.map((x) => x.ovi)).toFixed(2));
-  d.varCovi   = Number(rollingVariance(win.map((x) => x.covi)).toFixed(2));
-  d.varDelta  = Number(rollingVariance(win.map((x) => x.delta)).toFixed(5));
-  d.varCladeH = Number(rollingVariance(win.map((x) => x.cladeH)).toFixed(4));
-
-  if (win.length >= 4) {
-    let jumps = 0;
-    for (let i = 1; i < win.length; i++) {
-      jumps += Math.abs(win[i].delta - win[i - 1].delta) * 6 +
-               Math.abs(win[i].ovi - win[i - 1].ovi) / 40 +
-               Math.abs(win[i].covi - win[i - 1].covi) / 40 +
-               Math.abs(win[i].envTemp - win[i - 1].envTemp) / 80;
-    }
-    const rawVol = jumps / (win.length - 1);
-    const entBoost = (state.creatures.hueEntropyBits / 4.58) * 0.45 + (state.dna.frame?.entropy ? (state.dna.frame.entropy / 8) * 0.25 : 0);
-    d.chaosLyapunov = Number(Math.min(1, rawVol * 0.45 + entBoost).toFixed(3));
-  }
-
-  // Unified Cross-Tier Bedau-Packard Open-Ended Novelty A_new (Blindspot #8 closed!)
-  const t1Anew = Number(state.dna.frame?.bp_anew ?? 0);
-  const t2Anew = Number(state.cells.telemetry?.bedau_anew ?? 0);
-  const t3CladeNorm = Number(((state.creatures.activeClades ?? 0) / 1000).toFixed(3));
-  d.crossTierAnew = Number((t1Anew + t2Anew + t3CladeNorm).toFixed(2));
-
-  // Strictly honest 4x4 Coupling Matrix (v6.2 — ZERO overstated links!):
-  //   DNA128 = REAL 128-byte evolved AUTOPHAGE genome transfection into Cellulogonic (T1->T2)
-  //   LIVE   = active runtime command channel firing (T3->T2 plume/shock, T4->T2 solvent)
-  //   SEED   = deterministic metadata-seed hash bridge (fallback if genome_hex unavailable, or T3->T1 when reseedOnLock=ON)
-  //   WAVE   = adaptive 13-vector restraint modulation (T4->T1 & T2 when waveMode=="adaptive")
-  //   NAT    = native in-process physics inside Asmodensius-Native az_live.exe (T3<->T4)
-  //   CORR   = observational aligned 8-axis correlation only (T2->T1; no backward write)
-  //   D7RO   = read-only observer boundary per Asmodensius-Native Law 4 / D7 (no live write into az_live)
-  //   OFF    = toggle currently disabled (0.00)
-  const hasReal128 = Boolean(state.dna.frame?.apex?.genome_hex && state.dna.frame.apex.genome_hex.length === 256);
-  const c12 = state.coupling.autoCouple ? Math.min(1, 0.35 + d.cosineCoherence * 0.45 + Math.min(0.20, state.coupling.transfections * 0.02)) : 0;
-  const c42 = (state.coupling.autoCouple && state.coupling.envToCellsSolvent) ? Math.min(1, 0.55 + (state.env.maxTemp / 250)) : 0;
-  const c32 = (state.coupling.autoCouple && lk?.found) ? Math.min(1, 0.50 + Math.min(0.50, (state.coupling.creaturePlumes + state.coupling.creatureShocks) * 0.05)) : 0;
-  const c43 = hab ? Math.min(1, 0.75 + (1 - Math.min(1, hab.nearestVentDist / 30)) * 0.25) : 0.40;
-  const c31 = (state.coupling.autoCouple && state.coupling.reseedOnLock) ? 0.85 : 0;
-  const c41 = (state.coupling.waveMode === "adaptive") ? 0.88 : 0;
-  d.matrix4x4 = [
-    [{ m: "SELF", s: 1 }, { m: c12 > 0 ? (hasReal128 ? "DNA128" : "SEED") : "OFF", s: Number(c12.toFixed(2)) }, { m: "D7RO", s: 0 }, { m: "D7RO", s: 0 }],
-    [{ m: "CORR", s: Number(d.cosineCoherence.toFixed(2)) }, { m: "SELF", s: 1 }, { m: "D7RO", s: 0 }, { m: "D7RO", s: 0 }],
-    [{ m: c31 > 0 ? "SEED" : "OFF", s: Number(c31.toFixed(2)) }, { m: c32 > 0 ? "LIVE" : "OFF", s: Number(c32.toFixed(2)) }, { m: "SELF", s: 1 }, { m: "NAT", s: Number(c43.toFixed(2)) }],
-    [{ m: c41 > 0 ? "WAVE" : "OFF", s: Number(c41.toFixed(2)) }, { m: c42 > 0 ? "LIVE" : "OFF", s: Number(c42.toFixed(2)) }, { m: "NAT", s: Number(c43.toFixed(2)) }, { m: "SELF", s: 1 }]
-  ];
+  return computeDifferentialsCore(state, Date.now());
 }
 
 /* ============================================================================
- * 7. Real 4-Tier Cross-Scale Actions (v6.2: Real 128B DNA + Full 13-Vec Parity!)
+ * 7. Real 4-Tier Cross-Scale Actions (v6.7: Real 128B DNA + Full 13-Vec Parity!)
  * ============================================================================ */
 function deriveDnaSeed32() {
-  const a = state.dna.frame?.apex;
-  if (!a) return Math.floor(nextHubRand() * 89999999) + 1000;
-  const rHi = parseInt(String(a.ribo_hex || "0").slice(0, 8), 16) || 1;
-  const rLo = parseInt(String(a.ribo_hex || "0").slice(8, 16), 16) || 1;
-  const addr = parseInt(String(a.addr || "0"), 16) || 1;
-  return (((rHi ^ rLo ^ addr ^ ((a.poly || 1) * 2654435761) ^ (Number(state.dna.frame.epoch) || 1)) >>> 0) % 89999999) + 1;
-}
-
-function uidToSeed32(uidHex) {
-  const hi = parseInt(String(uidHex || "0").slice(0, 8), 16) || 0;
-  const lo = parseInt(String(uidHex || "0").slice(8, 16), 16) || 0;
-  return (((hi ^ lo ^ 0x5A0DE115) >>> 0) % 89999999) + 1;
+  return deriveDnaSeed32Core(state.dna.frame, nextHubRand);
 }
 
 async function transfectDnaToCells(reason = "manual") {
@@ -1014,105 +599,8 @@ async function onCreatureInspect(info, source = "click", forceSwitch = false) {
 /* ============================================================================
  * 8. AZST Binary Decoders (With Hue Spectrum, Shannon Entropy & Aggregation!)
  * ============================================================================ */
-function shannonBits(counts, total) {
-  if (!total) return 0;
-  let h = 0;
-  for (const c of counts) {
-    if (c > 0) { const p = c / total; h -= p * Math.log2(p); }
-  }
-  return Number(h.toFixed(3));
-}
-
 function decodeAzstCreatures(buf) {
-  if (!buf || buf.length < 80 || buf.readUInt32LE(0) !== 0x54535a41 || buf.readUInt16LE(4) !== 2) return null;
-  const seq = buf.readUInt32LE(12);
-  const tick = Number(buf.readBigUInt64LE(16));
-  const count = buf.readUInt32LE(16 + 24);
-  if (buf.readUInt32LE(16 + 28) !== 24 || buf.length < 80 + count * 24) return null;
-  const dims = [1 << buf.readUInt8(16 + 32), 1 << buf.readUInt8(16 + 33), 1 << buf.readUInt8(16 + 34)];
-  const wild = buf.readUInt8(16 + 35) === 1;
-  const lightVec = [
-    Number((buf.readInt8(16 + 44) / 127).toFixed(3)),
-    Number((buf.readInt8(16 + 45) / 127).toFixed(3)),
-    Number((buf.readInt8(16 + 46) / 127).toFixed(3))
-  ];
-  const clades = buf.readUInt32LE(16 + 48);
-  const failures = buf.readUInt32LE(16 + 52);
-
-  const cladeCounts = new Map();
-  const cladeSamples = new Map();
-  const hueBins = new Array(24).fill(0);
-  const voxelOcc = new Map(); // spatial cell occupancy -> Singular vs Cluster vs Globular!
-  const roster = [];
-  const stride = Math.max(1, Math.floor(count / 24));
-  let lockedVis = null;
-  let sumR = 0, sumR2 = 0;
-
-  for (let i = 0; i < count; i++) {
-    const off = 80 + i * 24;
-    const lo = buf.readUInt32LE(off);
-    const hi = buf.readUInt32LE(off + 4);
-    const x16 = buf.readUInt16LE(off + 8), y16 = buf.readUInt16LE(off + 10), z16 = buf.readUInt16LE(off + 12);
-    const rByte = buf.readUInt8(off + 16);
-    const hueByte = buf.readUInt8(off + 17);
-    const clade = buf.readUInt32LE(off + 20);
-
-    const rad = (rByte + 1) / 32;
-    sumR += rad; sumR2 += rad * rad;
-    hueBins[Math.min(23, Math.floor((hueByte / 256) * 24))]++;
-    cladeCounts.set(clade, (cladeCounts.get(clade) || 0) + 1);
-
-    // Coarse 16x16x8 spatial bin for Singular (1) vs Cluster (2..6) vs Globular Swarm (7+)
-    const key = ((x16 >> 12) << 7) | ((y16 >> 12) << 3) | (z16 >> 13);
-    voxelOcc.set(key, (voxelOcc.get(key) || 0) + 1);
-
-    const needCladeRep = !cladeSamples.has(clade);
-    const needRoster = (roster.length < 24 && (i % stride === 0));
-    let uid = null;
-    if (needCladeRep || needRoster || state.creatures.lockedUid) {
-      uid = hi.toString(16).padStart(8, "0") + lo.toString(16).padStart(8, "0");
-    }
-    if (needCladeRep && uid) cladeSamples.set(clade, uid);
-    const isLocked = Boolean(state.creatures.lockedUid && uid === state.creatures.lockedUid);
-
-    if ((needRoster || isLocked) && uid) {
-      const rec = {
-        uid, clade,
-        x: Number(((x16 / 65536) * dims[0]).toFixed(1)),
-        y: Number(((y16 / 65536) * dims[1]).toFixed(1)),
-        z: Number(((z16 / 65536) * dims[2]).toFixed(1)),
-        yaw: Number(((buf.readUInt8(off + 14) * Math.PI * 2) / 256).toFixed(2)),
-        pitch: Number((((buf.readUInt8(off + 15) > 127 ? buf.readUInt8(off + 15) - 256 : buf.readUInt8(off + 15)) * (Math.PI / 2)) / 127).toFixed(2)),
-        radius: Number(rad.toFixed(2)),
-        hue: Number((hueByte / 255).toFixed(3)),
-        pattern: buf.readUInt8(off + 18),
-        flags: buf.readUInt8(off + 19)
-      };
-      if (needRoster) roster.push(rec);
-      if (isLocked) lockedVis = rec;
-    }
-  }
-
-  let singular = 0, clustered = 0, globular = 0;
-  for (const occ of voxelOcc.values()) {
-    if (occ === 1) singular += occ;
-    else if (occ <= 6) clustered += occ;
-    else globular += occ;
-  }
-
-  const meanR = count ? sumR / count : 0;
-  const stdR  = count ? Math.sqrt(Math.max(0, sumR2 / count - meanR * meanR)) : 0;
-  const topClades = [...cladeCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
-  const cladeEntropyBits = shannonBits(cladeCounts.values(), count);
-  const hueEntropyBits   = shannonBits(hueBins, count);
-
-  return {
-    seq, tick, count, dims, wild, lightVec, clades,
-    activeClades: cladeCounts.size, failures, roster, topClades, cladeSamples,
-    hueBins, cladeEntropyBits, hueEntropyBits,
-    aggregation: { singular, clustered, globular, meanRadius: Number(meanR.toFixed(2)), stdRadius: Number(stdR.toFixed(2)) },
-    lockedVis
-  };
+  return decodeAzstCreaturesCore(buf, state.creatures.lockedUid);
 }
 
 function decodeAzstStatic(buf) {
@@ -1899,19 +1387,6 @@ function rewriteProxyContent(kind, urlPath, text) {
 const MAX_PROXY_REQ_BYTES = 2 * 1024 * 1024;
 const MAX_PROXY_RES_BYTES = 16 * 1024 * 1024;
 
-function sanitizeProxyHeaders(rawHeaders) {
-  const out = { ...rawHeaders };
-  for (const k of Object.keys(out)) {
-    const lk = k.toLowerCase();
-    if (lk === "x-frame-options") {
-      out[k] = "SAMEORIGIN";
-    } else if (lk === "content-security-policy" && typeof out[k] === "string") {
-      out[k] = out[k].replace(/frame-ancestors\s+'none'/gi, "frame-ancestors 'self'");
-    }
-  }
-  return out;
-}
-
 function proxyHttp(kind, targetPort, subPath, req, res) {
   if (req.method !== "GET" && req.method !== "HEAD" && !isSafeLoopbackRequest(req, false)) {
     res.writeHead(403, { "Content-Type": "application/json" });
@@ -2047,6 +1522,20 @@ const server = http.createServer(async (req, res) => {
   }
   const p = u.pathname;
 
+  if (req.method === "GET" && (p === "/healthz" || p === "/api/health")) {
+    res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
+    res.end(JSON.stringify({
+      ok: true,
+      service: "omega-triscale-observatory",
+      version: OBSERVATORY_VERSION,
+      uptime_s: Number(((Date.now() - SERVER_START_MS) / 1000).toFixed(2)),
+      engines: state.engines,
+      conservationState: state.differential.conservationState,
+      sseClients: sseClients.size
+    }));
+    return;
+  }
+
   if (p === "/proxy/macro")      { res.writeHead(302, { Location: "/proxy/macro/" });      res.end(); return; }
   if (p === "/proxy/macro-live") { res.writeHead(302, { Location: "/proxy/macro-live/" }); res.end(); return; }
   if (p === "/proxy/noetic")     { res.writeHead(302, { Location: "/proxy/noetic/" });     res.end(); return; }
@@ -2064,18 +1553,18 @@ const server = http.createServer(async (req, res) => {
   if (p.startsWith("/zeta-omega/")) {
     let subRel;
     try { subRel = decodeURIComponent(p.slice("/zeta-omega/".length)); } catch { res.writeHead(400); res.end("Bad path"); return; }
+    if (subRel.includes("\0")) { res.writeHead(403); res.end("Forbidden"); return; }
     let targetPath;
     if (!subRel || subRel === "index.html") {
       targetPath = PATHS.zetaHtml;
     } else if (/^[A-Za-z0-9_.-]+\.html$/i.test(subRel)) {
-      targetPath = path.resolve(ZETA_PKG_ROOT, "html", subRel);
+      targetPath = resolveSafePath(path.join(ZETA_PKG_ROOT, "html"), subRel);
     } else if (/^(html|pdf|specs|excel|csv|reports|results)\//i.test(subRel)) {
-      targetPath = path.resolve(ZETA_PKG_ROOT, subRel);
+      targetPath = resolveSafePath(ZETA_PKG_ROOT, subRel);
     } else {
       res.writeHead(404); res.end("Not found"); return;
     }
-    const pkgPrefix = ZETA_PKG_ROOT + path.sep;
-    if (!targetPath.startsWith(pkgPrefix)) { res.writeHead(403); res.end("Forbidden"); return; }
+    if (!targetPath) { res.writeHead(403); res.end("Forbidden"); return; }
     fs.readFile(targetPath, (err, data) => {
       if (err) { res.writeHead(404); res.end("Zeta-Omega asset not found"); return; }
       const ext = path.extname(targetPath).toLowerCase();
@@ -2088,8 +1577,8 @@ const server = http.createServer(async (req, res) => {
   if (/^\/(pdf|specs|excel|csv|reports|results)\//i.test(p)) {
     let subRel;
     try { subRel = decodeURIComponent(p.slice(1)); } catch { res.writeHead(400); res.end("Bad path"); return; }
-    const targetPath = path.resolve(ZETA_PKG_ROOT, subRel);
-    if (!targetPath.startsWith(ZETA_PKG_ROOT + path.sep)) { res.writeHead(403); res.end("Forbidden"); return; }
+    const targetPath = resolveSafePath(ZETA_PKG_ROOT, subRel);
+    if (!targetPath) { res.writeHead(403); res.end("Forbidden"); return; }
     fs.readFile(targetPath, (err, data) => {
       if (err) { res.writeHead(404); res.end("Asset not found"); return; }
       const ext = path.extname(targetPath).toLowerCase();
@@ -2100,7 +1589,13 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "GET" && p.startsWith("/api/stack/shape/")) {
-    const clade = Number(p.slice("/api/stack/shape/".length));
+    const rawClade = p.slice("/api/stack/shape/".length);
+    const clade = validateCladeParam(rawClade);
+    if (clade === null) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Invalid clade identifier; expected non-negative integer" }));
+      return;
+    }
     const shape = rawCache.shapes.get(clade);
     if (!shape) { res.writeHead(404, { "Content-Type": "application/json" }); res.end(JSON.stringify({ found: false, clade })); return; }
     res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
@@ -2109,8 +1604,13 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "GET" && p === "/api/stack/env-slice") {
-    const zReq = u.searchParams.has("z") ? Number(u.searchParams.get("z")) : null;
-    const payload = buildEnvSlicePayload(zReq);
+    const parsedZ = u.searchParams.has("z") ? validateSliceZParam(u.searchParams.get("z")) : { ok: true, value: null };
+    if (!parsedZ.ok) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Invalid z query parameter; expected integer in [0, 255]" }));
+      return;
+    }
+    const payload = buildEnvSlicePayload(parsedZ.value);
     if (!payload) { res.writeHead(204); res.end(); return; }
     res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
     res.end(JSON.stringify(payload));
@@ -2325,8 +1825,8 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(400); res.end("Bad path"); return;
   }
   const rel = decoded === "/" ? "index.html" : decoded.replace(/^\/+/, "");
-  const fp = path.resolve(WEB_DIR, rel);
-  if (!fp.startsWith(WEB_DIR + path.sep) && fp !== path.join(WEB_DIR, "index.html")) {
+  const fp = resolveSafePath(WEB_DIR, rel);
+  if (!fp) {
     res.writeHead(403); res.end("Forbidden"); return;
   }
   fs.readFile(fp, (err, data) => {
@@ -2369,26 +1869,49 @@ async function shutdown() {
   await Promise.allSettled(rest.map((ch) => stopChildGracefully(ch, null, 1500)));
   process.exit(0);
 }
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
 
-await ensureAllEngines();
-startDnaSseWatcher();
-startAsmodensiusPollers();
-startCellsHeartbeatAndWaveEngine();
-startOmegaPoller();
-startNoeticPoller();
+export {
+  server,
+  state,
+  rawCache,
+  buildRelayArgs,
+  embedCss,
+  injectMacroBioFx,
+  injectMacroDecodeBioFx,
+  rewriteProxyContent,
+  decodeAzstStatic,
+  decodeAzstFields,
+  decodeAzstShapes,
+  buildEnvSlicePayload,
+  computeDifferentials
+};
 
-server.listen(HUB_PORT, "127.0.0.1", () => {
-  console.log(`\n================================================================================`);
-  console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v6.6.0 (7 REPOS · 8 LIVE ENDPOINTS · 244 PURE LEAN 4)`);
-  console.log(`    #8 ZETA-OMEGA v3.3 ATLAS         : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
-  console.log(`    #7 UNIFIED "SEE ALL" HUB         : http://127.0.0.1:${HUB_PORT}/`);
-  console.log(`    #6 T3+T4 ASMODENSIUS WORLD #2    : http://127.0.0.1:${MACRO_LIVE_PORT}/ (Native az_view Dashboard & Proof Bench)`);
-  console.log(`    #5 T3+T4 ASMODENSIUS WORLD #1    : http://127.0.0.1:${MACRO_PORT}/ (WebGL2 3D Cosmos · ${currentCosmosPreset} · 20 Pure Lean 4)`);
-  console.log(`    #4 T3/4 NOETIC MIND v2.0         : http://127.0.0.1:${NOETIC_PORT}/ (825/825 C11 · 100M · 13/13 CS-v3 · 48 Pure Lean 4)`);
-  console.log(`    #3 OMEGA v5.1 FRONTIER VM        : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 75 Sub · 1000 Cube · 72 Pure Lean 4)`);
-  console.log(`    #2 T2 CELLS v1.4                 : http://127.0.0.1:${MESO_PORT}/ (62 Pure Lean 4)`);
-  console.log(`    #1 T1 DNA AUTOPHAGE v1.3         : http://127.0.0.1:${MICRO_PORT}/ (42 Pure Lean 4)`);
-  console.log(`================================================================================\n`);
-});
+const isMain = Boolean(process.argv[1] && path.resolve(process.argv[1]) === path.resolve(__filename));
+if (isMain) {
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+
+  const skipEngines = process.argv.includes("--no-engines") || process.env.OBSERVATORY_NO_ENGINES === "1";
+  if (!skipEngines) {
+    await ensureAllEngines();
+    startDnaSseWatcher();
+    startAsmodensiusPollers();
+    startCellsHeartbeatAndWaveEngine();
+    startOmegaPoller();
+    startNoeticPoller();
+  }
+
+  server.listen(HUB_PORT, "127.0.0.1", () => {
+    console.log(`\n================================================================================`);
+    console.log(`  OMEGA 4-TIER OMNISCIENT OBSERVATORY v${OBSERVATORY_VERSION} (7 REPOS · 8 LIVE ENDPOINTS · 244 UPSTREAM PURE LEAN 4)`);
+    console.log(`    #8 ZETA-OMEGA v3.3 ATLAS         : http://127.0.0.1:${HUB_PORT}/zeta-omega/`);
+    console.log(`    #7 UNIFIED "SEE ALL" HUB         : http://127.0.0.1:${HUB_PORT}/`);
+    console.log(`    #6 T3+T4 ASMODENSIUS WORLD #2    : http://127.0.0.1:${MACRO_LIVE_PORT}/ (Native az_view Dashboard & Proof Bench)`);
+    console.log(`    #5 T3+T4 ASMODENSIUS WORLD #1    : http://127.0.0.1:${MACRO_PORT}/ (WebGL2 3D Cosmos · ${currentCosmosPreset} · 20 Pure Lean 4)`);
+    console.log(`    #4 T3/4 NOETIC MIND v2.0         : http://127.0.0.1:${NOETIC_PORT}/ (825/825 C11 · 100M · 13/13 CS-v3 · 48 Pure Lean 4)`);
+    console.log(`    #3 OMEGA v5.1 FRONTIER VM        : http://127.0.0.1:${OMEGA_PORT}/ (TB01-TB16 · 75 Sub · 1000 Cube · 72 Pure Lean 4)`);
+    console.log(`    #2 T2 CELLS v1.4                 : http://127.0.0.1:${MESO_PORT}/ (62 Pure Lean 4)`);
+    console.log(`    #1 T1 DNA AUTOPHAGE v1.3         : http://127.0.0.1:${MICRO_PORT}/ (42 Pure Lean 4)`);
+    console.log(`================================================================================\n`);
+  });
+}

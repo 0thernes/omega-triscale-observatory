@@ -1,0 +1,689 @@
+# OMEGA 4-Tier Multi-Scale Observatory v6.7.0 — Full LLM Context Bundle
+================================================================================
+FILE: llms.txt
+================================================================================
+
+# OMEGA 4-Tier Multi-Scale Observatory (v6.7.0)
+
+> Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 local cockpit supervising 8 live Artificial Life endpoints across 7 public repositories on 127.0.0.1:8790 with strict render-only D7RO observer isolation, loopback CSRF/CSWSH & path-traversal defenses, bounded bare-metal 1..1,000,000 controls, and 6/6 (100%) surgical mutation verification.
+
+- Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
+- Licenses: Apache-2.0 (code) / CC-BY-4.0 (white paper & docs)
+- Verification boundary: 0 local Lean 4 files (supervises 5 formal companion repos reporting 244 combined upstream Lean 4 theorems); 0/1,900 Mega-Atlas open problems retired.
+
+## Core Entry Points
+- [README.md](README.md): Overview, 8-endpoint topology, Quickstart, Usage, verification boundaries
+- [AGENTS.md](AGENTS.md): Canonical engineering rules (Build Standard v1.2.0, R1-R8, 10 finding classes)
+- [CLAIMS.md](CLAIMS.md): Numbered claims ledger with epistemic tiers and explicit refutation conditions
+- [LIMITATIONS.md](LIMITATIONS.md): Threats to validity and real-vs-metaphor boundaries
+- [REPLICATION.md](REPLICATION.md): Clean-clone replication protocol and dated log
+- [docs/architecture.md](docs/architecture.md): 4-tier 8-endpoint reverse-proxy and telemetry architecture
+- [docs/threat-model.md](docs/threat-model.md): STRIDE security analysis
+- [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Non-retirement accounting (AI-045, SYS-009, SYS-050 remain OPEN)
+- [paper/main.tex](paper/main.tex): AMS-LaTeX architecture white paper (frozen PDF in dist/Donahue_2026_omega_triscale_observatory.pdf)
+- [lib/observatory_core.mjs](lib/observatory_core.mjs): Pure deterministic core logic
+- [server.mjs](server.mjs): Loopback HTTP/SSE/WebSocket Hub (:8790) + /healthz
+- [macro_wild_relay.py](macro_wild_relay.py): Read-only Asmodensius-Native relay (:8794) with --dry-run
+
+
+================================================================================
+FILE: README.md
+================================================================================
+
+# OMEGA 4-Tier Multi-Scale Observatory (v6.7.0)
+
+Unified zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life cockpit supervising **8 live local endpoints across 7 public repositories** on `http://127.0.0.1:8790/` with strict render-only `D7RO` observer isolation, loopback CSRF/CSWSH security boundaries, bounded bare-metal `1..1,000,000` controls, and 100% surgical mutation-verified metrology.
+
+[![Version](https://img.shields.io/badge/version-6.7.0-0e8a16.svg)](VERSION)
+[![Status](https://img.shields.io/badge/status-active-2ea44f.svg)](ROADMAP.md)
+[![Code License](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
+[![Docs License](https://img.shields.io/badge/docs%20%26%20paper-CC--BY--4.0-teal.svg)](LICENSE-DOCS)
+[![Tests](https://img.shields.io/badge/tests-12%20Node%20%2B%205%20Python%20PASS-brightgreen.svg)](tests/test_observatory.mjs)
+[![Mutation](https://img.shields.io/badge/mutation-6%2F6%20(100%25)-brightgreen.svg)](results/mutation_audit.json)
+[![Build Standard](https://img.shields.io/badge/build--standard-v1.2.0-informational.svg)](repo.yaml)
+
+> **Maintenance status:** `status: active` · **Author:** Alexander Stephen Donahue (`Independent Researcher, Spokane, WA, USA`, ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)) · **White Paper:** [`dist/Donahue_2026_omega_triscale_observatory.pdf`](dist/Donahue_2026_omega_triscale_observatory.pdf) *(not externally peer-reviewed)*
+
+![OMEGA 4-Tier Multi-Scale Observatory Architecture Card](docs/media/social-preview.svg)
+
+## Supervised 4-Tier, 8-Endpoint Topology (7 Public Repositories)
+
+| # | Tier / Instrument | Biological & Computational Layer | Upstream Engine & Audits | Local Endpoint |
+|---|---|---|---|---|
+| **#1** | **Tier 1 · DNA (`10⁻⁹ m`)** | 256B x86-64 RWX Genomes, 8×8 F₂ Ribosomes, GF(2⁸), Real 128B Genome Export, Philox/Weismann Isolation | `AUTOPHAGE v1.3.0` (`0thernes/autophage` · 42 upstream Lean 4) | `http://127.0.0.1:8787/` |
+| **#2** | **Tier 2 · CELLS (`10⁻⁶ m`)** | True 3D Morphogens, Strict 4-Solvent Second Law, XPBD Dissipation, Carcass/Yolk Conservation, 128B DNA Ingest | `Cellulogonic Mecha v1.4.0` (`0thernes/cellulogonic-mecha` · 62 upstream Lean 4) | `http://127.0.0.1:8788/` |
+| **#3** | **Tier 2+ · DEEP STRATA & CUBE** | 16 Frontier Testbeds (`TB01`–`TB16`), 75 Substrates, 1,000-Cell Hybrid Cube | `Cellular Engine Omega v5.1.0` (`0thernes/cellular-engine-omega` · 72 upstream Lean 4) | `http://127.0.0.1:8791/` |
+| **#4** | **Tier 3/4 · COGNITIVE & CS-v3** | 825/825 Native C11 Checks (29 indicator-only, 5 classical-parity disclosed), 100 Milestones, 13 CS-v3 Gates | `Noetic Organism Omega v2.0.0` (`0thernes/noetic-organism-omega` · 48 upstream Lean 4) | `http://127.0.0.1:8795/` |
+| **#5** | **Tier 3+4 · ASMODENSIUS WORLD #1** | GPU WebGL2 3D Wild Cosmos (`macro_wild_relay.py`), Orbit/Dive, Voxels, Close-Ups, strict **`D7RO`** read-only | `Asmodensius-Native` (`0thernes/asmodensius-native` · 20 upstream Lean 4) | `http://127.0.0.1:8794/` |
+| **#6** | **Tier 3+4 · ASMODENSIUS WORLD #2** | Native `az_view` Live Dashboard & Proof Bench (`live_server.py`, toggleable via `W1:GL2` ⇄ `W2:az_view`) | `Asmodensius-Native` (`az_live.exe` + `az_run.exe`, **`D7RO`**) | `http://127.0.0.1:8796/` |
+| **#7** | **ALL 4 TIERS · MASSIVE HUB v6.7.0** | Unified Cockpit, 112-Trait Spectral Δ, 8-Axis `cosθ`, `<=240` Ring, Bare-Metal `1..1M` Studio, `/healthz` | `server.mjs` + `lib/observatory_core.mjs` (this repository) | `http://127.0.0.1:8790/` |
+| **#8** | **ZETA-OMEGA v3.3 ATLAS** | 21-Tab Static Archive (2,782 records, 18/18 upstream package forensic gates) | `alife-singularity-omega-package` via safe static proxy | `http://127.0.0.1:8790/zeta-omega/` |
+
+## Quickstart
+
+Requires **Node.js >= 22** and **Python >= 3.12** (zero `npm install` or `pip install` needed).
+
+```bash
+git clone https://github.com/0thernes/omega-triscale-observatory.git
+cd omega-triscale-observatory
+
+# 1. Run all automated verification, property, differential, lint, and mutation tests
+npm test
+python -m unittest discover -s tests -v
+npm run lint
+npm run mutate
+
+# 2. Launch standalone UI & health endpoint (no sibling repositories required)
+npm run start:standalone
+# Visit http://127.0.0.1:8790/ and http://127.0.0.1:8790/healthz
+
+# 3. Launch full 4-tier 8-endpoint supervisor (when companion repos are cloned as siblings)
+npm start
+```
+
+## Usage
+
+### Dry-Run Bare-Metal Relay CLI (Cross-Platform, Safe)
+
+```bash
+python macro_wild_relay.py --preset million --data-dir ./runtime/dry \
+  --n 1000000 --cap 0 --species 100 --kernels 1 --ecores --gpu 1 --prefetch 1 --large-pages --dry-run
+```
+
+### Programmatic Core Import (`lib/observatory_core.mjs`)
+
+```js
+import { normalizeGenesisConfig, buildRelayArgs, computeDifferentialsCore, createInitialState } from "./lib/observatory_core.mjs";
+
+const cfg = normalizeGenesisConfig({ preset: "million", n: 1_000_000, ecores: true, gpu: true, prefetch: true });
+console.log(cfg.n, cfg.cap, buildRelayArgs(cfg).includes("--ecores"));
+// -> 1000000 1004096 true
+```
+
+See [`examples/README.md`](examples/README.md) and [`examples/verify_pipeline.mjs`](examples/README.md) for runnable end-to-end examples.
+
+## Honest Verification Boundaries & Mega-Atlas Cross-Check
+
+- **Local vs. Upstream Proofs:** This repository contains **0 local Lean 4 files**. It is strictly an orchestration, reverse-proxy, and visualization instrument. Its own invariants (CSRF/CSWSH loopback guard, path-traversal defense, `1..1,000,000` clamping, `D7RO` zero-observer-interference, `<=240` ring cap, 112-trait spectral symmetry, Node↔Python relay parity) are audited by **12/12 Node tests** (including **250 seeded `prop_check` trials**), **5/5 Python relay tests** (**120 trials**), static lint, and **6/6 (100.0%) surgical mutation kills**. The `244` combined Lean 4 proofs referenced in the ecosystem header live in and are audited by their five respective upstream repositories.
+- **Unsolved Problems Mega-Atlas Non-Retirement:** **`0 / 1,900` overarching Mega-Atlas open problems are solved or retired** by this repository. It serves solely as an observation and orchestration instrument supporting empirical study of `AI-045`, `SYS-009`, and `SYS-050`, each of which remains strictly **OPEN** (see [`docs/MEGA_ATLAS_CROSSCHECK.md`](docs/MEGA_ATLAS_CROSSCHECK.md)).
+- **Limitations & Indicator-Only Disclosures:** See [`LIMITATIONS.md`](LIMITATIONS.md) and [`CLAIMS.md`](CLAIMS.md) for full real-vs-metaphor boundaries (e.g., `chaosLyapunov` is a heuristic volatility index, not a maximal Lyapunov exponent; Tier 3 internal organs are count-driven projections; this preprint is not externally peer-reviewed).
+
+## Documentation & Paper
+
+- White Paper (AMS-LaTeX PDF): [`dist/Donahue_2026_omega_triscale_observatory.pdf`](dist/Donahue_2026_omega_triscale_observatory.pdf) · Source: [`paper/main.tex`](paper/main.tex) · Clean-room arXiv tarball: [`dist/arxiv_submission.tar.gz`](dist/arxiv_submission.tar.gz)
+- Claims & Falsification Ledger: [`CLAIMS.md`](CLAIMS.md) · Limitations: [`LIMITATIONS.md`](LIMITATIONS.md) · Replication: [`REPLICATION.md`](REPLICATION.md)
+- Architecture, Threat Model, Benchmarks, Operations, FAQ & Glossary: [`docs/index.md`](docs/index.md)
+- Dual License: Code under [Apache-2.0](LICENSE) · Paper, Docs & Figures under [CC-BY-4.0](LICENSE-DOCS)
+
+
+================================================================================
+FILE: AGENTS.md
+================================================================================
+
+# AGENTS.md — OMEGA 4-Tier Multi-Scale Observatory (v6.7.0)
+
+> Canonical agent instructions for `0thernes/omega-triscale-observatory` (`CLAUDE.md`, `GEMINI.md`, and `.cursor/rules/build-standard.mdc` all point here).
+
+## Purpose & Honest Scope
+
+`omega-triscale-observatory` is a **zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life cockpit** supervising **8 live local endpoints across 7 public repositories** on `http://127.0.0.1:8790/`.
+
+- **Author:** Alexander Stephen Donahue (`Independent Researcher, Spokane, WA, USA`, ORCID `0009-0006-8168-9648`, `0_0@0thernes.art`). Never attach an unformed LLC corporate suffix.
+- **Dual License:** Apache-2.0 (`LICENSE`) for all code, scripts, and CI; CC-BY-4.0 (`LICENSE-DOCS`) for white paper, PDFs, diagrams, and documentation.
+- **Honest Verification Boundary:** This repository is strictly a visualization, reverse-proxy, telemetry-metrology, and process-orchestration instrument. It contains **0 local Lean 4 files** (upstream formal proofs live in five sibling repositories: `42` `autophage` + `62` `cellulogonic-mecha` + `72` `cellular-engine-omega` + `48` `noetic-organism-omega` + `20` `asmodensius-native` = `244` combined upstream Lean 4 theorems) and retires **0 / 1,900** overarching open problems in `0thernes/unsolved-problems-mega-atlas`.
+- **Render-Only Observer Independence (`D7RO`):** Never introduce any live T1/T2 write path into `Asmodensius-Native` (`:8794` / `:8796`), and never modify code inside `#ifdef PICK` shader blocks when injecting Bio-FX overlays.
+
+## Hard Rules (Build Standard v1.2.0, R1–R8)
+
+- **R1–R2:** Commit and push directly to `main`. No pull requests, no feature branches, no git hooks, no commit/tag signing.
+- **R3:** CI (`.github/workflows/ci.yml`) is informational on every push to `main` and release tag `v*`.
+- **R4:** Banned files — never add `.github/dependabot.yml`, `renovate.json`, `PULL_REQUEST_TEMPLATE*`, `.github/copilot-instructions.md`, or `FUNDING.yml`.
+- **R5:** Keep `AGENTS.md` under 32 KiB. Never leave template placeholder or unfilled-todo markers anywhere in tracked files.
+- **R6:** Never fabricate numbers, test outcomes, citations, DOIs, or peer-review claims. Every number in docs and `paper/main.tex` must match a real command run.
+- **R7:** Classify every hardening or audit finding into exactly one of the 10 classes: `bug`, `error`, `issue`, `problem`, `concern`, `dilemma`, `conflict`, `gap`, `hole`, `blindspot`.
+- **R8:** On Windows paths containing brackets (`Z:\[Vibe Coded (AI)]\...`), ALWAYS pass `-LiteralPath` to PowerShell file cmdlets.
+- **Daemon Hygiene:** Never leave `server.mjs` or child engines running in the background after tests. Always test against ephemeral `127.0.0.1:0` or stop processes cleanly.
+
+## Repository Map
+
+- `lib/observatory_core.mjs` — Pure deterministic core: loopback CSRF/CSWSH guards, `resolveSafePath`, Genesis `1..1,000,000` clamping, bare-metal hardware flag builder, AZST binary decoder, 112-trait spectral delta, 8-axis cosine coherence, `<=240` omnitemporal ring buffer, fail-closed conservation gate, and `D7RO` 4x4 matrix.
+- `server.mjs` — Loopback HTTP/1.1 + SSE + WebSocket Hub (`:8790`), `/healthz`, reverse proxy, Bio-FX shader injector, and child supervisor (`--no-engines` for standalone mode).
+- `macro_wild_relay.py` — Read-only Asmodensius-Native relay (`:8794`) with `--dry-run` JSON contract output.
+- `web/` — Unified dark scientific cockpit (`index.html`, `app.js`, `creature_gl.js`, `styles.css`, `taxonomy.js`).
+- `tests/` — `test_observatory.mjs` (Node `node:test`, live ephemeral HTTP, 250 `prop_check` trials, metamorphic/golden, Node-vs-Python differential parity) and `test_relay.py` (Python `unittest`, 120 trials).
+- `scripts/` — `lint_check.mjs`, `run_mutation_audit.mjs` (6/6 mutants), `benchmark_observatory.mjs`, `check_citations.py`, `build_paper.py`, `Audit-Repo.ps1`, `audit-repo.sh`.
+- `paper/` & `dist/` — AMS-LaTeX architecture white paper (`main.tex`, `refs.bib`), frozen PDF (`dist/Donahue_2026_omega_triscale_observatory.pdf`), and clean-room arXiv tarball (`dist/arxiv_submission.tar.gz`).
+
+## Canonical Verification Commands
+
+```bash
+npm test                                    # 12/12 Node tests (contract, HTTP, 250 prop_check, differential)
+python -m unittest discover -s tests -v     # 5/5 Python relay tests (120 randomized trials)
+npm run lint                                # Syntax, security, determinism, and identity lint
+npm run mutate                              # 6/6 (100%) surgical mutation audit in isolated tempdir
+npm run bench                               # Deterministic telemetry micro-benchmarks -> results/benchmarks.json
+python scripts/check_citations.py           # Live DOI & URL verification for paper/refs.bib
+python scripts/build_paper.py               # Zero-overflow Tectonic PDF + clean-room arXiv tarball
+pwsh -NoProfile -File scripts/Audit-Repo.ps1  # Build Standard v1.2.0 audit (target: 100.0% / 100.0% / 100.0%)
+```
+
+
+================================================================================
+FILE: CLAIMS.md
+================================================================================
+
+# Claims Ledger (`CLAIMS.md`)
+
+Every engineering, verification, empirical, and epistemic claim in `omega-triscale-observatory` v6.7.0 is tracked below with an explicit epistemic tier, reproducible verification command, artifact path, and **explicit falsification / refutation condition (what would prove us wrong)**.
+
+Epistemic tiers:
+- `program-audited` — verified deterministically by automated tests, property checks, differential oracles, or surgical mutation audits on the current commit.
+- `empirical` — measured on real local hardware and recorded verbatim in `results/`.
+- `indicator-only` — heuristic visual or proxy indicator; explicitly NOT a rigorous mathematical or biological proof.
+- `upstream-linked` — reported by supervised companion repositories and audited there, not inside this repo.
+- `open-conjecture` — overarching unsolved scientific problem; strictly NOT solved or retired.
+
+| ID | Epistemic Tier | Exact Claim | Verification Command | Artifact | What Would Prove Us Wrong (Refutation Condition) |
+|---|---|---|---|---|---|
+| **C1** | `program-audited` | Loopback perimeter enforces `127.0.0.1`/`localhost`/`[::1]` `Host` and `Origin`, `application/json` on state-mutating `POST`, `Sec-Fetch-Site`, WebSocket upgrade guard, and canonical `resolveSafePath` traversal defense. | `npm test` | `lib/observatory_core.mjs`, `tests/test_observatory.mjs` | Any cross-origin `POST`/`SSE`/WS request returns `200`, or any `..`/backslash/NUL/drive-letter path leaks a file outside `web/` or `ZETA_PKG_ROOT`. |
+| **C2** | `program-audited` | Genesis normalizer clamps `n` in `[1, 1_000_000]`, `cap` in `[n, 2_000_000]`, `species` in `[1, min(100, n)]`, `lesion` to 23 bits (`0x7fffff`), whitelists `AZ_PARAM` keys, emits bare-metal flags (`--ecores`, `--gpu`, `--prefetch`, `--kernels`, `--large-pages`), and matches Python `macro_wild_relay.py --dry-run`. | `npm test && python -m unittest discover -s tests -v` | `lib/observatory_core.mjs`, `macro_wild_relay.py`, `tests/test_relay.py` | Any of the 250 Node + 120 Python `prop_check` trials violates a bound, or Node `normalizeGenesisConfig` disagrees with Python `--dry-run` on any parameter. |
+| **C3** | `program-audited` | Render-only observer boundary keeps all lower-to-Asmodensius coupling cells (`T1->T3`, `T1->T4`, `T2->T3`, `T2->T4`) strictly `{ m: "D7RO", s: 0 }`, and Bio-FX shader injection preserves `#ifdef PICK` intact. | `npm test` | `lib/observatory_core.mjs`, `server.mjs` | Any toggle combination sets `matrix4x4[0..1][2..3]` away from `D7RO` / `s: 0`, or Bio-FX injection alters picking code inside `#ifdef PICK`. |
+| **C4** | `program-audited` | 112-trait spectral differential clamps inputs to `[0, 1]`, satisfies swap antisymmetry and constant-shift invariance inside `[0, 1]`, produces 111 finite gradient slopes, and strictly caps omnitemporal `history.length <= 240`. | `npm test` | `lib/observatory_core.mjs`, `tests/test_observatory.mjs` | `history.length > 240`, any `NaN`/`Infinity` metric, or swap/shift invariance fails beyond rounding tolerance (`2e-4`). |
+| **C5** | `program-audited` | Conservation gate fails closed: reports `ALERT` if any T1/T2 residual or `observerFail !== 0`, `DEGRADED` if any required tier is offline or stale (`>= 15 s`), and `VERIFIED` only when all required tiers are live and zero-residual. | `npm test` | `lib/observatory_core.mjs` | Hub reports `VERIFIED` (`conservationOk === true`) while offline, stale, or with a nonzero residual. |
+| **C6** | `program-audited` | Verification suite passes `12/12` Node tests, `5/5` Python tests, static lint (`0` errors across 11 files), and kills `6/6` (`100.0%`) planted surgical mutants in an isolated temporary workspace. | `npm test && npm run lint && npm run mutate` | `results/mutation_audit.json`, `scripts/run_mutation_audit.mjs` | Any test fails, any lint error appears, or any planted mutant survives (`killed < 6`). |
+| **C7** | `empirical` | Measured telemetry micro-benchmarks on Node `v25.8.2` (Win64 x64) average `0.0804 ms` for `computeDifferentialsCore` (`p95 = 0.2605 ms`) and `4.5210 ms` for `10,000`-creature binary `AZST` decoding (`p95 = 6.3211 ms`). | `npm run bench` | `results/benchmarks.json`, `docs/benchmarks.md` | Repeated runs on the reference machine show systematic regression beyond the documented performance budgets (`> 2 ms` diff / `> 30 ms` AZST decode). |
+| **C8** | `indicator-only` | `differential.chaosLyapunov` is a heuristic volatility/entropy index in `[0, 1]`, Tier 3 internal organs in `web/creature_gl.js` are count-driven projections, and Noetic header readouts are forwarded proxy indicators. | `cat LIMITATIONS.md` | `LIMITATIONS.md`, `web/creature_gl.js` | Falsified immediately if any active document claims these are physical Lyapunov exponents, voxel-accurate organs, or proof of sentience. |
+| **C9** | `upstream-linked` | This repository contains `0` local Lean 4 files; the 5 supervised formal sibling repositories report `244` combined upstream Lean 4 theorems (`42 + 62 + 72 + 48 + 20`) audited in their own repos. | Inspect `repo.yaml` & sibling repos | `README.md`, `docs/MEGA_ATLAS_CROSSCHECK.md` | Any local `.lean` file claimed without audit, or upstream counts drift without updating the registry table. |
+| **C10** | `open-conjecture` | Zero (`0 / 1,900`) overarching Mega-Atlas open problems (`AI-045`, `SYS-009`, `SYS-050`) are solved or retired by this instrument. | `cat docs/MEGA_ATLAS_CROSSCHECK.md` | `docs/MEGA_ATLAS_CROSSCHECK.md` | Falsified if any section claims retirement of an overarching Mega-Atlas open problem without independent peer-reviewed resolution. |
+
+
+================================================================================
+FILE: LIMITATIONS.md
+================================================================================
+
+# Limitations, Threats to Validity, and Real-vs-Metaphor Boundary
+
+This document explicitly delineates what `omega-triscale-observatory` v6.7.0 **does** and **does not** establish (Build Standard `B41` and Playbook v1.3).
+
+## 1. Real vs. Metaphor Boundary
+
+| Element in UI / Code | What Is Computationally Real | What Is Strictly Visual Metaphor or Heuristic Indicator |
+|---|---|---|
+| `differential.chaosLyapunov` | Bounded `[0, 1]` sum of rolling telemetry step differences and Shannon entropies. | **NOT** a maximal Lyapunov exponent, phase-space divergence proof, or formal proof of mathematical chaos. |
+| Tier 3 Internal Organs (`web/creature_gl.js`) | Synthesized deterministically from live integer counts (`parts`, `neurons`, `tiles`, `T2 active_axons`, `CPG`). | **NOT** physical 3D organ coordinates exported from `az_live.exe` (which `/api/inspect` does not provide). |
+| Tier 4 Bio-FX ULTRA Shaders (`server.mjs`) | Real GLSL ES 3.00 fragment/vertex shaders injected client-side outside `#ifdef PICK`. | **NOT** physical biochemical skin membranes, iridescence physics, or state changes inside `Asmodensius-Native`. |
+| Binomial Taxonomy (`web/taxonomy.js`) | Deterministic FNV-1a procedural Latinate labels derived from clade IDs, UIDs, and morphology ratios. | **NOT** phylogenetic cladistics or biological taxonomy recognized by ICZN/ICN. |
+| Noetic Header Pill (`B14/14 · T10/10 · CQM25/25`) | Real HTTP JSON telemetry proxied from local `:8795`. | Strictly **indicator-only** computational diagnostics; **NOT** evidence of phenomenal consciousness or sentience. |
+| Ecosystem Lean 4 Count (`244` upstream) | Sum of audited Lean 4 theorems reported by five sibling repositories. | **NOT** formally verifying `server.mjs`, `web/app.js`, or `macro_wild_relay.py` (this repo contains **0** Lean 4 files). |
+
+## 2. Engineering & Experimental Limitations
+
+1. **Local-Only Loopback Scope:** `server.mjs` binds strictly to `127.0.0.1` without TLS, user accounts, or rate-limiting middleware suitable for public internet exposure. Exposing port `8790` beyond loopback breaks the threat model (`docs/threat-model.md`).
+2. **Sibling Engine Availability:** Full 8-endpoint live supervision requires the 6 companion repositories built locally on disk. In standalone CI (`ubuntu-latest` / `windows-latest`) or clean-clone tests, tests verify the Hub HTTP/core/relay contracts directly without launching external C/CUDA binaries.
+3. **Headless WebGL2 Rendering Not Automated in CI:** `web/app.js` and `web/creature_gl.js` are verified via Node syntax checks (`node --check`), static lint, and shader-injection string/contract tests (`#ifdef PICK` preservation), not via headless Chromium GPU pixel-diffing in CI.
+4. **Windows Bare-Metal Hardware Paths:** Flags such as `--ecores`, `--gpu 1` (RTX 5070 Ti CUDA PTX), and `--large-pages` are validated end-to-end as CLI contracts between Node and Python (`--dry-run`), while actual multi-core/GPU throughput depends on the host OS, privileges (`SeLockMemoryPrivilege` for large pages), and `az_live.exe`.
+5. **Non-Peer-Reviewed Status:** Neither this repository nor its accompanying white paper (`dist/Donahue_2026_omega_triscale_observatory.pdf`) has undergone external peer review.
+6. **Zero Mega-Atlas Retirements:** `0 / 1,900` overarching open problems in `0thernes/unsolved-problems-mega-atlas` are retired by this instrument (`docs/MEGA_ATLAS_CROSSCHECK.md`).
+
+
+================================================================================
+FILE: REPLICATION.md
+================================================================================
+
+# Replication Protocol (`REPLICATION.md`)
+
+This document provides exact clean-clone instructions to independently verify all tests, property checks, differential Node↔Python relay contracts, surgical mutation kills, telemetry micro-benchmarks, citation checks, and Tectonic AMS-LaTeX PDF builds for `omega-triscale-observatory` v6.7.0.
+
+## Prerequisites
+
+- **Node.js:** `>= 22.0.0` (tested on `v25.8.2`; zero npm packages required)
+- **Python:** `>= 3.12.0` (tested on `3.12.10`; zero pip packages required)
+- **Tectonic (optional, for PDF rebuild):** `>= 0.15.0` (tested on `0.17.0`)
+- **PowerShell 7+ or Bash (optional, for Build Standard audit):** `pwsh` or `bash`
+
+## Clean-Clone Step-by-Step Protocol
+
+```bash
+git clone https://github.com/0thernes/omega-triscale-observatory.git
+cd omega-triscale-observatory
+
+# Step 1: Node.js unit, live HTTP contract, 250 prop_check, metamorphic & differential tests
+npm test
+
+# Step 2: Python macro_wild_relay.py unit & 120 randomized property tests
+python -m unittest discover -s tests -v
+
+# Step 3: Static syntax, security, determinism & identity hygiene lint
+npm run lint
+
+# Step 4: Isolated 6-mutant surgical mutation audit (expects 6/6 = 100.0% killed)
+npm run mutate
+
+# Step 5: Deterministic micro-benchmarks (writes results/benchmarks.json)
+npm run bench
+
+# Step 6: Live citation DOI & URL verification (16/16 targets)
+python scripts/check_citations.py
+
+# Step 7: Zero-overflow Tectonic AMS-LaTeX PDF + clean-room arXiv tarball verification
+python scripts/build_paper.py
+
+# Step 8: Build Standard v1.2.0 repository audit (expects 100.0% / 100.0% / 100.0%)
+pwsh -NoProfile -File scripts/Audit-Repo.ps1
+```
+
+## Expected Verification Thresholds
+
+- `npm test`: `12/12` pass, `0` fail, `0` lingering processes on port `8790`.
+- `python -m unittest discover -s tests -v`: `5/5` pass.
+- `npm run lint`: `0` errors across 9 JS/MJS + 2 Python targets.
+- `npm run mutate`: `6/6` (`100.0%`) mutants killed.
+- `python scripts/check_citations.py`: `16/16` live URL/DOI checks OK.
+- `python scripts/build_paper.py`: `0` Overfull `\hbox`, `0` undefined refs/citations, clean-room arXiv compile passes.
+- `scripts/Audit-Repo.ps1`: Structure `100.0%`, Completion `100.0%`, Core `100.0%`, `0` placeholder files.
+
+## Independent Replication Log
+
+| Date | Replicator | Platform & Toolchain | Outcome | Notes |
+|---|---|---|---|---|
+| 2026-11-25 | Alexander Stephen Donahue (Author, self-audit) | Windows 11 x64, Node v25.8.2, Python 3.12.10, Tectonic 0.17.0 | PASS (12/12 Node, 5/5 Py, 6/6 Mutants, 16/16 Citations, 0 TeX warnings) | Author clean-room local verification; external independent replication is invited via GitHub Issues (`replication` label). |
+
+
+================================================================================
+FILE: DEVIATIONS.md
+================================================================================
+
+# Deviations (`DEVIATIONS.md`)
+
+Intentional, documented deviations from generic repository templates or external standards for `omega-triscale-observatory` v6.7.0:
+
+| ID | Standard / Template Item | Deviation & Rationale | Compensating Control |
+|---|---|---|---|
+| **D1** | `formal` / `B22–B25` (Lean 4 / TLA+ / CBMC) | `formal: false` in `repo.yaml` because this repository is a Node.js + Python + WebGL2 orchestration & visualization hub containing **0** local Lean 4 files. | Formal proofs for the supervised engines live in the 5 companion repositories (`244` combined upstream Lean 4 theorems), while this repo enforces its own invariants via 250+120 `prop_check` trials, differential Node↔Python parity, live HTTP contract tests, and 6/6 surgical mutation testing. |
+| **D2** | `A27` (GitHub Pages deploy) | Declared `n/a` in `repo.yaml` because `omega-triscale-observatory` is strictly a loopback (`127.0.0.1:8790`) local-engine supervisor whose live WebSocket/SSE reverse proxy cannot operate on static GitHub Pages without local companion binaries. | Complete static architecture documentation, SVG preview (`docs/media/social-preview.svg`), and frozen PDF white paper (`dist/Donahue_2026_omega_triscale_observatory.pdf`) are committed directly and linked from `README.md`. |
+| **D3** | `native` / `B15–B16` (C/C++ fuzzing & sanitizers) | `native: false` because this repository contains zero C/C++/Rust/asm source files. | All binary `AZST` decoding and path/query inputs are memory-safe Node.js `Buffer` reads tested against truncated/malformed payloads and 250 seeded property trials. |
+| **D4** | `deployed` / `A36` (Production cloud rollback) | `deployed: false` because the Hub runs strictly on local loopback (`127.0.0.1:8790`) on the researcher's workstation. | Full local restart, clean process-tree reaping (`taskkill /T /F` / `SIGTERM`), and git-tag rollback instructions are documented in `docs/operations.md`. |
+| **D5** | `experimental` / `B28–B32, B39` | `experimental: false` because this repo makes no statistical hypothesis-testing or dataset-inference claims (only deterministic systems invariants and local micro-benchmarks under `perf: true`). | Micro-benchmark repeatability and exact environment disclosures are recorded in `docs/benchmarks.md` and `results/benchmarks.json`. |
+
+
+================================================================================
+FILE: ERRATA.md
+================================================================================
+
+# Errata (`ERRATA.md`)
+
+Published corrections to earlier versions of `omega-triscale-observatory`.
+
+| Date | Affected Version(s) | Finding Class | Issue Identified | Resolution in v6.7.0 |
+|---|---|---|---|---|
+| 2026-11-25 | `v6.2.0` – `v6.6.0` | `error` | `HANDOFF.md` stated *"Verified green on Win64 Clang (`-Wall -Wextra -Werror`) and Linux GCC (`-Wall -Wextra -Werror`)"* — copy-pasted from sibling C11 engine repositories; this repo has zero C files. | Replaced with exact Node.js v25.8.2 + Python 3.12.10 + Tectonic 0.17.0 verification record in `HANDOFF.md`, `EVIDENCE.md`, and `REPLICATION.md`. |
+| 2026-11-25 | `v6.3.0` – `v6.6.0` | `error` | Stale version & proof-count drift across `web/app.js` Export JSON (`v6.3`, `162 PURE LEAN 4`), `web/index.html` (`16 Lean`, `AUTOPHAGE v1.2`, `Cellulogonic v1.3`), `CLAUDE.md` (`v6.5.0`), `README.md` (`240`), and GitHub About (`v6.2`, `150`). | Unified all active code, UI, docs, metadata, and GitHub About strictly to `v6.7.0` and clearly distinguished `0` local Lean files vs. `244` upstream companion theorems. |
+| 2026-11-25 | `v6.6.0` | `bug` | `populateGenesisForm(cfg)` in `web/app.js` did not hydrate the four bare-metal hardware checkboxes (`genKernels`, `genEcores`, `genPrefetch`, `genGpu`) from server state. | Added checkbox synchronization in `web/app.js`. |
+| 2026-11-25 | `v6.6.0` | `hole` | Static asset containment relied on string `startsWith` without explicit NUL-byte / UNC / drive-letter rejection, and `/api/stack/shape/:clade` + `/api/stack/env-slice?z=` lacked strict `400` validation on malformed inputs. | Centralized canonical `resolveSafePath`, `validateCladeParam`, and `validateSliceZParam` in `lib/observatory_core.mjs` with negative tests and mutation kill `M1`. |
+
+
+================================================================================
+FILE: EVIDENCE.md
+================================================================================
+
+# Evidence Index (`EVIDENCE.md`)
+
+Machine-verifiable evidence artifacts generated locally for `omega-triscale-observatory` v6.7.0 (zero fabricated results; every artifact corresponds to an executable script in this repository).
+
+| Evidence Domain | Artifact Path | Producing Command | Verified Result (2026-11-25) |
+|---|---|---|---|
+| Node Unit, Live HTTP Contract, Property (`250` trials), Metamorphic & Differential Suite | `tests/test_observatory.mjs` | `npm test` | `12/12` PASS (`0` fail, `~2.5 s`, zero lingering processes) |
+| Python Relay Unit & Property (`120` trials) Suite | `tests/test_relay.py` | `python -m unittest discover -s tests -v` | `5/5` PASS (`0.31 s`) |
+| Static Syntax, Security & Hygiene Linter | `scripts/lint_check.mjs` | `npm run lint` | PASS (`9` JS/MJS + `2` Python targets, `0` errors) |
+| Surgical Mutation Audit (`6` Planted Regressions) | `results/mutation_audit.json` | `npm run mutate` | `6/6` (`100.0%`) KILLED |
+| Telemetry & Guard Micro-Benchmarks | `results/benchmarks.json` | `npm run bench` | `computeDifferentialsCore` `0.0804 ms` mean; `decodeAzstCreaturesCore` (10k) `4.5210 ms` mean |
+| Live Bibliography Citation Verification | `paper/refs.bib` | `python scripts/check_citations.py` | `16/16` live URLs & DOIs verified HTTP 200 / DOI OK (`13` entries) |
+| Zero-Overflow AMS-LaTeX White Paper & Clean-Room arXiv Tarball | `dist/Donahue_2026_omega_triscale_observatory.pdf`, `dist/arxiv_submission.tar.gz` | `python scripts/build_paper.py` | `0` Overfull `\hbox`, `0` undefined refs/citations, clean-room compile PASS |
+| Build Standard v1.2.0 Audit | `repo.yaml`, `scripts/Audit-Repo.ps1` | `pwsh -NoProfile -File scripts/Audit-Repo.ps1` | `100.0%` Structure / `100.0%` Completion / `100.0%` Core |
+| Cryptographic SHA-256 Manifest | `CHECKSUMS.sha256` | `just checksums` | Verified SHA-256 digests of core code, scripts, results, and frozen `dist/` |
+
+
+================================================================================
+FILE: docs/architecture.md
+================================================================================
+
+# System Architecture (`docs/architecture.md`)
+
+`omega-triscale-observatory` v6.7.0 is a **single-process local supervisor, loopback reverse proxy, binary telemetry decoder, and WebGL 2.0 scientific cockpit** written in zero-dependency Node.js ESM (`server.mjs`, `lib/observatory_core.mjs`) and Python 3 (`macro_wild_relay.py`).
+
+## 1. Module Separation
+
+| Module | Responsibility | Runtime Dependencies |
+|---|---|---|
+| `lib/observatory_core.mjs` | Pure deterministic core: SplitMix32 PRNG, `clampInt`, loopback CSRF/CSWSH predicates, `resolveSafePath`, `validateCladeParam`, `validateSliceZParam`, `normalizeGenesisConfig`, `buildRelayArgs`, `computeDifferentialsCore`, `decodeAzstCreaturesCore`, `sampleLocalHabitatCore`, `sanitizeProxyHeaders`. | Node.js built-ins only (`node:path`) |
+| `server.mjs` | Loopback HTTP/1.1 + SSE + WebSocket Hub (`127.0.0.1:8790`), `/healthz`, reverse-proxy URL rewriting, observer-only Bio-FX GLSL injector (preserving `#ifdef PICK`), background engine polling, and child process tree supervision. | Node.js built-ins only (`node:http`, `node:net`, `node:fs`, `node:path`, `node:child_process`, `node:url`) |
+| `macro_wild_relay.py` | Read-only relay (`:8794`) importing `Asmodensius-Native/demo/viewer_server.py` with bounded `1..1,000,000` Genesis presets, bare-metal flags (`--ecores`, `--gpu`, `--prefetch`, `--kernels`, `--large-pages`), run-directory pruning, and `--dry-run` JSON contract mode. | Python 3.12+ stdlib only |
+| `web/` | Dark scientific UI (`index.html`, `styles.css`), SSE telemetry client & Canvas metrology (`app.js`), WebGL2 GLSL ES 3.00 12-shader specimen engine (`creature_gl.js`), and deterministic FNV-1a taxonomy generator (`taxonomy.js`). | Browser WebGL2 / Canvas 2D |
+
+## 2. Eight Supervised Local Endpoints
+
+1. **`:8787` — Tier 1 DNA (`AUTOPHAGE v1.3`):** Streams SSE frames containing `ovi`, `traits112`, conservation ledger, and evolved 128-byte `genome_hex`.
+2. **`:8788` — Tier 2 Cells (`Cellulogonic Mecha v1.4`):** Receives real 128B DNA transfection, 13-vector restraints, solvent overrides, and nutrient plumes; returns `telemetry` and `bridge.traits112`.
+3. **`:8791` — Tier 2+ Frontier VM (`Cellular Engine Omega v5.1`):** Polled via `/api/run` for `TB13`–`TB16` frontier diagnostics (75 substrates, 1,000-cell hybrid cube).
+4. **`:8795` — Tier 3/4 Cognitive (`Noetic Organism Omega v2.0`):** Polled via `/api/state` and `/api/e2` for conservation checks and indicator-only cognitive readouts.
+5. **`:8794` — Tier 3+4 World #1 (`Asmodensius-Native` WebGL2 via `macro_wild_relay.py`):** Binary `AZST` creature/static/field/shape snapshots and WebSocket stream under strict **`D7RO`** read-only policy.
+6. **`:8796` — Tier 3+4 World #2 (`Asmodensius-Native` native `az_view`):** Proxied via `/proxy/macro-live/`, toggleable inside the Hub via `W1:GL2` ⇄ `W2:az_view`.
+7. **`:8790` — Unified Hub (`server.mjs`):** Serves UI, `/healthz`, `/api/stack/events` (SSE), `/api/stack/action` (JSON POST), `/api/stack/shape/:clade`, `/api/stack/env-slice`, and `/proxy/*`.
+8. **`:8790/zeta-omega/` — Singularity Atlas (`alife-singularity-omega-package`):** Static read-only archive served strictly through `resolveSafePath`.
+
+## 3. Data Flow & Observer Independence (`D7RO`)
+
+- **Allowed Write Paths:** T1 → T2 (`DNA-128B` transfection), T4/T3 → T2 (habitat solvent sync, nutrient plume, shock), Operator → T1+T2 (13-vector restraint parity).
+- **Strictly Forbidden Write Paths (`D7RO`):** T1 → T3, T1 → T4, T2 → T3, T2 → T4. `computeDifferentialsCore` hard-codes `{ m: "D7RO", s: 0 }` for all four cells, verified by automated tests and mutation kill `M3_D7RO_OBSERVER_VIOLATION`.
+- **Client-Only Bio-FX:** Proxy shader injection into `/proxy/macro/viewer_gl.js` modifies rendering strictly outside `#ifdef PICK` blocks, leaving GPU picking and engine state untouched.
+
+
+================================================================================
+FILE: docs/configuration.md
+================================================================================
+
+# Configuration Reference (`docs/configuration.md`)
+
+## Environment Variables (`.env.example`)
+
+| Variable | Default | Description |
+|---|---|---|
+| `TRISCALE_PORT` | `8790` | Loopback HTTP/SSE/WebSocket bind port on `127.0.0.1`. |
+| `OBSERVATORY_NO_ENGINES` | `0` | Set to `1` (or pass `--no-engines`) to serve Hub UI and `/healthz` standalone without spawning sibling engines. |
+| `ASMODENSIUS_DEMO_DIR` | Auto-resolved | Optional path override for `Asmodensius-Native/demo` used by `macro_wild_relay.py`. |
+| `PYTHON_BIN` | Auto-detected | Optional Python 3.12+ interpreter path used by `tests/test_observatory.mjs` and `scripts/lint_check.mjs`. |
+| `TECTONIC_BIN` | Auto-detected | Optional path to Tectonic compiler binary used by `scripts/build_paper.py`. |
+
+## Genesis Studio & Bare-Metal Hardware Parameters
+
+| Parameter | Valid Bounds | Default (`cambrian`) | Notes |
+|---|---|---|---|
+| `preset` | `cambrian`, `hyperbrain`, `hyperchaos`, `megaswarm`, `abyss`, `megagrowth`, `million` | `cambrian` | Unknown presets safely fall back to `cambrian`. |
+| `n` (Founders) | `1 .. 1,000,000` | `8000` | Clamped identically in Node and Python (`--n`). |
+| `cap` (Carrying Capacity) | `0` (auto) or `n .. 2,000,000` | `48000` | `0` invokes `autoCap(n)`. |
+| `species` | `1 .. min(100, n)` | `100` | Aligned with upstream `WG_MAX_SPECIES = 100`. |
+| `grid` | `"auto"` or `"x,y,z"` with `x,y,z in [2..8]` | `"6,6,5"` | Log2 voxel dimensions (`6,6,5` = `64x64x32`; `7,6,6` = `128x64x64`). |
+| `tps` / `sps` | `tps: 0..1000`, `sps: 1..60` | `14` / `12` | `tps=0` runs uncapped; updatable live without restart. |
+| `threads` | `0..64` (`0` = auto) | `0` | Worker thread count passed to `az_live.exe`. |
+| `kernels` (`--kernels`) | `0` or `1` | `1` | Enables AVX2/AVX-VNNI vector kernels. |
+| `ecores` (`--ecores`) | boolean | `true` | Enables all 24 physical cores (8 P-cores + 16 E-cores). |
+| `prefetch` (`--prefetch`) | `0` or `1` | `1` | Enables DDR5 streaming software prefetch. |
+| `gpu` (`--gpu`) | `0` or `1` | `0` | Enables NVIDIA RTX 5070 Ti CUDA PTX sparse brain offload. |
+| `largePages` (`--large-pages`) | boolean | `false` | Requests 2 MiB TLB large pages (requires OS privilege). |
+| `lesion` | `0x000000 .. 0x7fffff` | `0` | 23-bit behavior/cognition lesion mask (`0` = all 23 active). |
+| `lab` / `seed` | boolean / `0 .. 2,147,483,647` | `false` / `42` | `false` = Wild OS entropy; `true` = reproducible seeded Lab mode. |
+| `params` | `^[A-Z0-9_]+$` integer map | Preset defaults | Non-whitelisted keys or non-finite values are stripped cleanly. |
+
+## `macro_wild_relay.py` CLI Usage
+
+```bash
+# Dry-run JSON contract resolution (works on any OS without Asmodensius-Native present)
+python macro_wild_relay.py --preset million --data-dir ./runtime/dry \
+  --n 1000000 --cap 0 --species 100 --kernels 1 --ecores --gpu 1 --prefetch 1 --large-pages --dry-run
+```
+
+
+================================================================================
+FILE: docs/threat-model.md
+================================================================================
+
+# Threat Model (`docs/threat-model.md`)
+
+STRIDE threat analysis for `omega-triscale-observatory` v6.7.0 (`B36`).
+
+## Trust Boundary
+
+- **Intended Deployment:** Single-user local workstation bound strictly to `127.0.0.1:8790`.
+- **Untrusted Adversaries Considered:**
+  1. Malicious web pages open in the same browser attempting cross-origin CSRF, DNS-rebinding, or cross-site WebSocket hijacking (CSWSH) against `http://127.0.0.1:8790`.
+  2. Malformed URLs, path-traversal payloads, or oversized HTTP bodies targeting static file routes or proxy endpoints.
+  3. Malformed/injected Genesis `AZ_PARAM` strings or oversized CLI arguments attempting command-line injection into `macro_wild_relay.py` / `az_live.exe`.
+  4. Corrupted or truncated binary `AZST` packets from upstream engines.
+
+## STRIDE Matrix & Verified Mitigations
+
+| Category | Concrete Threat | Mitigation Implemented | Verification Evidence |
+|---|---|---|---|
+| **Spoofing** | Cross-site page forging `POST /api/stack/action` or WebSocket `/proxy/macro/ws` upgrade (CSRF / CSWSH / DNS rebinding). | `isLoopbackHost`, `isLoopbackOrigin`, `Sec-Fetch-Site` check, and required `Content-Type: application/json` (`isSafeLoopbackRequest`), plus WebSocket `upgrade` guard. | `tests/test_observatory.mjs` (Tests 2c, 3.5, 3.6, 3.8) + Mutant `M5_CSRF_ORIGIN_BYPASS` |
+| **Tampering** | Directory traversal (`../`, `..\`, `%2e%2e`, NUL bytes, Windows drive prefixes) leaking files outside `web/` or `ZETA_PKG_ROOT`. | Canonical `path.relative` containment in `resolveSafePath` rejecting NUL bytes, drive prefixes, UNC paths, and `..`. | `tests/test_observatory.mjs` (Tests 2c, 3.3) + Mutant `M1_PATH_TRAVERSAL_BYPASS` |
+| **Tampering** | Command/argument injection via Genesis `params`, `grid`, or `lesion` fields passed to `spawn()`. | `spawn()` uses `shell: false` (argument array only); `params` keys strictly whitelisted to `^[A-Z0-9_]+$` with finite integer values; `grid` whitelisted to `auto` or clamped `2..8` triples; `lesion` masked `& 0x7fffff`. | `tests/test_observatory.mjs` (Tests 2a, 2b, 4) + `tests/test_relay.py` |
+| **Tampering (Scientific)** | Observer interference mutating `Asmodensius-Native` state or breaking GPU picking. | Hard-coded `D7RO` (`s: 0`) boundary in `computeDifferentialsCore`; `#ifdef PICK` preserved untouched in `injectMacroBioFx`. | `tests/test_observatory.mjs` (Tests 5b, 5c) + Mutant `M3_D7RO_OBSERVER_VIOLATION` |
+| **Information Disclosure** | XSS in UI telemetry rendering from upstream engine strings. | All dynamic DOM interpolations in `web/app.js` escape HTML entities via `esc()` (`&`, `<`, `>`, `"`, `'`); responses emit `X-Content-Type-Options: nosniff`. | `web/app.js`, `tests/test_observatory.mjs` (Test 3.2) |
+| **Denial of Service** | Memory exhaustion via unbounded history growth, oversized proxy payloads, or SSE connection floods. | Omnitemporal ring capped `<= 240`; causal log `<= 80`; SSE clients `<= 32` (`429`); request cap `2 MiB` (`413`); proxy response cap `16 MiB` (`502`); JSON body cap `256 KiB`; `az_live` run dirs pruned to `5`. | `tests/test_observatory.mjs` (Test 5b) + Mutant `M4_OMNITEMPORAL_CAP_LEAK` |
+| **Elevation of Privilege** | Exposing local supervisor over LAN/WAN. | Hard-bound strictly to `127.0.0.1` (`server.listen(HUB_PORT, "127.0.0.1")`); documented explicitly in `SECURITY.md` and `LIMITATIONS.md`. | `server.mjs`, `SECURITY.md` |
+
+
+================================================================================
+FILE: docs/verification.md
+================================================================================
+
+# Verification Architecture (`docs/verification.md`)
+
+`omega-triscale-observatory` v6.7.0 implements a multi-layer automated verification strategy covering every critical security, numeric, cross-language, and observer-isolation invariant with **zero external test frameworks** (pure Node.js `node:test` + Python `unittest`).
+
+## Verification Layers
+
+1. **Syntax & Static Hygiene (`npm run lint` — `B17`/`B18`):**
+   - Executes `node --check` on all 9 JS/MJS files and `python -m py_compile` on Python targets.
+   - Rejects `eval`, `new Function`, `Math.random()` inside server/core logic, and stale `0thernes LLC` affiliation strings.
+   - Paired with `jsconfig.json` (`"checkJs": true`, `"strict": true`) and CI report-only `ruff` + `mypy`.
+2. **Contract, Negative & Live HTTP Integration Tests (`tests/test_observatory.mjs` — `B06`/`B09`):**
+   - Binds `server.mjs` to ephemeral loopback port `127.0.0.1:0` (closing cleanly in `t.after()` — zero lingering daemons).
+   - Verifies `/healthz`, static `nosniff`, 5 distinct path-traversal payloads, HTTP `400` on invalid `clade` and `z`, HTTP `403` on cross-origin CSRF, non-JSON POST, and non-loopback SSE `Host`.
+3. **Property-Based Testing (`prop_check` — `B10`):**
+   - `250` deterministic seeded randomized trials in Node (`tests/test_observatory.mjs`) + `120` seeded randomized trials in Python (`tests/test_relay.py`) asserting `1 <= n <= 1_000_000`, `n <= cap <= 2_000_000`, `1 <= species <= min(100, n)`, `2 <= grid <= 8`, 23-bit lesion masking, and exact hardware flag serialization.
+4. **Metamorphic, Golden & Observer-Isolation Tests (`B08`/`B14`):**
+   - 112-trait spectral delta swap antisymmetry (`dna <-> cells`), constant-shift invariance inside `[0, 1]`, and clamping against unclamped `[0..7]` inputs.
+   - Omnitemporal ring cap `<= 240` across `320` consecutive pushes; fail-closed conservation gate (`VERIFIED` / `ALERT` / `DEGRADED`).
+   - Unconditional `D7RO` (`s: 0`) enforcement on `matrix4x4[0..1][2..3]` and `#ifdef PICK` preservation in `injectMacroBioFx`.
+   - Deterministic `AZST` binary creature decoding and deterministic `web/taxonomy.js` outputs.
+5. **Cross-Language Differential Oracle (`B11`/`B12`):**
+   - Feeds identical extreme & nominal configurations through Node `normalizeGenesisConfig` + `buildRelayArgs` and invokes `python macro_wild_relay.py --dry-run` as an independent cross-language oracle, verifying 100% agreement across every clamped field and hardware flag.
+6. **Surgical Mutation Testing (`scripts/run_mutation_audit.mjs` — `B13`):**
+   - Copies the repo into an isolated `os.tmpdir()` directory, plants 6 targeted logic regressions (`M1`..`M6`), executes the full Node test suite against each mutant, verifies **6/6 (100.0%)** killed, and removes the temporary directory cleanly.
+7. **Live Citation & Clean-Room White Paper Verification:**
+   - `scripts/check_citations.py`: live HTTP/DOI Handle REST verification of all 16 URLs/DOIs in `paper/refs.bib`.
+   - `scripts/build_paper.py`: Tectonic compilation failing on ANY Overfull `\hbox`, undefined ref/citation, or missing character, followed by deterministic `arxiv_submission.tar.gz` clean-room rebuild.
+
+
+================================================================================
+FILE: docs/benchmarks.md
+================================================================================
+
+# Benchmarks & Performance Budgets (`docs/benchmarks.md`)
+
+All measurements below were collected directly via `node scripts/benchmark_observatory.mjs` (`results/benchmarks.json`) with **zero fabricated numbers**.
+
+## Environment
+
+- **Runtime:** Node.js `v25.8.2` (`win32-x64`)
+- **Date:** `2026-11-25`
+- **Harness:** `scripts/benchmark_observatory.mjs` (deterministic SplitMix32 workload, 20-iteration JIT warmup)
+
+## Measured Latency vs. Performance Budgets (`A37` / `B26`)
+
+| Workload | Payload / Iterations | Mean (ms) | p50 (ms) | p95 (ms) | p99 (ms) | Budget (p95) | Status |
+|---|---|---|---|---|---|---|---|
+| `computeDifferentialsCore` | 112-trait Δ + 8-axis `cosθ` + D7RO (`1,000` iters) | `0.0804` | `0.0527` | `0.2605` | `0.3694` | `<= 2.0 ms` | PASS |
+| `decodeAzstCreaturesCore` | `10,000`-creature binary `AZST` (`100` iters) | `4.5210` | `4.3503` | `6.3211` | `11.1753` | `<= 30.0 ms` | PASS |
+| `normalizeGenesisConfig + buildRelayArgs` | `1,000,000` bare-metal config (`1,000` iters) | `0.0318` | `0.0187` | `0.0569` | `0.1728` | `<= 1.0 ms` | PASS |
+| `resolveSafePath` | Traversal + valid path pair (`2,000` iters) | `0.0190` | `0.0153` | `0.0295` | `0.0867` | `<= 0.5 ms` | PASS |
+
+## Memory & Resource Budgets
+
+- **Omnitemporal History Ring:** Strictly capped at `<= 240` entries (`MAX_OMNITEMPORAL_HISTORY = 240`), guaranteeing bounded O(1) memory growth regardless of session duration.
+- **Causal Event Log:** Strictly capped at `<= 80` entries in memory (`24` serialized per SSE frame).
+- **Concurrent SSE Clients:** Hard cap of `32` concurrent subscribers (`429 Too Many Requests` above cap).
+- **Proxy Body Caps:** `2 MiB` request cap (`413`), `16 MiB` buffered rewrite response cap (`502`), `256 KiB` JSON action body cap.
+
+## Tracking Over Time (`B27`)
+
+Every CI run executes `npm run bench` in report-only mode and uploads `results/benchmarks.json` as a build artifact for historical regression comparison.
+
+
+================================================================================
+FILE: docs/operations.md
+================================================================================
+
+# Operations, Health, Backups & Offsite Mirror (`docs/operations.md`)
+
+## 1. Local Startup & Clean Shutdown
+
+### Standalone Mode (No Sibling Engines)
+```bash
+node server.mjs --no-engines
+# or:
+OBSERVATORY_NO_ENGINES=1 node server.mjs
+```
+
+### Full 4-Tier 8-Endpoint Mode
+```bash
+node server.mjs
+# Windows shortcut: Start-TriScale.cmd
+```
+
+### Clean Process-Tree Reaping
+Sending `SIGINT` (`Ctrl+C`) or `SIGTERM` triggers `shutdown()` in `server.mjs`, which closes all active SSE streams, posts `/api/shutdown` to `:8794`, and reaps child process trees cleanly (`taskkill /T /F` on Windows, `SIGKILL` fallback on POSIX). Never leave background test servers running.
+
+## 2. Observability & Health Monitoring (`A34`)
+
+- **Health Endpoint:** `GET http://127.0.0.1:8790/healthz` (alias `/api/health`) returns HTTP `200` JSON:
+  ```json
+  {
+    "ok": true,
+    "service": "omega-triscale-observatory",
+    "version": "6.7.0",
+    "uptime_s": 12.34,
+    "engines": { "t1_dna": false, "t2_cells": false, "t2_omega": false, "t3_noetic": false, "t3_creatures": false, "t4_env": false },
+    "conservationState": "DEGRADED",
+    "sseClients": 0
+  }
+  ```
+- **Structured Console Logging:** All child engine lifecycle events (`[4TIER]`), Bio-FX shader hook counts (`[T4:Proxy Bio-FX ULTRA v5]`), and error events write cleanly to `stdout`/`stderr`.
+- **Runtime Disk Hygiene:** `macro_wild_relay.py` automatically prunes stale run directories inside `runtime/macro-wild-data/runs/` keeping only the latest `MAX_RETAINED_RUNS = 5` runs.
+
+## 3. Data, Backups & Offsite Repository Mirror (`A35`)
+
+- **Ephemeral Runtime Data:** `runtime/` is git-ignored and safely deletable at any time; no persistent user database or schema migration is required.
+- **Primary Remote & Master Archive Mirror:**
+  - Primary GitHub remote: `https://github.com/0thernes/omega-triscale-observatory`
+  - Offsite research archive & mirror registration: `https://github.com/0thernes/0thernes-research-archive` (plus Software Heritage snapshot and local ReFS Dev Drive / external `I:` backup).
+- **Offline Git Bundle Backup:** Create a full self-contained offline backup bundle at any time:
+  ```bash
+  git bundle create omega-triscale-observatory-v6.7.0.bundle --all
+  git bundle verify omega-triscale-observatory-v6.7.0.bundle
+  ```
+- **Local Rollback:** Revert to any prior tagged release cleanly via `git checkout v6.6.0` (or restore from the verified `.bundle` archive).
+
+
+================================================================================
+FILE: docs/MEGA_ATLAS_CROSSCHECK.md
+================================================================================
+
+# Unsolved Problems Mega-Atlas Non-Retirement Cross-Check
+
+Canonical cross-mapping of `omega-triscale-observatory` v6.7.0 against **`0thernes/unsolved-problems-mega-atlas`** (`1,900` curated open problems).
+
+## Executive Non-Retirement Statement
+
+> **`0 / 1,900` overarching open problems in the Unsolved Problems Mega-Atlas are solved or retired by `omega-triscale-observatory` v6.7.0.**
+
+This repository is strictly a multi-scale visualization, reverse-proxy, telemetry-metrology, and process-orchestration instrument. It contains **0 local Lean 4 formal proofs** (the `244` combined upstream Lean 4 theorems belong to five supervised companion repositories and verify finite discrete engine invariants, not overarching open problems).
+
+## Supported Empirical Observation Scope (Parent Problems Strictly OPEN)
+
+| Mega-Atlas ID | Exact Problem Name (Mega-Atlas V2) | Macro-Pillar / Superdomain | Instrument Support Provided by Observatory v6.7.0 | Parent Status |
+|---|---|---|---|---|
+| **`AI-045`** | *Open-Ended Artificial Life, Automated Environment Generation & Unbounded Novelty Creation* | AI, Quantum Tech, Hardware & Systems / Artificial Intelligence, ML & Digital Simulations | Aggregates cross-tier Bedau–Packard novelty telemetry (`bp_anew`, `bedau_anew`, active clade diversity), 24-bin hue Shannon entropy, and Anti-Monoculture renewal events across 8 endpoints without mutating `Asmodensius-Native` (`D7RO`). | **OPEN** (not retired) |
+| **`SYS-009`** | *Formal Cybernetic Theory of Multi-Scale Agency, Autopoiesis & Self-Maintaining Systems* | AI, Quantum Tech, Hardware & Systems / Systems, Control, Robotics & Cybernetics | Exposes real-time conservation-gate status (`VERIFIED`/`DEGRADED`/`ALERT`), 13-vector restraint parity across T1+T2, and 8-axis cross-tier biophysical cosine coherence across four spatial scales ($10^{-9}\text{ m}$ to $10^{1}\text{ m}$). | **OPEN** (not retired) |
+| **`SYS-050`** | *Unified Foundations of Physical Intelligence: Co-Optimizing Morphology, Material Compliance, Sensing & Control (Embodied Co-Design)* | AI, Quantum Tech, Hardware & Systems / Systems, Control, Robotics & Cybernetics | Visualizes real 48×48 octahedral clade morphologies (`AZST TYPE.SHAPES`), `/api/inspect` anatomy counts, local T4 voxel micro-habitats, and T2 GRN fate strips side-by-side in a calibrated WebGL2 studio. | **OPEN** (not retired) |
+
+## Indicator-Only Cognitive Disclaimer
+
+The `Noetic` header pill proxied from `:8795` displays indicator-only computational diagnostics (such as Butlin-style architectural checks and PCI* proxy values) reported by `noetic-organism-omega`. These readouts are strictly engineering telemetry and make **zero claim** regarding phenomenal consciousness, sentience, or moral patienthood.
+
+
+================================================================================
+FILE: docs/AI_DISCLOSURE.md
+================================================================================
+
+# AI-Assistance Disclosure & CRediT Authorship (`docs/AI_DISCLOSURE.md`)
+
+In accordance with the Defensible Independent AI Research Playbook v1.3 and transparent scholarly standards, this document discloses how human authorship and AI coding assistants contributed to `omega-triscale-observatory` v6.7.0.
+
+## Sole Human Author & CRediT Taxonomy
+
+- **Author:** Alexander Stephen Donahue
+- **Affiliation:** Independent Researcher, Spokane, WA, USA
+- **ORCID:** [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)
+- **Contact:** `0_0@0thernes.art` · `https://0thernes.art`
+- **CRediT Roles:** Conceptualization, Methodology, Software, Validation, Investigation, Data Curation, Writing — Original Draft, Writing — Review & Editing, Supervision.
+
+## Transparent AI-Assistance Disclosure
+
+- **Models / Assistants Used:** Large language model coding assistants (Antigravity / Gemini / Claude / Codex coding workflows) were utilized under direct human direction and architectural specification to:
+  1. Refactor pure deterministic server helpers into `lib/observatory_core.mjs` and add `--dry-run` / `/healthz` contracts;
+  2. Author Node.js (`node:test`) and Python (`unittest`) test suites, `prop_check` generators, static lint checks, and the 6-mutant surgical mutation harness;
+  3. Draft AMS-LaTeX manuscript source (`paper/main.tex`), TikZ architecture diagrams, and Build Standard v1.2.0 documentation scaffolding.
+- **Human Verification & Accountability:** Every claim, test pass (`12/12` Node, `5/5` Python), mutation kill (`6/6`), micro-benchmark (`results/benchmarks.json`), live citation check (`16/16` URLs/DOIs), Tectonic PDF build (`0` Overfull `\hbox`), and `Audit-Repo.ps1` score (`100.0%`) was executed locally against the actual committed files and reviewed by the human author, who takes full scholarly and engineering responsibility for the published artifact.
+- **No Fabricated Peer Review or Credentials:** This work is published openly as an independent technical software artifact and non-peer-reviewed preprint. No external peer review, institutional affiliation, or commercial LLC entity is claimed.
+- **Conflict of Interest:** None declared.
+
+
+================================================================================
+FILE: docs/faq.md
+================================================================================
+
+# Frequently Asked Questions (`docs/faq.md`)
+
+### 1. Can I run and test `omega-triscale-observatory` without cloning the 6 sibling repositories?
+Yes. Every automated test (`npm test`, `python -m unittest discover -s tests -v`, `npm run lint`, `npm run mutate`, `npm run bench`) and standalone server mode (`npm run start:standalone` or `node server.mjs --no-engines`) runs cleanly from a standalone clone with zero sibling repositories on disk and zero npm/pip installs.
+
+### 2. Does this repository contain Lean 4 formal proofs?
+No. `omega-triscale-observatory` contains **0 local Lean 4 files**. It is strictly a visualization, reverse-proxy, metrology, and orchestration hub. The `244` combined upstream Lean 4 proofs displayed in the ecosystem summary (`42 + 62 + 72 + 48 + 20`) live in and are formally checked inside their five respective sibling repositories.
+
+### 3. Does the Hub mutate `Asmodensius-Native` while observing it?
+No. All live cross-tier links from Tier 1 / Tier 2 into `Asmodensius-Native` (`:8794` / `:8796`) are permanently enforced as read-only (`{ m: "D7RO", s: 0 }`), and client-side WebGL2 Bio-FX shader injection strictly leaves `#ifdef PICK` intact. This invariant is verified by automated tests and surgical mutant `M3_D7RO_OBSERVER_VIOLATION`.
+
+### 4. Does this observatory solve any open problems in the Unsolved Problems Mega-Atlas?
+No. **`0 / 1,900` overarching Mega-Atlas open problems are solved or retired.** The observatory is an empirical telemetry and orchestration instrument supporting exploration related to `AI-045`, `SYS-009`, and `SYS-050`, each of which remains strictly **OPEN** (`docs/MEGA_ATLAS_CROSSCHECK.md`).
+
+### 5. Is `differential.chaosLyapunov` a real Lyapunov exponent?
+No. It is a bounded `[0, 1]` heuristic combining rolling telemetry step deltas and Shannon entropies for UI trend monitoring (`LIMITATIONS.md`).
+
+### 6. Why does `server.mjs` reject requests from non-loopback hosts or external browser tabs?
+To prevent cross-site request forgery (CSRF) and cross-site WebSocket hijacking (CSWSH) against local simulation controls (`docs/threat-model.md`). Always access the Hub via `http://127.0.0.1:8790/` or `http://localhost:8790/`.
+
+
+================================================================================
+FILE: docs/glossary.md
+================================================================================
+
+# Glossary (`docs/glossary.md`)
+
+## Observatory & Multi-Scale Domain Terms
+
+- **AZST:** Binary streaming snapshot wire format (`magic = 0x54535a41`) emitted by `Asmodensius-Native` for creatures (`type=2`), static terrain/vents (`type=3`), dynamic voxel fields (`type=4`), and 48×48 octahedral clade meshes (`type=5`).
+- **Bio-FX ULTRA:** Client-side, observer-only GLSL ES 3.00 shader injection applied by `server.mjs` to `/proxy/macro/viewer_gl.js` strictly outside `#ifdef PICK` blocks.
+- **D7RO (Law 4 / D7 Read-Only):** Hard architectural boundary prohibiting live T1/T2 state mutations into `Asmodensius-Native` during simulation ticks.
+- **Genesis Studio:** Collapsible control drawer exposing `1..1,000,000` founder population controls, carrying capacity, 3D log2 grid geometry, 23 native lesion flags, and bare-metal Windows execution flags (`--ecores`, `--kernels`, `--prefetch`, `--gpu`, `--large-pages`).
+- **Omnitemporal History Ring:** Fixed-capacity (`<= 240` samples) rolling buffer of synchronized 4-tier telemetry snapshots used for time-scrubbing and variance windows.
+- **112-Trait Spectral Δ:** Elementwise clamped difference $\Delta_i = \operatorname{clip}_{[0,1]}(b_i) - \operatorname{clip}_{[0,1]}(a_i)$ between Tier 1 DNA and Tier 2 cellular 112-slot telemetry vectors, accompanied by 111 finite-difference gradient slopes.
+- **8-Axis Biophysical Cosine Coherence:** Directional cosine similarity computed over 8 semantically aligned normalized metrics across Tier 1 and Tier 2.
+- **SplitMix32:** Deterministic 32-bit seeded PRNG replacing `Math.random()` inside the Hub core.
+
+## Build Standard v1.2.0 — The 10 Finding Classes (`R7`)
+
+Every audit, review, or issue finding in this repository is classified under exactly one of these ten classes:
+
+1. **`bug`** — Code does something different from its spec or intent (a defect in program logic).
+2. **`error`** — Wrong number, claim, doc, config, version, build, or command.
+3. **`issue`** — Works and is not wrong, but is unclear, inconsistent, fragile, or hard to maintain.
+4. **`problem`** — External obstacle (network, account, legal/entity naming, toolchain) blocking progress or compliance.
+5. **`concern`** — Risk that has not caused harm yet (security, cost, legal, reliability).
+6. **`dilemma`** — Trade-off between valid options; the owner decides.
+7. **`conflict`** — Two requirements or rules contradict each other.
+8. **`gap`** — Something required or expected is missing; nothing present is wrong.
+9. **`hole`** — Missing check or safeguard, so a defect could pass unnoticed.
+10. **`blindspot`** — A user, platform, failure mode, or assumption nobody has examined yet.
+

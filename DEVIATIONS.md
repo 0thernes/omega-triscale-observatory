@@ -1,0 +1,11 @@
+# Deviations (`DEVIATIONS.md`)
+
+Intentional, documented deviations from generic repository templates or external standards for `omega-triscale-observatory` v6.7.0:
+
+| ID | Standard / Template Item | Deviation & Rationale | Compensating Control |
+|---|---|---|---|
+| **D1** | `formal` / `B22–B25` (Lean 4 / TLA+ / CBMC) | `formal: false` in `repo.yaml` because this repository is a Node.js + Python + WebGL2 orchestration & visualization hub containing **0** local Lean 4 files. | Formal proofs for the supervised engines live in the 5 companion repositories (`244` combined upstream Lean 4 theorems), while this repo enforces its own invariants via 250+120 `prop_check` trials, differential Node↔Python parity, live HTTP contract tests, and 6/6 surgical mutation testing. |
+| **D2** | `A27` (GitHub Pages deploy) | Declared `n/a` in `repo.yaml` because `omega-triscale-observatory` is strictly a loopback (`127.0.0.1:8790`) local-engine supervisor whose live WebSocket/SSE reverse proxy cannot operate on static GitHub Pages without local companion binaries. | Complete static architecture documentation, SVG preview (`docs/media/social-preview.svg`), and frozen PDF white paper (`dist/Donahue_2026_omega_triscale_observatory.pdf`) are committed directly and linked from `README.md`. |
+| **D3** | `native` / `B15–B16` (C/C++ fuzzing & sanitizers) | `native: false` because this repository contains zero C/C++/Rust/asm source files. | All binary `AZST` decoding and path/query inputs are memory-safe Node.js `Buffer` reads tested against truncated/malformed payloads and 250 seeded property trials. |
+| **D4** | `deployed` / `A36` (Production cloud rollback) | `deployed: false` because the Hub runs strictly on local loopback (`127.0.0.1:8790`) on the researcher's workstation. | Full local restart, clean process-tree reaping (`taskkill /T /F` / `SIGTERM`), and git-tag rollback instructions are documented in `docs/operations.md`. |
+| **D5** | `experimental` / `B28–B32, B39` | `experimental: false` because this repo makes no statistical hypothesis-testing or dataset-inference claims (only deterministic systems invariants and local micro-benchmarks under `perf: true`). | Micro-benchmark repeatability and exact environment disclosures are recorded in `docs/benchmarks.md` and `results/benchmarks.json`. |

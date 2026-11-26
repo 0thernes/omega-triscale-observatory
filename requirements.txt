@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Alexander Stephen Donahue
+#
+# OMEGA 4-Tier Observatory v6.7.0 has ZERO third-party runtime Python dependencies.
+# macro_wild_relay.py, scripts/build_paper.py, scripts/check_citations.py, and
+# tests/test_relay.py use exclusively the Python 3.12+ standard library
+# (argparse, importlib.util, json, os, pathlib, re, shutil, signal, subprocess,
+# tarfile, tempfile, threading, unittest, urllib).
+#
+# Optional static-analysis / linting tools used report-only in CI:
+#   ruff==0.11.12
+#   mypy==1.15.0

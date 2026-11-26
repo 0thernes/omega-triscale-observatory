@@ -1,8 +1,12 @@
-# Runtime data, logs, caches, dependencies
+# Runtime data, caches, logs, build intermediates, and local secrets
 runtime/
 __pycache__/
 *.pyc
+*.pyo
 *.log
 node_modules/
+paper/build/
+.env
+.env.local
 .DS_Store
 Thumbs.db

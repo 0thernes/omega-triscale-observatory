@@ -1,0 +1,42 @@
+{
+  "name": "omega-triscale-observatory",
+  "version": "6.7.0",
+  "description": "Unified 4-Tier Artificial Life Multi-Scale Observatory supervising 8 local endpoints across 7 public repositories with render-only D7 observer isolation, bare-metal 1..1M controls, and WebGL2 metrology.",
+  "type": "module",
+  "main": "server.mjs",
+  "exports": {
+    ".": "./lib/observatory_core.mjs",
+    "./server": "./server.mjs"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "start:standalone": "node server.mjs --no-engines",
+    "test": "node --test tests/test_observatory.mjs",
+    "lint": "node scripts/lint_check.mjs",
+    "mutate": "node scripts/run_mutation_audit.mjs",
+    "bench": "node scripts/benchmark_observatory.mjs",
+    "check:citations": "python scripts/check_citations.py",
+    "paper": "python scripts/build_paper.py",
+    "audit": "pwsh -NoProfile -File scripts/Audit-Repo.ps1"
+  },
+  "keywords": [
+    "artificial-life",
+    "multi-scale-observatory",
+    "webgl2",
+    "telemetry",
+    "reverse-proxy",
+    "scientific-visualization",
+    "observer-independence",
+    "node-esm"
+  ],
+  "author": "Alexander Stephen Donahue <0_0@0thernes.art> (https://orcid.org/0009-0006-8168-9648)",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0thernes/omega-triscale-observatory.git"
+  },
+  "homepage": "https://github.com/0thernes/omega-triscale-observatory"
+}

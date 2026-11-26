@@ -353,6 +353,10 @@ function populateGenesisForm(cfg) {
   if (cfg.tps !== undefined) $("genTps").value = cfg.tps;
   if (cfg.sps !== undefined) $("genSps").value = cfg.sps;
   if (cfg.threads !== undefined) $("genThreads").value = cfg.threads;
+  if ($("genKernels") && cfg.kernels !== undefined) $("genKernels").checked = Boolean(cfg.kernels);
+  if ($("genEcores") && cfg.ecores !== undefined) $("genEcores").checked = Boolean(cfg.ecores);
+  if ($("genPrefetch") && cfg.prefetch !== undefined) $("genPrefetch").checked = Boolean(cfg.prefetch);
+  if ($("genGpu") && cfg.gpu !== undefined) $("genGpu").checked = Boolean(cfg.gpu);
   $("genLabMode").value = cfg.lab ? "lab" : "wild";
   if (cfg.seed !== undefined) $("genSeed").value = cfg.seed;
   if (cfg.params) {
@@ -504,7 +508,7 @@ $("btnExportJson").addEventListener("click", () => {
   if (!latestState) return;
   const bundle = {
     exported_utc: new Date().toISOString(),
-    observatory: "OMEGA 4-TIER OBSERVATORY v6.3 (12-SHADER EXTREME BIO · DEEP STRATA · V-CELL AI · 162 PURE LEAN 4 PROOFS)",
+    observatory: "OMEGA 4-TIER OBSERVATORY v6.7.0 (7 REPOS · 8 LIVE ENDPOINTS · BOTH ASMODENSIUS WORLDS · 244 UPSTREAM PURE LEAN 4 PROOFS)",
     proof_lock: latestState.differential?.conservationOk ?? false,
     genesis_config: latestState.genesis || null,
     omega_frontier_tb13_16: latestState.omega || null,
@@ -515,8 +519,8 @@ $("btnExportJson").addEventListener("click", () => {
       creature_species: latestState.creatures?.locked?.found ? nameSpecies(latestState.creatures.locked.clade, loadedShape, latestState.creatures.lockedVisual, latestState.creatures.locked) : null,
       creature_individual: latestState.creatures?.locked?.found ? nameCreature(latestState.creatures.locked.uid, latestState.creatures.locked.clade, latestState.creatures.locked.generation) : null
     },
-    tier1_dna_autophage_v1_2: latestState.dna,
-    tier2_cells_v1_3: latestState.cells,
+    tier1_dna_autophage_v1_3: latestState.dna,
+    tier2_cells_v1_4: latestState.cells,
     tier3_creatures: latestState.creatures,
     tier4_environment: latestState.env,
     cross_tier_differential: latestState.differential,

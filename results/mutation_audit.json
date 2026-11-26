@@ -1,0 +1,44 @@
+{
+  "version": "6.7.0",
+  "total": 6,
+  "killed": 6,
+  "survived": 0,
+  "results": [
+    {
+      "id": "M1_PATH_TRAVERSAL_BYPASS",
+      "description": "Disable directory-escape check in resolveSafePath",
+      "killed": true,
+      "elapsed_ms": 1074
+    },
+    {
+      "id": "M2_POPULATION_CLAMP_UNBOUNDED",
+      "description": "Remove 1..1,000,000 Genesis founder population clamping",
+      "killed": true,
+      "elapsed_ms": 1158
+    },
+    {
+      "id": "M3_D7RO_OBSERVER_VIOLATION",
+      "description": "Violate Asmodensius D7RO read-only observer boundary on T1->T3",
+      "killed": true,
+      "elapsed_ms": 1436
+    },
+    {
+      "id": "M4_OMNITEMPORAL_CAP_LEAK",
+      "description": "Break <= 240 omnitemporal rolling history memory cap",
+      "killed": true,
+      "elapsed_ms": 1438
+    },
+    {
+      "id": "M5_CSRF_ORIGIN_BYPASS",
+      "description": "Disable loopback Origin check in isSafeLoopbackRequest",
+      "killed": true,
+      "elapsed_ms": 1237
+    },
+    {
+      "id": "M6_ECORES_FLAG_DROPPED",
+      "description": "Drop --ecores bare-metal 24C P+E scheduling flag in buildRelayArgs",
+      "killed": true,
+      "elapsed_ms": 928
+    }
+  ]
+}

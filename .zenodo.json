@@ -1,0 +1,39 @@
+{
+  "title": "OMEGA 4-Tier Multi-Scale Observatory (v6.7.0): Render-Only Observer Isolation, Loopback Reverse-Proxy Telemetry, and Automated Verification Across Eight Local Artificial-Life Endpoints",
+  "description": "Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life cockpit supervising eight local endpoints across seven public repositories on 127.0.0.1:8790. Enforces render-only D7RO observer independence, loopback CSRF/CSWSH and path-traversal defense, bounded bare-metal 1..1,000,000 controls (AVX2/VNNI, 24C P+E, DDR5 PF, RTX 5070 Ti CUDA PTX, large pages), 112-trait spectral differentials, <=240 omnitemporal ring buffer, 12/12 Node tests (250 prop_check trials), 5/5 Python relay tests (120 trials), 6/6 (100.0%) surgical mutation kills, and an AMS-LaTeX architecture white paper. Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648). Strictly a visualization and orchestration instrument; 0 local Lean 4 files; 0/1,900 overarching Mega-Atlas open problems retired.",
+  "upload_type": "software",
+  "version": "6.7.0",
+  "publication_date": "2026-11-25",
+  "access_right": "open",
+  "license": "apache-2.0",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Donahue, Alexander Stephen",
+      "affiliation": "Independent Researcher, Spokane, WA, USA",
+      "orcid": "0009-0006-8168-9648"
+    }
+  ],
+  "keywords": [
+    "artificial life",
+    "multi-scale observatory",
+    "observer independence",
+    "WebGL2",
+    "reverse proxy",
+    "telemetry metrology",
+    "mutation testing",
+    "property-based testing"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/0thernes/omega-triscale-observatory",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/0thernes/0thernes-research-archive",
+      "relation": "isPartOf",
+      "scheme": "url"
+    }
+  ]
+}

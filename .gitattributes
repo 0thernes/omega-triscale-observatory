@@ -1,0 +1,18 @@
+# Normalize line endings; shell scripts stay LF even on Windows.
+* text=auto eol=lf
+*.sh text eol=lf
+justfile text eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary artifacts
+*.png binary
+*.jpg binary
+*.pdf binary
+*.gz binary
+*.zip binary
+
+# Generated / standard metadata
+llms-full.txt linguist-generated=true
+scripts/audit-checks.tsv linguist-generated=true
