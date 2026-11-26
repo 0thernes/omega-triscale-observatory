@@ -3,13 +3,13 @@
 Complete technical documentation for **OMEGA 4-Tier Multi-Scale Observatory v6.7.0**.
 
 ## Architecture & Design
-- [System Architecture](architecture.md) — 4-tier, 8-endpoint topology, loopback reverse proxy, SSE/WebSocket fan-out, and `D7RO` render-only isolation.
+- [System Architecture](architecture.md) — 4-tier, 8-endpoint topology, loopback reverse proxy, SSE/WebSocket fan-out, and the `D7RO` render-only convention (displayed T1/T2-to-T3/T4 cells fixed at strength 0).
 - [Architecture Decision Records](adr/README.md) — [ADR 0001: Architecture & Verification Boundaries](adr/0001-architecture-and-verification-boundaries.md).
 - [Configuration Reference](configuration.md) — Environment variables, ports, Genesis Studio bare-metal flags (`1..1,000,000`), and `macro_wild_relay.py` CLI options.
 - [Threat Model (STRIDE)](threat-model.md) — Loopback CSRF/CSWSH defenses, canonical path containment, and bounded resource caps.
 
 ## Verification, Metrology & Audits
-- [Verification Strategy](verification.md) — Node/Python test suites, `prop_check`, metamorphic/golden tests, Node↔Python differential parity, and `6/6` surgical mutation audit.
+- [Verification Strategy](verification.md) — Node/Python test suites, `prop_check`, metamorphic/golden tests, a Node↔Python comparison on 3 pre-normalized configurations, and a 6-mutant planted-regression audit (6/6 killed).
 - [Benchmarks & Performance Budgets](benchmarks.md) — Real measured telemetry & guard latencies (`results/benchmarks.json`).
 - [Statement Fidelity Audit](statement-fidelity.md) — Exact mapping from claims and white-paper equations to code symbols and automated tests.
 - [Mega-Atlas Non-Retirement Cross-Check](MEGA_ATLAS_CROSSCHECK.md) — Explicit `0 / 1,900` non-retirement accounting (`AI-045`, `SYS-009`, `SYS-050`).
