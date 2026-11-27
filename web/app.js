@@ -508,7 +508,7 @@ $("btnExportJson").addEventListener("click", () => {
   if (!latestState) return;
   const bundle = {
     exported_utc: new Date().toISOString(),
-    observatory: "OMEGA 4-TIER OBSERVATORY v6.7.0 (7 REPOS · 8 LIVE ENDPOINTS · BOTH ASMODENSIUS WORLDS · 327 UPSTREAM PURE LEAN 4 PROOFS)",
+    observatory: "OMEGA 4-TIER OBSERVATORY v6.8.0 (7 REPOS · 8 LIVE ENDPOINTS · BOTH ASMODENSIUS WORLDS · 327 UPSTREAM PURE LEAN 4 PROOFS)",
     proof_lock: latestState.differential?.conservationOk ?? false,
     genesis_config: latestState.genesis || null,
     omega_frontier_tb13_16: latestState.omega || null,

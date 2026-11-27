@@ -62,7 +62,7 @@ class TestMacroWildRelay(unittest.TestCase):
             data = json.loads(proc.stdout)
             cfg = data["config"]
             opts = data["options"]
-            self.assertEqual(cfg["version"], "6.7.0")
+            self.assertEqual(cfg["version"], "6.8.0")
             self.assertEqual(cfg["n"], 1000000)
             self.assertEqual(cfg["cap"], 1004096)
             self.assertEqual(cfg["species"], 100)
@@ -73,6 +73,33 @@ class TestMacroWildRelay(unittest.TestCase):
             self.assertEqual(opts[opts.index("--gpu") + 1], "1")
             self.assertEqual(opts[opts.index("--kernels") + 1], "1")
             self.assertEqual(opts[opts.index("--prefetch") + 1], "1")
+
+    def test_raw_adversarial_clamping_and_flags(self) -> None:
+        parser = relay.build_parser()
+        ns = parser.parse_args([
+            "--preset", "nonexistent_preset",
+            "--data-dir", ".",
+            "--n", "-5",
+            "--cap", "-10",
+            "--species", "999",
+            "--grid", "bad;rm -rf /",
+            "--kernels", "false",
+            "--gpu", "yes",
+            "--prefetch", "2",
+            "--lesion", "-5",
+            "--lab", "--seed", "-99",
+        ])
+        cfg, _opts = relay.resolve_relay_options(ns)
+        self.assertEqual(cfg["preset"], "cambrian")
+        self.assertEqual(cfg["n"], 1)
+        self.assertEqual(cfg["cap"], relay.auto_cap(1))
+        self.assertEqual(cfg["species"], 1)
+        self.assertEqual(cfg["grid"], "6,6,5")
+        self.assertEqual(cfg["kernels"], 0)
+        self.assertEqual(cfg["gpu"], 1)
+        self.assertEqual(cfg["prefetch"], 1)
+        self.assertEqual(cfg["lesion"], 0)
+        self.assertEqual(cfg["seed"], 0)
 
     def test_prop_check_randomized_relay_configs(self) -> None:
         rng = random.Random(20260670)

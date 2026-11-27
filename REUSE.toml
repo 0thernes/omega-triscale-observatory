@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Alexander Stephen Donahue
+version = 1
+SPDX-PackageName = "omega-triscale-observatory"
+SPDX-PackageSupplier = "Alexander Stephen Donahue <0_0@0thernes.art>"
+SPDX-PackageDownloadLocation = "https://github.com/0thernes/omega-triscale-observatory"
+
+[[annotations]]
+path = [
+  "VERSION",
+  "NOTICE",
+  "CHECKSUMS.sha256",
+  "CHECKSUMS.sha256.tsr",
+  "CHECKSUMS.sha256.ots",
+  "data/**",
+  "results/**",
+  "lib/**",
+  "server.mjs",
+  "macro_wild_relay.py",
+  "web/**",
+  "tests/**",
+  "scripts/**",
+  "examples/**",
+  "Start-TriScale.cmd",
+  "package.json",
+  "package-lock.json",
+  "jsconfig.json",
+  "requirements.txt",
+  "repo.yaml",
+  "repo-standard.schema.json",
+  "CITATION.cff",
+  "CITATION.bib",
+  ".zenodo.json",
+  "codemeta.json",
+  "croissant.json",
+  "ro-crate-metadata.json",
+  ".editorconfig",
+  ".gitattributes",
+  ".gitignore",
+  ".env.example",
+  ".github/**",
+  ".cursor/**",
+  "justfile",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Alexander Stephen Donahue <0_0@0thernes.art>"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = [
+  "*.md",
+  "llms.txt",
+  "llms-full.txt",
+  "docs/**",
+  "paper/**",
+  "dist/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Alexander Stephen Donahue <0_0@0thernes.art>"
+SPDX-License-Identifier = "CC-BY-4.0"

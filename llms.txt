@@ -1,21 +1,26 @@
-# OMEGA 4-Tier Multi-Scale Observatory (v6.7.0)
+# OMEGA 4-Tier Multi-Scale Observatory (v6.8.0)
 
-> Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 local cockpit supervising 8 live Artificial Life endpoints across 7 public repositories on 127.0.0.1:8790 with strict render-only D7RO observer isolation, loopback CSRF/CSWSH & path-traversal defenses, bounded bare-metal 1..1,000,000 controls, and 6/6 (100%) surgical mutation verification.
+> Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 local cockpit supervising 8 live Artificial Life endpoints across 7 public repositories on 127.0.0.1:8790 with render-only D7RO observer isolation (verified by display-matrix assertions, #ifdef PICK checks, and a live loopback wire-spy test), loopback HTTP CSRF & live raw-socket WebSocket Upgrade 403 CSWSH defenses, offline-engine DEGRADED conservation gating, bounded bare-metal 1..1,000,000 controls differentially verified on 18 raw unnormalized inputs between Node and Python, and 9/9 hand-planted regression mutants killed (7 in lib/observatory_core.mjs, 2 in server.mjs).
 
 - Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648)
-- Licenses: Apache-2.0 (code) / CC-BY-4.0 (white paper & docs)
-- Verification boundary: 0 local Lean 4 files (supervises 6 formal companion repos reporting 327 combined upstream 6-kernel Lean 4.35.0 theorems); 0/1,900 Mega-Atlas open problems retired.
+- Licenses: Apache-2.0 (code) / CC-BY-4.0 (white paper & docs); REUSE.toml + LICENSES/
+- Verification boundary: 0 local Lean 4 files (supervises 6 formal companion repos reporting 327 combined upstream 6-kernel Lean 4.35.0 theorems); not externally peer-reviewed; 0/1,900 Mega-Atlas open problems retired.
+- Showcase & Archival: https://0thernes.github.io/omega-triscale-observatory/ | SWHID: swh:1:snp:045edd61e0805b3778e40f5230062e8cc245bb60 | Dual RFC 3161 (.tsr) + Bitcoin OTS (.ots) timestamps.
 
 ## Core Entry Points
-- [README.md](README.md): Overview, 8-endpoint topology, Quickstart, Usage, verification boundaries
+- [README.md](README.md): Overview, 8-endpoint topology, Quickstart, Usage, AI disclosure, verification boundaries
 - [AGENTS.md](AGENTS.md): Canonical engineering rules (Build Standard v1.2.0, R1-R8, 10 finding classes)
 - [CLAIMS.md](CLAIMS.md): Numbered claims ledger with epistemic tiers and explicit refutation conditions
 - [LIMITATIONS.md](LIMITATIONS.md): Threats to validity and real-vs-metaphor boundaries
+- [ERRATA.md](ERRATA.md): Published corrections including full 2026-11-26 statement-audit record and v6.8.0 resolutions
 - [REPLICATION.md](REPLICATION.md): Clean-clone replication protocol and dated log
+- [SUBMISSION_READINESS.md](SUBMISSION_READINESS.md): Playbook v1.3 readiness checklist
+- [docs/DATASHEET.md](docs/DATASHEET.md): Gebru et al. datasheet for verification & telemetry artifacts
+- [docs/index.html](docs/index.html): Static WCAG 2.2 AA GitHub Pages architecture & verification showcase
 - [docs/architecture.md](docs/architecture.md): 4-tier 8-endpoint reverse-proxy and telemetry architecture
 - [docs/threat-model.md](docs/threat-model.md): STRIDE security analysis
 - [docs/MEGA_ATLAS_CROSSCHECK.md](docs/MEGA_ATLAS_CROSSCHECK.md): Non-retirement accounting (AI-045, SYS-009, SYS-050 remain OPEN)
 - [paper/main.tex](paper/main.tex): AMS-LaTeX architecture white paper (frozen PDF in dist/Donahue_2026_omega_triscale_observatory.pdf)
 - [lib/observatory_core.mjs](lib/observatory_core.mjs): Pure deterministic core logic
 - [server.mjs](server.mjs): Loopback HTTP/SSE/WebSocket Hub (:8790) + /healthz
-- [macro_wild_relay.py](macro_wild_relay.py): Read-only Asmodensius-Native relay (:8794) with --dry-run
+- [macro_wild_relay.py](macro_wild_relay.py): Read-only Asmodensius-Native relay (:8794) with raw-input parity and --dry-run

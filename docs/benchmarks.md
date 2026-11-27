@@ -4,18 +4,19 @@ All measurements below were collected directly via `node scripts/benchmark_obser
 
 ## Environment
 
+- **Version:** `v6.8.0`
 - **Runtime:** Node.js `v25.8.2` (`win32-x64`)
-- **Date:** `2026-11-25`
+- **Date:** `2026-11-26`
 - **Harness:** `scripts/benchmark_observatory.mjs` (deterministic SplitMix32 workload, 20-iteration JIT warmup)
 
 ## Measured Latency vs. Performance Budgets (`A37` / `B26`)
 
 | Workload | Payload / Iterations | Mean (ms) | p50 (ms) | p95 (ms) | p99 (ms) | Budget (p95) | Status |
 |---|---|---|---|---|---|---|---|
-| `computeDifferentialsCore` | 112-trait Δ + 8-axis `cosθ` + D7RO (`1,000` iters) | `0.0804` | `0.0527` | `0.2605` | `0.3694` | `<= 2.0 ms` | PASS |
-| `decodeAzstCreaturesCore` | `10,000`-creature binary `AZST` (`100` iters) | `4.5210` | `4.3503` | `6.3211` | `11.1753` | `<= 30.0 ms` | PASS |
-| `normalizeGenesisConfig + buildRelayArgs` | `1,000,000` bare-metal config (`1,000` iters) | `0.0318` | `0.0187` | `0.0569` | `0.1728` | `<= 1.0 ms` | PASS |
-| `resolveSafePath` | Traversal + valid path pair (`2,000` iters) | `0.0190` | `0.0153` | `0.0295` | `0.0867` | `<= 0.5 ms` | PASS |
+| `computeDifferentialsCore` | 112-trait Δ + 8-axis `cosθ` + D7RO (`1,000` iters) | `0.0504` | `0.0401` | `0.1169` | `0.2615` | `<= 2.0 ms` | PASS |
+| `decodeAzstCreaturesCore` | `10,000`-creature binary `AZST` (`100` iters) | `3.1278` | `3.1040` | `4.1033` | `4.6251` | `<= 30.0 ms` | PASS |
+| `normalizeGenesisConfig + buildRelayArgs` | `1,000,000` bare-metal config (`1,000` iters) | `0.0191` | `0.0129` | `0.0344` | `0.1585` | `<= 1.0 ms` | PASS |
+| `resolveSafePath` | Traversal + valid path pair (`2,000` iters) | `0.0130` | `0.0103` | `0.0202` | `0.0539` | `<= 0.5 ms` | PASS |
 
 ## Memory & Resource Budgets
 

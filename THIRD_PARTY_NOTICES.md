@@ -1,6 +1,6 @@
 # Third-Party Notices and Attribution
 
-`omega-triscale-observatory` v6.7.0 ships **zero third-party runtime npm or PyPI dependencies**. All server, telemetry, verification, and relay logic runs exclusively on built-in Node.js (>=22 ESM) and Python (>=3.12 stdlib) modules, plus standard browser WebGL 2.0 and HTML5 Canvas APIs.
+`omega-triscale-observatory` v6.8.0 ships **zero third-party runtime npm or PyPI dependencies**. All server, telemetry, verification, and relay logic runs exclusively on built-in Node.js (>=22 ESM) and Python (>=3.12 stdlib) modules, plus standard browser WebGL 2.0 and HTML5 Canvas APIs.
 
 ## Runtime & Build Toolchains (Not Bundled)
 

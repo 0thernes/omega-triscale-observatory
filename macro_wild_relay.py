@@ -9,6 +9,7 @@ coexist across all 3D habitats without rapid monoculture collapse.
 import argparse
 import importlib.util
 import json
+import math
 import os
 import re
 import shutil
@@ -16,7 +17,7 @@ import signal
 import threading
 from pathlib import Path
 
-RELAY_VERSION = "6.7.0"
+RELAY_VERSION = "6.8.0"
 DEFAULT_ASMO_ROOT = Path(r"Z:\[Vibe Coded (AI)]\CLAUDECODE\Asmodensius-Native")
 ASMO_ENGINE = DEFAULT_ASMO_ROOT / "build" / "z" / "az_live.exe"
 MAX_RETAINED_RUNS = 5
@@ -326,49 +327,95 @@ def parse_param_string(raw: str) -> dict:
     return out
 
 
+def clamp_int_raw(raw: object, lo: int, hi: int, fallback: int) -> int:
+    if raw is None:
+        return fallback
+    if isinstance(raw, bool):
+        n = 1.0 if raw else 0.0
+    elif isinstance(raw, (int, float)):
+        n = float(raw)
+    else:
+        s = str(raw).strip()
+        if not s:
+            return fallback
+        try:
+            n = float(int(s, 0)) if s.lower().startswith(("0x", "-0x", "+0x")) else float(s)
+        except ValueError:
+            return fallback
+    if not math.isfinite(n):
+        return fallback
+    rounded = int(math.floor(n + 0.5))
+    return max(lo, min(hi, rounded))
+
+
+def parse_bool_flag(raw: object, default: bool) -> bool:
+    if raw is None:
+        return default
+    if isinstance(raw, bool):
+        return raw
+    if isinstance(raw, (int, float)):
+        return (raw != 0) if math.isfinite(float(raw)) else default
+    s = str(raw).strip().lower()
+    if not s:
+        return default
+    if s in ("0", "false", "no", "off", "f", "n"):
+        return False
+    if s in ("1", "true", "yes", "on", "t", "y"):
+        return True
+    try:
+        n = float(s)
+        if math.isfinite(n):
+            return n != 0.0
+    except ValueError:
+        pass
+    return default
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Omega 4-Tier Wild Biodiversity Relay for Asmodensius-Native")
     p.add_argument("--port", type=int, default=8794)
-    p.add_argument("--preset", choices=list(PRESETS.keys()), default="cambrian")
+    p.add_argument("--preset", type=str, default="cambrian")
     p.add_argument("--data-dir", type=Path, required=True)
     p.add_argument("--engine", type=Path, default=ASMO_ENGINE)
-    p.add_argument("--n", type=int, default=None)
-    p.add_argument("--cap", type=int, default=None)
-    p.add_argument("--species", type=int, default=None)
+    p.add_argument("--n", type=str, default=None)
+    p.add_argument("--cap", type=str, default=None)
+    p.add_argument("--species", type=str, default=None)
     p.add_argument("--grid", type=str, default=None)
-    p.add_argument("--tps", type=int, default=None)
-    p.add_argument("--sps", type=int, default=None)
-    p.add_argument("--threads", type=int, default=None)
-    p.add_argument("--kernels", type=int, choices=(0, 1), default=1)
+    p.add_argument("--tps", type=str, default=None)
+    p.add_argument("--sps", type=str, default=None)
+    p.add_argument("--threads", type=str, default=None)
+    p.add_argument("--kernels", type=str, default="1")
     p.add_argument("--ecores", action="store_true")
-    p.add_argument("--gpu", type=int, choices=(0, 1), default=0)
-    p.add_argument("--prefetch", type=int, choices=(0, 1), default=1)
+    p.add_argument("--gpu", type=str, default="0")
+    p.add_argument("--prefetch", type=str, default="1")
     p.add_argument("--large-pages", action="store_true")
     p.add_argument("--lesion", type=str, default=None)
     p.add_argument("--lab", action="store_true")
-    p.add_argument("--seed", type=int, default=None)
+    p.add_argument("--seed", type=str, default=None)
     p.add_argument("--param", type=str, default="")
     p.add_argument("--dry-run", action="store_true", help="Emit resolved JSON config and engine CLI options without launching")
     return p
 
 
 def resolve_relay_options(a: argparse.Namespace) -> tuple[dict, list[str]]:
-    cfg = PRESETS[a.preset]
-    n_val = max(1, min(1000000, a.n if a.n is not None else cfg["n"]))
-    raw_cap = a.cap if a.cap is not None else cfg["cap"]
-    cap_val = max(n_val, min(2000000, raw_cap)) if raw_cap else auto_cap(n_val)
-    sp_val = max(1, min(100, a.species if a.species is not None else cfg["species"], n_val))
-    grid_val = sanitize_grid(a.grid, cfg["grid"] if a.n is None else None)
-    tps_val = max(0, min(1000, a.tps if a.tps is not None else cfg["tps"]))
-    sps_val = max(1, min(60, a.sps if a.sps is not None else cfg["sps"]))
-    threads_val = max(0, min(64, a.threads if a.threads is not None else cfg["threads"]))
+    preset_key = a.preset if a.preset in PRESETS else "cambrian"
+    cfg = PRESETS[preset_key]
+    n_val = clamp_int_raw(a.n, 1, 1000000, cfg["n"])
+    if a.cap is not None:
+        raw_cap = clamp_int_raw(a.cap, 0, 2000000, 0)
+    else:
+        raw_cap = 0 if a.n is not None else cfg["cap"]
+    cap_val = max(n_val, raw_cap) if raw_cap > 0 else auto_cap(n_val)
+    sp_val = min(clamp_int_raw(a.species, 1, 100, cfg["species"]), n_val)
+    grid_val = sanitize_grid(a.grid, cfg["grid"])
+    tps_val = clamp_int_raw(a.tps, 0, 1000, cfg["tps"])
+    sps_val = clamp_int_raw(a.sps, 1, 60, cfg["sps"])
+    threads_val = clamp_int_raw(a.threads, 0, 64, cfg["threads"])
+    kernels_val = 1 if parse_bool_flag(a.kernels, True) else 0
+    gpu_val = 1 if parse_bool_flag(a.gpu, False) else 0
+    prefetch_val = 1 if parse_bool_flag(a.prefetch, True) else 0
 
-    lesion_val = cfg["lesion"]
-    if a.lesion is not None:
-        try:
-            lesion_val = int(a.lesion, 0) & 0x7FFFFF
-        except ValueError:
-            lesion_val = 0
+    lesion_val = clamp_int_raw(a.lesion, 0, 0x7FFFFF, cfg["lesion"])
 
     merged_params = {k: str(v) for k, v in cfg["params"].items()}
     merged_params.update(parse_param_string(a.param))
@@ -382,9 +429,9 @@ def resolve_relay_options(a: argparse.Namespace) -> tuple[dict, list[str]]:
         "--sps", str(sps_val),
         "--tps", str(tps_val),
         "--threads", str(threads_val),
-        "--kernels", str(a.kernels),
-        "--gpu", str(a.gpu),
-        "--prefetch", str(a.prefetch),
+        "--kernels", str(kernels_val),
+        "--gpu", str(gpu_val),
+        "--prefetch", str(prefetch_val),
         "--observer-ms", "500",
     ]
     if a.ecores:
@@ -395,7 +442,7 @@ def resolve_relay_options(a: argparse.Namespace) -> tuple[dict, list[str]]:
         options.extend(["--grid", grid_val])
     if lesion_val:
         options.extend(["--lesion", hex(lesion_val)])
-    safe_seed = max(0, min(2147483647, a.seed)) if a.seed is not None else None
+    safe_seed = clamp_int_raw(a.seed, 0, 2147483647, 42) if a.seed is not None else (42 if a.lab else None)
     if a.lab:
         options.append("--lab")
         if safe_seed is not None:
@@ -403,7 +450,7 @@ def resolve_relay_options(a: argparse.Namespace) -> tuple[dict, list[str]]:
 
     resolved = {
         "version": RELAY_VERSION,
-        "preset": a.preset,
+        "preset": preset_key,
         "n": n_val,
         "cap": cap_val,
         "species": sp_val,
@@ -411,10 +458,10 @@ def resolve_relay_options(a: argparse.Namespace) -> tuple[dict, list[str]]:
         "tps": tps_val,
         "sps": sps_val,
         "threads": threads_val,
-        "kernels": int(a.kernels),
+        "kernels": kernels_val,
         "ecores": bool(a.ecores),
-        "gpu": int(a.gpu),
-        "prefetch": int(a.prefetch),
+        "gpu": gpu_val,
+        "prefetch": prefetch_val,
         "large_pages": bool(a.large_pages),
         "lesion": lesion_val,
         "lab": bool(a.lab),

@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: Apache-2.0
+name: Automated Tag Release & SLSA Provenance
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  package-release:
+    name: Package Release Bundle, SHA256SUMS & SLSA Attestation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run Verification Gate Before Packaging
+        run: |
+          npm test
+          python -m unittest discover -s tests -v
+          npm run lint
+          npm run mutate
+          python scripts/stamp_timestamps.py --verify
+
+      - name: Assemble Release Assets & SHA256SUMS
+        run: |
+          mkdir -p release_assets
+          cp dist/Donahue_2026_omega_triscale_observatory.pdf release_assets/
+          cp dist/arxiv_submission.tar.gz release_assets/
+          cp CHECKSUMS.sha256 CHECKSUMS.sha256.tsr CHECKSUMS.sha256.ots release_assets/
+          cp data/MANIFEST.sha256 release_assets/DATA_MANIFEST.sha256
+          cp croissant.json ro-crate-metadata.json codemeta.json CITATION.cff release_assets/
+          cp results/mutation_audit.json results/benchmarks.json results/citation-audit.json release_assets/
+          (cd release_assets && sha256sum * > SHA256SUMS)
+          cat release_assets/SHA256SUMS
+
+      - name: Attest Release Assets Provenance (SLSA)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: "release_assets/*"
+
+      - name: Upload Release Bundle Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: omega-triscale-observatory-release-bundle
+          path: release_assets/
+
+      - name: Publish GitHub Release (on Tag Push)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" release_assets/* --clobber
+          else
+            gh release create "$TAG" release_assets/* \
+              --title "OMEGA 4-Tier Multi-Scale Observatory $TAG" \
+              --notes "Automated release bundle for $TAG with frozen AMS-LaTeX PDF, clean-room arXiv source tarball, FAIR metadata, dual RFC 3161 + Bitcoin OpenTimestamps proofs, SHA256SUMS, and SLSA/Sigstore Rekor build provenance attestation. See CHANGELOG.md and CLAIMS.md for full details (not externally peer-reviewed; 0 local Lean 4 files; 0/1,900 Mega-Atlas open problems retired)."
+          fi

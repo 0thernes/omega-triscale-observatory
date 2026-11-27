@@ -1,0 +1,282 @@
+{
+  "version": "6.8.0",
+  "bib_file": "paper/refs.bib",
+  "total_entries": 13,
+  "doi_targets_verified": 10,
+  "doi_targets_total": 10,
+  "url_targets_verified": 5,
+  "url_targets_total": 5,
+  "print_entries_verified": 1,
+  "retracted_count": 0,
+  "entries": [
+    {
+      "key": "bedau1998",
+      "type": "inproceedings",
+      "bib_title": "A Classification of Long-Term Evolutionary Dynamics",
+      "year": "1998",
+      "print_check": {
+        "verification_mode": "print-proceedings-no-crossref-doi",
+        "publisher": "MIT Press",
+        "pages": "228--237",
+        "isbn": "978-0-262-51099-8",
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "taylor2016",
+      "type": "article",
+      "bib_title": "Open-Ended Evolution: Perspectives from the OEE Workshop in York",
+      "year": "2016",
+      "doi_check": {
+        "doi": "10.1162/ARTL_a_00210",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "Open-Ended Evolution: Perspectives from the OEE Workshop in York",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "varela1974",
+      "type": "article",
+      "bib_title": "Autopoiesis: The Organization of Living Systems, Its Characterization and a Model",
+      "year": "1974",
+      "doi_check": {
+        "doi": "10.1016/0303-2647(74)90031-8",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "Autopoiesis: The organization of living systems, its characterization and a model",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "levin2022",
+      "type": "article",
+      "bib_title": "Technological Approach to Mind Everywhere: An Experimentally-Grounded Framework for Understanding Diverse Bodies and Minds",
+      "year": "2022",
+      "doi_check": {
+        "doi": "10.3389/fnsys.2022.768201",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "Technological Approach to Mind Everywhere: An Experimentally-Grounded Framework for Understanding Diverse Bodies and Minds",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "butlin2023",
+      "type": "misc",
+      "bib_title": "Consciousness in Artificial Intelligence: Insights from the Science of Consciousness",
+      "year": "2023",
+      "doi_check": {
+        "doi": "10.48550/arXiv.2308.08708",
+        "handle_ok": true,
+        "registry": "datacite",
+        "remote_title": "Consciousness in Artificial Intelligence: Insights from the Science of Consciousness",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "url_check": {
+        "url": "https://arxiv.org/abs/2308.08708",
+        "http_status": 200,
+        "page_title": "[2308.08708] Consciousness in Artificial Intelligence: Insights from the Science of Consciousness",
+        "matched_tokens": [
+          "artificial",
+          "consciousness",
+          "insights",
+          "intelligence",
+          "science"
+        ],
+        "content_match": true,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "moura2021",
+      "type": "inproceedings",
+      "bib_title": "The Lean 4 Theorem Prover and Programming Language",
+      "year": "2021",
+      "doi_check": {
+        "doi": "10.1007/978-3-030-79876-5_37",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "The Lean 4 Theorem Prover and Programming Language",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "salmon2011",
+      "type": "inproceedings",
+      "bib_title": "Parallel Random Numbers: As Easy as 1, 2, 3",
+      "year": "2011",
+      "doi_check": {
+        "doi": "10.1145/2063384.2063405",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "Parallel random numbers as easy as 1, 2, 3",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "rfc9110",
+      "type": "techreport",
+      "bib_title": "HTTP Semantics",
+      "year": "2022",
+      "doi_check": {
+        "doi": "10.17487/RFC9110",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "HTTP Semantics",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "url_check": {
+        "url": "https://www.rfc-editor.org/rfc/rfc9110",
+        "http_status": 200,
+        "page_title": "RFC 9110: HTTP Semantics | RFC Editor",
+        "matched_tokens": [
+          "http",
+          "semantics"
+        ],
+        "content_match": true,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "rfc6455",
+      "type": "techreport",
+      "bib_title": "The WebSocket Protocol",
+      "year": "2011",
+      "doi_check": {
+        "doi": "10.17487/RFC6455",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "The WebSocket Protocol",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "url_check": {
+        "url": "https://www.rfc-editor.org/rfc/rfc6455",
+        "http_status": 200,
+        "page_title": "RFC 6455: The WebSocket Protocol | RFC Editor",
+        "matched_tokens": [
+          "protocol",
+          "websocket"
+        ],
+        "content_match": true,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "webgl2spec",
+      "type": "misc",
+      "bib_title": "WebGL 2.0 Specification",
+      "year": "2024",
+      "url_check": {
+        "url": "https://registry.khronos.org/webgl/specs/latest/2.0/",
+        "http_status": 200,
+        "page_title": "WebGL 2.0 Specification",
+        "matched_tokens": [
+          "specification",
+          "webgl"
+        ],
+        "content_match": true,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "shannon1948",
+      "type": "article",
+      "bib_title": "A Mathematical Theory of Communication",
+      "year": "1948",
+      "doi_check": {
+        "doi": "10.1002/j.1538-7305.1948.tb01338.x",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "A Mathematical Theory of Communication",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "jia2011",
+      "type": "article",
+      "bib_title": "An Analysis and Survey of the Development of Mutation Testing",
+      "year": "2011",
+      "doi_check": {
+        "doi": "10.1109/TSE.2010.62",
+        "handle_ok": true,
+        "registry": "crossref",
+        "remote_title": "An Analysis and Survey of the Development of Mutation Testing",
+        "title_overlap": 1.0,
+        "title_match": true,
+        "author_match": true,
+        "retracted": false,
+        "ok": true
+      },
+      "status": "verified"
+    },
+    {
+      "key": "htmlsse",
+      "type": "misc",
+      "bib_title": "HTML Living Standard -- Server-Sent Events",
+      "year": "2026",
+      "url_check": {
+        "url": "https://html.spec.whatwg.org/multipage/server-sent-events.html",
+        "http_status": 200,
+        "page_title": "HTML Standard",
+        "matched_tokens": [
+          "events",
+          "html",
+          "sent",
+          "server",
+          "standard"
+        ],
+        "content_match": true,
+        "ok": true
+      },
+      "status": "verified"
+    }
+  ]
+}

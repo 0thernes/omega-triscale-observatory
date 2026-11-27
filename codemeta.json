@@ -1,0 +1,51 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "OMEGA 4-Tier Multi-Scale Observatory",
+  "version": "6.8.0",
+  "datePublished": "2026-11-26",
+  "dateModified": "2026-11-26",
+  "description": "Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life cockpit supervising eight local endpoints across seven public repositories on 127.0.0.1:8790, featuring live wire-spy tested D7RO render-only observer isolation, raw-socket WebSocket CSWSH rejection, offline-engine DEGRADED conservation gating, raw-input Node-Python differential parity, 250+120 seeded prop_check trials, and 9/9 planted regression mutants killed across lib/observatory_core.mjs and server.mjs. Contains 0 local Lean 4 files and retires 0/1,900 Mega-Atlas open problems.",
+  "codeRepository": "https://github.com/0thernes/omega-triscale-observatory",
+  "url": "https://0thernes.github.io/omega-triscale-observatory/",
+  "issueTracker": "https://github.com/0thernes/omega-triscale-observatory/issues",
+  "license": "https://spdx.org/licenses/Apache-2.0",
+  "programmingLanguage": [
+    "JavaScript (ESM)",
+    "Python 3",
+    "GLSL ES 3.00 (WebGL 2.0)",
+    "AMS-LaTeX"
+  ],
+  "operatingSystem": [
+    "Linux",
+    "Windows"
+  ],
+  "runtimePlatform": [
+    "Node.js 22+",
+    "Python 3.12+",
+    "WebGL 2.0 Browser"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0009-0006-8168-9648",
+      "givenName": "Alexander Stephen",
+      "familyName": "Donahue",
+      "email": "0_0@0thernes.art",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Independent Researcher, Spokane, WA, USA"
+      }
+    }
+  ],
+  "keywords": [
+    "artificial life",
+    "multi-scale observatory",
+    "observer independence",
+    "reverse proxy",
+    "WebGL2",
+    "telemetry metrology",
+    "mutation testing",
+    "property-based testing"
+  ]
+}

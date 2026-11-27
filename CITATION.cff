@@ -1,14 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this multi-scale observatory, reverse-proxy metrology architecture, verification suite, or white paper, please cite it as below."
-title: "OMEGA 4-Tier Multi-Scale Observatory (v6.7.0): A Loopback Reverse-Proxy Telemetry Hub with a Render-Only Observer Convention and Automated Tests Across Eight Local Artificial-Life Endpoints"
-version: "6.7.0"
-date-released: "2026-11-25"
+title: "OMEGA 4-Tier Multi-Scale Observatory (v6.8.0): A Loopback Reverse-Proxy Telemetry Hub with Render-Only D7RO Observer Isolation and Automated Verification Across Eight Local Artificial-Life Endpoints"
+version: "6.8.0"
+date-released: "2026-11-26"
 type: software
 license:
   - Apache-2.0
   - CC-BY-4.0
 repository-code: "https://github.com/0thernes/omega-triscale-observatory"
-url: "https://github.com/0thernes/omega-triscale-observatory"
+url: "https://0thernes.github.io/omega-triscale-observatory/"
 authors:
   - family-names: "Donahue"
     given-names: "Alexander Stephen"
@@ -27,12 +27,14 @@ keywords:
 abstract: >-
   Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life
   observatory supervising eight local endpoints across seven public repositories on
-  127.0.0.1:8790. The displayed T1/T2-to-T3/T4 coupling cells are fixed at D7RO with
-  strength 0; no code path writing T1/T2 data into Asmodensius was found by inspection,
-  but no automated test checks this. Automated example-based and seeded-random tests
-  cover loopback CSRF/CSWSH request predicates, path-traversal rejection, 1..1,000,000
-  population clamping (compared between Node and Python on normalized inputs), 112-trait
-  spectral differentials and a <=240-sample history ring; 6/6 hand-planted regression
-  mutants in lib/observatory_core.mjs are killed. These are tests, not proofs; the
-  repository contains no Lean code. It is a visualization and orchestration instrument
-  and retires 0/1,900 Mega-Atlas open problems.
+  127.0.0.1:8790. Render-only D7RO observer isolation is checked via fixed T1/T2-to-T3/T4
+  coupling cells, #ifdef PICK shader preservation, and a live loopback wire-spy test
+  recording every HTTP method and payload sent to a mock Asmodensius port during T1/T2
+  updates. Automated example-based, live raw-socket, and seeded-random tests (14/14 Node,
+  6/6 Python) cover loopback CSRF and raw-socket WebSocket Upgrade 403 CSWSH rejection,
+  path-traversal containment, offline-engine DEGRADED conservation gating, 1..1,000,000
+  raw-input differential Node-vs-Python clamping parity (18 adversarial cases), 112-trait
+  spectral differentials, and a <=240-sample history ring; 9/9 hand-planted regression
+  mutants (7 in lib/observatory_core.mjs, 2 in server.mjs) are killed. These are tests,
+  not formal proofs; the repository contains 0 local Lean 4 files, has not undergone
+  external peer review, and retires 0/1,900 Mega-Atlas open problems.

@@ -3,9 +3,17 @@
 ## Semantic Versioning Policy
 
 `omega-triscale-observatory` follows [SemVer 2.0.0](https://semver.org/):
-- **Patch (`6.7.x`):** Bug fixes, security hardening, test additions, and documentation corrections with full backward compatibility on HTTP routes and CLI flags.
+- **Patch (`6.8.x`):** Bug fixes, security hardening, test additions, and documentation corrections with full backward compatibility on HTTP routes and CLI flags.
 - **Minor (`6.x.0`):** Backward-compatible new endpoints (e.g., `/healthz`), new bare-metal flags, or new verification scripts.
 - **Major (`x.0.0`):** Breaking changes to `/api/stack/*` JSON payload schemas, SSE event structure, or `macro_wild_relay.py` CLI contracts.
+
+## Upgrading from `v6.7.0` to `v6.8.0`
+
+1. **Backward-Compatible Core & Relay Hardening:**
+   - `macro_wild_relay.py` now clamps negative `--cap` values via `auto_cap(n)` and clamps `--lesion` strictly to `[0, 0x7fffff]` (matching `lib/observatory_core.mjs` identically on raw adversarial inputs), and accepts flexible boolean strings (`true`/`false`/`yes`/`no`/`0`/`1`) on `--kernels`, `--gpu`, `--prefetch`.
+   - `server.mjs` exports a configurable `PORTS` map (`MACRO_PORT`, `MESO_PORT`, `MICRO_PORT`, `NOETIC_PORT`, `OMEGA_PORT`, `MACRO_LIVE_PORT`) plus `pollAsmodensiusSnapOnce` / `pollAsmodensiusFieldsOnce` for deterministic live loopback testing.
+2. **Non-Dirty Mutation Audit:** `npm run mutate` no longer modifies `results/mutation_audit.json` by default; pass `--write` (`npm run mutate:write`) to regenerate the deterministic schema.
+3. **CI Paper Verification:** `python scripts/build_paper.py --verify-only` checks zero-overflow compilation and clean-room arXiv rebuild without overwriting committed `dist/` deliverables.
 
 ## Upgrading from `v6.6.0` to `v6.7.0`
 

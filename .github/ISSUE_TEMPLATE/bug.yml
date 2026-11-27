@@ -30,7 +30,7 @@ body:
     id: steps
     attributes:
       label: Exact steps to reproduce
-      placeholder: "1. git checkout v6.7.0\n2. npm test\n3. ..."
+      placeholder: "1. git checkout v6.8.0\n2. npm test\n3. ..."
     validations:
       required: true
   - type: input

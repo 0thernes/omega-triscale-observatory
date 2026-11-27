@@ -1,44 +1,63 @@
 {
-  "version": "6.7.0",
-  "total": 6,
-  "killed": 6,
+  "version": "6.8.0",
+  "scope": "9 hand-planted regression mutants (7 in lib/observatory_core.mjs, 2 in server.mjs); deterministic schema without volatile timing fields",
+  "total": 9,
+  "killed": 9,
   "survived": 0,
   "results": [
     {
       "id": "M1_PATH_TRAVERSAL_BYPASS",
+      "file": "lib/observatory_core.mjs",
       "description": "Disable directory-escape check in resolveSafePath",
-      "killed": true,
-      "elapsed_ms": 886
+      "killed": true
     },
     {
       "id": "M2_POPULATION_CLAMP_UNBOUNDED",
+      "file": "lib/observatory_core.mjs",
       "description": "Remove 1..1,000,000 Genesis founder population clamping",
-      "killed": true,
-      "elapsed_ms": 832
+      "killed": true
     },
     {
       "id": "M3_D7RO_OBSERVER_VIOLATION",
-      "description": "Violate Asmodensius D7RO read-only observer boundary on T1->T3",
-      "killed": true,
-      "elapsed_ms": 950
+      "file": "lib/observatory_core.mjs",
+      "description": "Violate Asmodensius D7RO read-only observer boundary on T1->T3 display matrix",
+      "killed": true
     },
     {
       "id": "M4_OMNITEMPORAL_CAP_LEAK",
+      "file": "lib/observatory_core.mjs",
       "description": "Break <= 240 omnitemporal rolling history memory cap",
-      "killed": true,
-      "elapsed_ms": 954
+      "killed": true
     },
     {
       "id": "M5_CSRF_ORIGIN_BYPASS",
+      "file": "lib/observatory_core.mjs",
       "description": "Disable loopback Origin check in isSafeLoopbackRequest",
-      "killed": true,
-      "elapsed_ms": 844
+      "killed": true
     },
     {
       "id": "M6_ECORES_FLAG_DROPPED",
+      "file": "lib/observatory_core.mjs",
       "description": "Drop --ecores bare-metal 24C P+E scheduling flag in buildRelayArgs",
-      "killed": true,
-      "elapsed_ms": 696
+      "killed": true
+    },
+    {
+      "id": "M7_WS_UPGRADE_CSWSH_BYPASS",
+      "file": "server.mjs",
+      "description": "Disable Host/Origin CSWSH rejection in server.mjs WebSocket upgrade handler",
+      "killed": true
+    },
+    {
+      "id": "M8_OFFLINE_CONSERVATION_FALSE_GREEN",
+      "file": "lib/observatory_core.mjs",
+      "description": "Allow offline T1 DNA engine to render false-green VERIFIED conservation status",
+      "killed": true
+    },
+    {
+      "id": "M9_D7RO_WIRE_LEAK_SERVER",
+      "file": "server.mjs",
+      "description": "Leak T1 128B DNA write to Asmodensius port inside server.mjs transfectDnaToCells",
+      "killed": true
     }
   ]
 }

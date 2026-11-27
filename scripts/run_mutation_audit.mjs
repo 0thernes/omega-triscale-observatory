@@ -4,10 +4,14 @@
 /**
  * OMEGA 4-TIER OBSERVATORY — Surgical Mutation Audit Harness (B13)
  *
- * Plants 6 targeted logic regressions (mutants) into an isolated temporary
- * workspace copy (never leaving the repository working tree dirty), runs the
- * full `node --test tests/test_observatory.mjs` suite against each mutant,
- * and asserts 100% mutant kill coverage (6/6).
+ * Plants 9 targeted logic regressions (7 in `lib/observatory_core.mjs`, 2 in `server.mjs`)
+ * into an isolated temporary workspace copy (never leaving the repository working tree dirty),
+ * runs the full `node --test tests/test_observatory.mjs` suite against each mutant,
+ * and asserts 9/9 (100.0%) planted-mutant kill coverage.
+ *
+ * Usage:
+ *   node scripts/run_mutation_audit.mjs           # Read-only verification (never dirties working tree)
+ *   node scripts/run_mutation_audit.mjs --write   # Write deterministic results/mutation_audit.json (no volatile elapsed_ms)
  */
 
 import fs from "node:fs";
@@ -15,9 +19,11 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { OBSERVATORY_VERSION } from "../lib/observatory_core.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
+const WRITE_REPORT = process.argv.includes("--write");
 
 const MUTANTS = [
   {
@@ -39,7 +45,7 @@ const MUTANTS = [
     file: "lib/observatory_core.mjs",
     target: '    [{ m: "SELF", s: 1 }, { m: c12 > 0 ? (hasReal128 ? "DNA128" : "SEED") : "OFF", s: Number(c12.toFixed(2)) }, { m: "D7RO", s: 0 }, { m: "D7RO", s: 0 }],',
     replacement: '    [{ m: "SELF", s: 1 }, { m: c12 > 0 ? (hasReal128 ? "DNA128" : "SEED") : "OFF", s: Number(c12.toFixed(2)) }, { m: "LIVE", s: 0.9 }, { m: "D7RO", s: 0 }],',
-    description: "Violate Asmodensius D7RO read-only observer boundary on T1->T3"
+    description: "Violate Asmodensius D7RO read-only observer boundary on T1->T3 display matrix"
   },
   {
     id: "M4_OMNITEMPORAL_CAP_LEAK",
@@ -61,6 +67,27 @@ const MUTANTS = [
     target: '  if (cfg.ecores) args.push("--ecores");',
     replacement: '  if (false && cfg.ecores) args.push("--ecores");',
     description: "Drop --ecores bare-metal 24C P+E scheduling flag in buildRelayArgs"
+  },
+  {
+    id: "M7_WS_UPGRADE_CSWSH_BYPASS",
+    file: "server.mjs",
+    target: "  if (!isLoopbackHost(req.headers.host) || !isLoopbackOrigin(req.headers.origin)) {",
+    replacement: "  if (false && (!isLoopbackHost(req.headers.host) || !isLoopbackOrigin(req.headers.origin))) {",
+    description: "Disable Host/Origin CSWSH rejection in server.mjs WebSocket upgrade handler"
+  },
+  {
+    id: "M8_OFFLINE_CONSERVATION_FALSE_GREEN",
+    file: "lib/observatory_core.mjs",
+    target: "  const hasDna   = Boolean(state.engines.t1_dna && state.dna.frame?.ledger && (now - state.dna.updatedAt < 15000));",
+    replacement: "  const hasDna   = Boolean(state.dna.frame?.ledger && (now - state.dna.updatedAt < 15000));",
+    description: "Allow offline T1 DNA engine to render false-green VERIFIED conservation status"
+  },
+  {
+    id: "M9_D7RO_WIRE_LEAK_SERVER",
+    file: "server.mjs",
+    target: '        httpRequest(PORTS.noetic, "POST", "/api/cmd", { op: "dna", hex: hex128 }).catch(() => {});',
+    replacement: '        httpRequest(PORTS.noetic, "POST", "/api/cmd", { op: "dna", hex: hex128 }).catch(() => {});\n        await httpRequest(PORTS.macro, "POST", "/api/cmd", { op: "autophage_dna", hex: hex128 }).catch(() => {});',
+    description: "Leak T1 128B DNA write to Asmodensius port inside server.mjs transfectDnaToCells"
   }
 ];
 
@@ -75,7 +102,14 @@ function copyTree(src, dst) {
 }
 
 const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "omega_obs_mut_"));
-const report = { version: "6.7.0", total: MUTANTS.length, killed: 0, survived: 0, results: [] };
+const report = {
+  version: OBSERVATORY_VERSION,
+  scope: "9 hand-planted regression mutants (7 in lib/observatory_core.mjs, 2 in server.mjs); deterministic schema without volatile timing fields",
+  total: MUTANTS.length,
+  killed: 0,
+  survived: 0,
+  results: []
+};
 
 try {
   for (const item of ["VERSION", "package.json", "server.mjs", "macro_wild_relay.py"]) {
@@ -117,19 +151,22 @@ try {
     const killed = res.status !== 0;
     if (killed) report.killed++;
     else report.survived++;
-    report.results.push({ id: m.id, description: m.description, killed, elapsed_ms: elapsedMs });
-    console.log(`  [${killed ? "KILLED  " : "SURVIVED"}] ${m.id} (${elapsedMs} ms) — ${m.description}`);
+    report.results.push({ id: m.id, file: m.file, description: m.description, killed });
+    console.log(`  [${killed ? "KILLED  " : "SURVIVED"}] ${m.id} (${m.file}, ${elapsedMs} ms) — ${m.description}`);
   }
 } finally {
   fs.rmSync(tmpRoot, { recursive: true, force: true });
 }
 
-const outDir = path.join(ROOT, "results");
-fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, "mutation_audit.json"), JSON.stringify(report, null, 2) + "\n", "utf8");
+if (WRITE_REPORT) {
+  const outDir = path.join(ROOT, "results");
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, "mutation_audit.json"), JSON.stringify(report, null, 2) + "\n", "utf8");
+  console.log(`Wrote deterministic results/mutation_audit.json (${report.killed}/${report.total} killed).`);
+}
 
 if (report.survived > 0) {
   console.error(`\nFAIL: ${report.killed}/${report.total} mutants killed (${report.survived} survived).`);
   process.exit(1);
 }
-console.log(`\nPASS: ${report.killed}/${report.total} (100.0%) planted mutants killed!`);
+console.log(`\nPASS: ${report.killed}/${report.total} (100.0%) planted mutants killed (working tree untouched)!`);

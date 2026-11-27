@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self';">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1120">
+  <meta name="description" content="OMEGA 4-Tier Multi-Scale Observatory v6.8.0: Architecture, D7RO Render-Only Observer Isolation, Loopback Reverse-Proxy Telemetry, and Automated Verification Across Eight Local Artificial-Life Endpoints.">
+  <meta property="og:title" content="OMEGA 4-Tier Multi-Scale Observatory (v6.8.0) — Architecture &amp; Verification Showcase">
+  <meta property="og:description" content="Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life observatory supervising 8 local endpoints across 7 public repositories. 14/14 Node tests, 6/6 Python tests, 9/9 planted mutants killed.">
+  <meta property="og:image" content="./media/social-preview.svg">
+  <title>OMEGA 4-Tier Multi-Scale Observatory (v6.8.0) — Architecture &amp; Verification Showcase</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #11192c;
+      --surface-alt: #16213a;
+      --ink: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-strong: #0284c7;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --err: #fb7185;
+      --border: #23314d;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      margin: 0;
+      padding: clamp(0.85rem, 2.5vw, 2rem) clamp(0.75rem, 2.2vw, 1.4rem) 4rem;
+      line-height: 1.58;
+    }
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--accent-strong);
+      color: #ffffff;
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      font-weight: 700;
+      z-index: 100;
+    }
+    .skip-link:focus { left: 1rem; top: 1rem; }
+    main { max-width: 1120px; margin: 0 auto; }
+    h1 { font-size: clamp(1.3rem, 3.2vw, 2.05rem); line-height: 1.22; margin: 0 0 0.55rem; color: #f8fafc; }
+    h2 { font-size: clamp(1.06rem, 2.2vw, 1.32rem); margin: 0 0 0.7rem; color: #f8fafc; }
+    h3 { font-size: 0.96rem; margin: 0.9rem 0 0.4rem; color: #f1f5f9; }
+    p.meta { color: var(--muted); margin: 0.25rem 0 0.9rem; font-size: 0.9rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover, a:focus-visible { text-decoration: underline; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .pills { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.7rem 0 1.15rem; }
+    .pill {
+      display: inline-block;
+      padding: 0.24rem 0.72rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: #064e3b;
+      color: #a7f3d0;
+      border: 1px solid #059669;
+    }
+    .pill.info { background: #0c4a6e; color: #bae6fd; border-color: #0284c7; }
+    .pill.warn { background: #451a03; color: #fde68a; border-color: #b45309; }
+    .notice-banner {
+      border-radius: 10px;
+      padding: 0.85rem 1.05rem;
+      margin: 0.9rem 0 1.2rem;
+      border: 1px solid #b45309;
+      background: rgba(69, 26, 3, 0.35);
+      font-size: 0.9rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 0.8rem;
+      margin: 0.85rem 0 1.25rem;
+    }
+    .stat {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+    }
+    .stat .k { font-size: 1.4rem; font-weight: 700; color: #f8fafc; }
+    .stat .l { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(0.95rem, 2.4vw, 1.45rem);
+      margin: 1.15rem 0;
+    }
+    .card.highlight { border-color: #0369a1; box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.16); }
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.55rem; font-size: 0.88rem; }
+    th, td { border-bottom: 1px solid var(--border); text-align: left; padding: 0.55rem 0.6rem; vertical-align: top; }
+    th { color: #cbd5e1; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #0a101d;
+      padding: 0.12rem 0.34rem;
+      border-radius: 4px;
+      font-size: 0.84em;
+      color: #e2e8f0;
+    }
+    pre {
+      background: #0a101d;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.48;
+    }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.55rem 0 0.85rem; }
+    .btn {
+      background: var(--surface-alt);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.42rem 0.82rem;
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-weight: 600;
+      min-height: 38px;
+    }
+    .btn.active { background: #0c4a6e; border-color: var(--accent); color: #f8fafc; }
+    .btn.primary { background: var(--accent-strong); border-color: var(--accent); color: #ffffff; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 175px), 1fr));
+      gap: 0.75rem;
+      margin: 0.7rem 0 0.9rem;
+    }
+    .field { display: flex; flex-direction: column; gap: 0.25rem; }
+    .field label { font-size: 0.78rem; font-weight: 600; color: #cbd5e1; }
+    .field input, .field select {
+      background: #0a101d;
+      color: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.88rem;
+      min-height: 38px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.12rem 0.48rem;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .b-pa { background: #064e3b; color: #a7f3d0; }
+    .b-em { background: #0c4a6e; color: #bae6fd; }
+    .b-io { background: #451a03; color: #fde68a; }
+    .b-ul { background: #312e81; color: #e0e7ff; }
+    .b-oc { background: #4c0519; color: #fecdd3; }
+    .svg-wrap { width: 100%; overflow-x: auto; margin-top: 0.6rem; }
+    .svg-wrap img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); display: block; }
+    footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.84rem; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      body { background: #ffffff; color: #0f172a; padding: 0; }
+      .card, .stat, .notice-banner, pre { background: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+      h1, h2, h3, .stat .k { color: #0f172a !important; }
+      .filter-bar, .btn { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content">
+  <header>
+    <h1>OMEGA 4-Tier Multi-Scale Observatory (v6.8.0)</h1>
+    <p class="meta">
+      <strong>Author:</strong> Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA) &middot;
+      <strong>ORCID:</strong> <a href="https://orcid.org/0009-0006-8168-9648">0009-0006-8168-9648</a> &middot;
+      <strong>Repository:</strong> <a href="https://github.com/0thernes/omega-triscale-observatory">0thernes/omega-triscale-observatory</a> &middot;
+      <strong>SWHID:</strong> <code>swh:1:snp:045edd61e0805b3778e40f5230062e8cc245bb60</code>
+    </p>
+    <div class="pills" aria-label="Verification status summary">
+      <span class="pill">14/14 Node Tests PASS (250 prop_check)</span>
+      <span class="pill">6/6 Python Relay Tests PASS (120 trials)</span>
+      <span class="pill">9/9 Planted Mutants Killed (7 Core + 2 Server)</span>
+      <span class="pill info">13/13 Citations Audited (0 Retractions)</span>
+      <span class="pill info">Zero Runtime Dependencies</span>
+      <span class="pill warn">Preprint &middot; Not Peer-Reviewed</span>
+    </div>
+    <div class="notice-banner" role="note">
+      <strong>Honest Epistemic &amp; Scope Boundary:</strong> This static portal showcases the architecture, verification results, and frozen white paper of <code>omega-triscale-observatory</code> v6.8.0. The live 8-endpoint supervisor runs strictly on local loopback (<code>127.0.0.1:8790</code>). This repository contains <strong>0 local Lean 4 files</strong> (the <code>327</code> combined upstream Lean 4.35.0 proofs are reported by six formal sibling repositories), has <strong>not undergone external peer review</strong>, and retires <strong>0 / 1,900</strong> overarching open problems in <code>0thernes/unsolved-problems-mega-atlas</code>.
+    </div>
+  </header>
+
+  <section class="grid" aria-label="Headline verification metrics">
+    <div class="stat"><div class="k">8 Endpoints</div><div class="l">Supervised across 7 public repositories on <code>127.0.0.1:8790</code></div></div>
+    <div class="stat"><div class="k">9 / 9 Killed</div><div class="l">Hand-planted regression mutants (7 in core, 2 in <code>server.mjs</code>)</div></div>
+    <div class="stat"><div class="k">0.0504 ms</div><div class="l">Mean <code>computeDifferentialsCore</code> latency (112-trait &Delta; + 8-axis cos&theta;)</div></div>
+    <div class="stat"><div class="k">13 / 13 OK</div><div class="l">Crossref/DataCite title+author verified bibliography (0 retractions)</div></div>
+  </section>
+
+  <section class="card" aria-labelledby="arch-heading">
+    <h2 id="arch-heading">1. Four-Tier, Eight-Endpoint Architecture</h2>
+    <p>A single zero-dependency Node.js ESM hub (<code>server.mjs</code> + <code>lib/observatory_core.mjs</code>) paired with a Python 3 read-only relay (<code>macro_wild_relay.py</code>) aggregates Server-Sent Events, binary <code>AZST</code> snapshots, WebSocket streams, and HTTP controls across four spatial scales (<code>10^-9 m</code> to <code>10^1 m</code>).</p>
+    <div class="svg-wrap">
+      <img src="./media/social-preview.svg" alt="OMEGA 4-Tier Multi-Scale Observatory v6.8.0 architecture diagram showing Tier 1 DNA, Tier 2 Cells, Tier 3 Organisms, Tier 4 Environment with D7RO read-only boundary, and verified hub controls">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Tier</th><th>Endpoint</th><th>Instrument / Upstream Repo</th><th>Transport</th><th>Policy</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>T1 (10<sup>&minus;9</sup> m)</td><td><code>:8787</code></td><td>AUTOPHAGE v1.4.0 (<code>0thernes/autophage</code> &middot; 48 upstream Lean 4)</td><td>HTTP + SSE</td><td>Read/Cmd</td></tr>
+          <tr><td>2</td><td>T2 (10<sup>&minus;6</sup> m)</td><td><code>:8788</code></td><td>Cellulogonic Mecha v1.5.0 (<code>cellulogonic-mecha</code> &middot; 70 upstream Lean 4)</td><td>HTTP JSON</td><td>Read/Cmd</td></tr>
+          <tr><td>3</td><td>T2+</td><td><code>:8791</code></td><td>Cellular Engine Omega v5.2.0 (<code>cellular-engine-omega</code> &middot; 89 upstream Lean 4)</td><td>HTTP JSON</td><td>Read/Poll</td></tr>
+          <tr><td>4</td><td>T3/4</td><td><code>:8795</code></td><td>Noetic Organism Omega v2.1.0 (<code>noetic-organism-omega</code> &middot; 54 upstream Lean 4)</td><td>HTTP JSON</td><td>Read/DNA</td></tr>
+          <tr><td>5</td><td>T3+4 W1</td><td><code>:8794</code></td><td>Asmodensius-Native v1.1.0 WebGL2 (<code>asmodensius-native</code> &middot; 30 upstream Lean 4)</td><td>AZST + WS</td><td><strong>D7RO</strong></td></tr>
+          <tr><td>6</td><td>T3+4 W2</td><td><code>:8796</code></td><td>Asmodensius-Native v1.1.0 Native <code>az_view</code></td><td>HTTP Proxy</td><td><strong>D7RO</strong></td></tr>
+          <tr><td>7</td><td>Hub</td><td><code>:8790</code></td><td>OMEGA Observatory v6.8.0 (this repository &middot; 0 local Lean 4)</td><td>HTTP/SSE/WS</td><td>Supervisor</td></tr>
+          <tr><td>8</td><td>Atlas</td><td><code>/zeta-omega/</code></td><td>Zeta-Omega v3.4.0 (<code>alife-singularity-omega-package</code> &middot; 36 upstream Lean 4)</td><td>Static Safe</td><td>Read-Only</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card highlight" aria-labelledby="sandbox-heading">
+    <h2 id="sandbox-heading">2. Interactive Client-Side Genesis Clamping &amp; D7RO Boundary Sandbox</h2>
+    <p>Test the exact deterministic <code>normalizeGenesisConfig</code> clamping bounds (<code>1..1,000,000</code> founders, <code>autoCap</code>, <code>species &le; min(100, n)</code>, <code>23</code>-bit lesion mask, and bare-metal relay CLI generation) directly in your browser with zero external requests.</p>
+    <div class="form-grid">
+      <div class="field">
+        <label for="sb-preset">Preset</label>
+        <select id="sb-preset">
+          <option value="cambrian">cambrian (8k)</option>
+          <option value="hyperbrain">hyperbrain (6k)</option>
+          <option value="hyperchaos">hyperchaos (10k)</option>
+          <option value="megaswarm">megaswarm (24k)</option>
+          <option value="abyss">abyss (8k)</option>
+          <option value="megagrowth">megagrowth (250k)</option>
+          <option value="million" selected>million (1M)</option>
+          <option value="nonexistent">nonexistent (adversarial)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sb-n">Raw Founders (--n)</label>
+        <input id="sb-n" type="text" value="5000000">
+      </div>
+      <div class="field">
+        <label for="sb-cap">Raw Cap (--cap, 0=Auto)</label>
+        <input id="sb-cap" type="text" value="-10">
+      </div>
+      <div class="field">
+        <label for="sb-sp">Raw Species (--species)</label>
+        <input id="sb-sp" type="text" value="999">
+      </div>
+      <div class="field">
+        <label for="sb-grid">Raw Grid (--grid)</label>
+        <input id="sb-grid" type="text" value="99,0,1">
+      </div>
+      <div class="field">
+        <label for="sb-lesion">Raw Lesion (--lesion)</label>
+        <input id="sb-lesion" type="text" value="0xffffffff">
+      </div>
+    </div>
+    <div class="filter-bar">
+      <button class="btn primary" type="button" id="btn-run-sb">Evaluate Clamping &amp; Relay CLI</button>
+      <button class="btn" type="button" id="btn-preset-neg">Adversarial Negative Input</button>
+      <button class="btn" type="button" id="btn-preset-1m">1M Bare-Metal Preset</button>
+    </div>
+    <pre id="sb-out" aria-live="polite"></pre>
+  </section>
+
+  <section class="card" aria-labelledby="claims-heading">
+    <h2 id="claims-heading">3. Numbered Claims Ledger (C1&ndash;C10)</h2>
+    <p>Filter all ten tracked claims by epistemic tier. Program-audited claims are checked by deterministic automated tests, live sockets, property trials, and planted mutants&mdash;never overstated as formal proofs.</p>
+    <div class="filter-bar" role="group" aria-label="Filter claims by epistemic tier">
+      <button class="btn active" type="button" data-tier="all" aria-pressed="true">All (10)</button>
+      <button class="btn" type="button" data-tier="program-audited" aria-pressed="false">program-audited (6)</button>
+      <button class="btn" type="button" data-tier="empirical" aria-pressed="false">empirical (1)</button>
+      <button class="btn" type="button" data-tier="indicator-only" aria-pressed="false">indicator-only (1)</button>
+      <button class="btn" type="button" data-tier="upstream-linked" aria-pressed="false">upstream-linked (1)</button>
+      <button class="btn" type="button" data-tier="open-conjecture" aria-pressed="false">open-conjecture (1)</button>
+    </div>
+    <div class="table-wrap">
+      <table id="claims-table">
+        <thead><tr><th>ID</th><th>Tier</th><th>Claim Summary</th><th>Verification Evidence</th></tr></thead>
+        <tbody>
+          <tr data-tier="program-audited"><td><code>C1</code></td><td><span class="badge b-pa">program-audited</span></td><td>Loopback Host/Origin/JSON/Sec-Fetch-Site guard, live raw-socket WS <code>Upgrade</code> 403 CSWSH rejection (admitting absent-Origin loopback CLI), and canonical <code>resolveSafePath</code>.</td><td><code>Test 2c, 3, 3b</code>; Mutants <code>M1, M5, M7</code></td></tr>
+          <tr data-tier="program-audited"><td><code>C2</code></td><td><span class="badge b-pa">program-audited</span></td><td>Genesis clamping (<code>1..1M</code>, <code>cap &ge; n</code>, <code>species &le; min(100,n)</code>, 23-bit lesion, bare-metal flags) matches Python <code>--dry-run</code> on 18 raw unnormalized adversarial inputs.</td><td><code>Test 2a, 2b, 4 (250), 6 (18)</code>; <code>test_relay.py</code>; <code>M2, M6</code></td></tr>
+          <tr data-tier="program-audited"><td><code>C3</code></td><td><span class="badge b-pa">program-audited</span></td><td>Render-only <code>D7RO</code> boundary keeps <code>matrix4x4[0..1][2..3]=(D7RO,0)</code>, preserves <code>#ifdef PICK</code>, and sends zero T1/T2 writes to mock Asmodensius in live loopback wire-spy test.</td><td><code>Test 5b, 5c, 5e</code>; Mutants <code>M3, M9</code></td></tr>
+          <tr data-tier="program-audited"><td><code>C4</code></td><td><span class="badge b-pa">program-audited</span></td><td>112-trait spectral delta clamps inputs to <code>[0,1]</code>, obeys swap antisymmetry and shift invariance, and caps omnitemporal history <code>&le; 240</code>.</td><td><code>Test 5a, 5b</code>; Mutant <code>M4</code></td></tr>
+          <tr data-tier="program-audited"><td><code>C5</code></td><td><span class="badge b-pa">program-audited</span></td><td>Conservation gate fails closed: <code>ALERT</code> on nonzero residual/observerFail, <code>DEGRADED</code> on stale <code>&ge; 15s</code> or offline required tiers (<code>t1_dna</code>, <code>t2_cells</code>, <code>t4_env</code>).</td><td><code>Test 5b</code>; Mutant <code>M8</code></td></tr>
+          <tr data-tier="program-audited"><td><code>C6</code></td><td><span class="badge b-pa">program-audited</span></td><td>14/14 Node tests, 6/6 Python tests, 0 lint errors, and 9/9 planted mutants killed (7 core, 2 server) without dirtying <code>results/mutation_audit.json</code>.</td><td><code>npm test</code>, <code>npm run lint</code>, <code>npm run mutate</code></td></tr>
+          <tr data-tier="empirical"><td><code>C7</code></td><td><span class="badge b-em">empirical</span></td><td>Node v25.8.2 Win64 mean latency: <code>0.0504 ms</code> differentials (p95 <code>0.1169 ms</code>), <code>3.1278 ms</code> 10k-creature binary AZST decode (p95 <code>4.1033 ms</code>).</td><td><code>results/benchmarks.json</code></td></tr>
+          <tr data-tier="indicator-only"><td><code>C8</code></td><td><span class="badge b-io">indicator-only</span></td><td><code>chaosLyapunov</code> volatility index, count-driven T3 organs, and Noetic header readouts are strictly visual/proxy indicators.</td><td><code>LIMITATIONS.md</code></td></tr>
+          <tr data-tier="upstream-linked"><td><code>C9</code></td><td><span class="badge b-ul">upstream-linked</span></td><td>0 local Lean 4 files; 327 combined upstream 6-kernel Lean 4.35.0 theorems reported by six formal companion repositories.</td><td><code>docs/MEGA_ATLAS_CROSSCHECK.md</code></td></tr>
+          <tr data-tier="open-conjecture"><td><code>C10</code></td><td><span class="badge b-oc">open-conjecture</span></td><td>Zero (<code>0 / 1,900</code>) overarching Mega-Atlas open problems (<code>AI-045</code>, <code>SYS-009</code>, <code>SYS-050</code>) are solved or retired.</td><td><code>docs/MEGA_ATLAS_CROSSCHECK.md</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="mut-heading">
+    <h2 id="mut-heading">4. Planted-Regression Mutation Audit (9/9 Killed)</h2>
+    <p>Every mutant runs inside an isolated temporary workspace copy without modifying the repository working tree. Scope: 7 mutants in <code>lib/observatory_core.mjs</code> and 2 mutants in <code>server.mjs</code> (a kill rate for 9 hand-planted regression mutants, not an automated repo-wide mutation score).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Mutant ID</th><th>Target File</th><th>Injected Regression</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><code>M1_PATH_TRAVERSAL_BYPASS</code></td><td><code>lib/observatory_core.mjs</code></td><td>Disable <code>..</code> escape rejection in <code>resolveSafePath</code></td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M2_POPULATION_CLAMP_UNBOUNDED</code></td><td><code>lib/observatory_core.mjs</code></td><td>Remove <code>1..1,000,000</code> founder population clamping</td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M3_D7RO_OBSERVER_VIOLATION</code></td><td><code>lib/observatory_core.mjs</code></td><td>Mutate T1&rarr;T3 display coupling cell from <code>D7RO</code> to <code>LIVE</code></td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M4_OMNITEMPORAL_CAP_LEAK</code></td><td><code>lib/observatory_core.mjs</code></td><td>Break <code>&le; 240</code> rolling history memory cap</td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M5_CSRF_ORIGIN_BYPASS</code></td><td><code>lib/observatory_core.mjs</code></td><td>Disable loopback <code>Origin</code> check in <code>isSafeLoopbackRequest</code></td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M6_ECORES_FLAG_DROPPED</code></td><td><code>lib/observatory_core.mjs</code></td><td>Suppress <code>--ecores</code> bare-metal flag in <code>buildRelayArgs</code></td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M7_WS_UPGRADE_CSWSH_BYPASS</code></td><td><code>server.mjs</code></td><td>Disable Host/Origin CSWSH rejection in WebSocket <code>upgrade</code> handler</td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M8_OFFLINE_CONSERVATION_FALSE_GREEN</code></td><td><code>lib/observatory_core.mjs</code></td><td>Allow offline T1 DNA engine to render false-green <code>VERIFIED</code></td><td><span class="badge b-pa">KILLED</span></td></tr>
+          <tr><td><code>M9_D7RO_WIRE_LEAK_SERVER</code></td><td><code>server.mjs</code></td><td>Leak T1 128B DNA POST to <code>PORTS.macro</code> inside <code>transfectDnaToCells</code></td><td><span class="badge b-pa">KILLED</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="artifacts-heading">
+    <h2 id="artifacts-heading">5. White Paper, Machine-Readable FAIR Metadata &amp; Cryptographic Provenance</h2>
+    <p>All release artifacts are dual-licensed under <strong>Apache-2.0</strong> (code) and <strong>CC-BY-4.0</strong> (paper &amp; docs), verified by cross-platform CI (<code>ubuntu-latest</code> + <code>windows-latest</code>), attested via GitHub Actions SLSA / Sigstore Rekor on the committed PDF &amp; arXiv tarball, and dual-timestamped via DigiCert RFC 3161 (<code>CHECKSUMS.sha256.tsr</code>) and 3-calendar Bitcoin OpenTimestamps (<code>CHECKSUMS.sha256.ots</code>).</p>
+    <ul>
+      <li><strong>Frozen AMS-LaTeX White Paper (PDF):</strong> <a href="./dist/Donahue_2026_omega_triscale_observatory.pdf">Donahue_2026_omega_triscale_observatory.pdf</a></li>
+      <li><strong>Verification Evidence JSON:</strong> <a href="./results/mutation_audit.json">mutation_audit.json</a> &middot; <a href="./results/benchmarks.json">benchmarks.json</a> &middot; <a href="./results/citation-audit.json">citation-audit.json</a></li>
+      <li><strong>FAIR &amp; Citation Metadata:</strong> <a href="./CITATION.cff">CITATION.cff</a> &middot; <a href="./codemeta.json">codemeta.json</a> &middot; <a href="./croissant.json">croissant.json</a> &middot; <a href="./ro-crate-metadata.json">ro-crate-metadata.json</a></li>
+      <li><strong>LLM Context &amp; Checksums:</strong> <a href="./llms.txt">llms.txt</a> &middot; <a href="./llms-full.txt">llms-full.txt</a> &middot; <a href="./CHECKSUMS.sha256">CHECKSUMS.sha256</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Copyright &copy; 2026 Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648; <code>0_0@0thernes.art</code>). Code: Apache-2.0 &middot; Paper &amp; Docs: CC-BY-4.0. Zero external CDN assets loaded.</p>
+  </footer>
+</main>
+<script>
+(function () {
+  "use strict";
+  const PRESETS = {
+    cambrian:   { n: 8000, cap: 48000, species: 100, grid: "6,6,5" },
+    hyperbrain: { n: 6000, cap: 40000, species: 100, grid: "6,6,5" },
+    hyperchaos: { n: 10000, cap: 65536, species: 100, grid: "6,6,5" },
+    megaswarm:  { n: 24000, cap: 110000, species: 100, grid: "6,6,5" },
+    abyss:      { n: 8000, cap: 48000, species: 100, grid: "6,6,5" },
+    megagrowth: { n: 250000, cap: 1004096, species: 100, grid: "6,6,5" },
+    million:    { n: 1000000, cap: 1004096, species: 100, grid: "7,6,6" }
+  };
+  function clampInt(val, lo, hi, fb) {
+    if (val === null || val === undefined || String(val).trim() === "") return fb;
+    const n = Number(val);
+    if (!Number.isFinite(n)) return fb;
+    return Math.max(lo, Math.min(hi, Math.round(n)));
+  }
+  function autoCap(n) {
+    return n <= 250000 ? Math.min(1004096, n * 4 + 4096) : Math.max(n + 4096, 1004096);
+  }
+  function sanitizeGrid(raw, fb) {
+    const s = String(raw || "").trim();
+    if (!s) return fb;
+    if (s.toLowerCase() === "auto") return "auto";
+    if (/^\d+,\d+,\d+$/.test(s)) return s.split(",").map((g) => clampInt(g, 2, 8, 6)).join(",");
+    return fb;
+  }
+  function evaluateSandbox() {
+    const rawPreset = document.getElementById("sb-preset").value;
+    const preset = Object.prototype.hasOwnProperty.call(PRESETS, rawPreset) ? rawPreset : "cambrian";
+    const base = PRESETS[preset];
+    const n = clampInt(document.getElementById("sb-n").value, 1, 1000000, base.n);
+    const rawCap = clampInt(document.getElementById("sb-cap").value, 0, 2000000, 0);
+    const cap = rawCap > 0 ? Math.max(n, rawCap) : autoCap(n);
+    const species = Math.min(clampInt(document.getElementById("sb-sp").value, 1, 100, base.species), n);
+    const grid = sanitizeGrid(document.getElementById("sb-grid").value, base.grid);
+    const lesion = (clampInt(document.getElementById("sb-lesion").value, 0, 0x7fffff, 0) >>> 0) & 0x7fffff;
+    const cli = `python macro_wild_relay.py --preset ${preset} --data-dir ./runtime/dry --n ${n} --cap ${cap} --species ${species} --grid ${grid} --lesion 0x${lesion.toString(16)} --kernels 1 --ecores --prefetch 1 --dry-run`;
+    document.getElementById("sb-out").textContent = JSON.stringify({
+      normalized_config: { preset, n, cap, species, grid, lesion: "0x" + lesion.toString(16) },
+      d7ro_coupling_cells: { t1_to_t3: { m: "D7RO", s: 0 }, t1_to_t4: { m: "D7RO", s: 0 }, t2_to_t3: { m: "D7RO", s: 0 }, t2_to_t4: { m: "D7RO", s: 0 } },
+      equivalent_relay_cli: cli
+    }, null, 2);
+  }
+  document.getElementById("btn-run-sb").addEventListener("click", evaluateSandbox);
+  document.getElementById("btn-preset-neg").addEventListener("click", () => {
+    document.getElementById("sb-preset").value = "nonexistent";
+    document.getElementById("sb-n").value = "-5";
+    document.getElementById("sb-cap").value = "-10";
+    document.getElementById("sb-sp").value = "999";
+    document.getElementById("sb-grid").value = "bad;rm -rf /";
+    document.getElementById("sb-lesion").value = "-5";
+    evaluateSandbox();
+  });
+  document.getElementById("btn-preset-1m").addEventListener("click", () => {
+    document.getElementById("sb-preset").value = "million";
+    document.getElementById("sb-n").value = "1000000";
+    document.getElementById("sb-cap").value = "0";
+    document.getElementById("sb-sp").value = "100";
+    document.getElementById("sb-grid").value = "7,6,6";
+    document.getElementById("sb-lesion").value = "0x0";
+    evaluateSandbox();
+  });
+  document.querySelectorAll("[data-tier]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tier = btn.getAttribute("data-tier");
+      document.querySelectorAll("[data-tier]").forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+      document.querySelectorAll("#claims-table tbody tr").forEach((tr) => {
+        tr.hidden = tier !== "all" && tr.getAttribute("data-tier") !== tier;
+      });
+    });
+  });
+  evaluateSandbox();
+})();
+</script>
+</body>
+</html>

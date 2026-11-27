@@ -11,7 +11,7 @@ Published corrections to earlier versions of `omega-triscale-observatory`.
 
 ## 2026-11-26 statement audit
 
-An independent statement audit of commit `bbe4da9` ([audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md)) re-ran the Node, Python, lint and mutation suites (all pass) and found the wording problems below. The README, `CLAIMS.md`, `LIMITATIONS.md`, `CITATION.cff` and `docs/` were corrected on 2026-11-26. The frozen paper (`paper/main.tex`, `paper/refs.bib`, `dist/Donahue_2026_omega_triscale_observatory.pdf`) and files outside this pass are not changed; their errors are listed here. This repository contains no Lean code, so no error below affects a theorem statement.
+An independent statement audit of commit `bbe4da9` ([audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md)) re-ran the Node, Python, lint and mutation suites (all pass) and found the wording problems below. The README, `CLAIMS.md`, `LIMITATIONS.md`, `CITATION.cff` and `docs/` were corrected on 2026-11-26 (commits `d2fbe46` and `1d5b54a`). The frozen v6.7.0 paper (`paper/main.tex`, `paper/refs.bib`, `dist/Donahue_2026_omega_triscale_observatory.pdf`) and files outside that documentation-only pass were logged here for v6.8.0 resolution. This repository contains no Lean code, so no error below affects a theorem statement.
 
 | Where | What is wrong | Correction | Affects a theorem statement? |
 |---|---|---|---|
@@ -26,13 +26,27 @@ An independent statement audit of commit `bbe4da9` ([audit log](https://github.c
 | `AGENTS.md` line 11, `DEVIATIONS.md` line 7 | Still state `244` upstream Lean theorems across five repositories; the current figure in README, `CLAIMS.md` C9 and the paper is `327` across six. The same stale figure was fixed in `docs/faq.md`, `docs/MEGA_ATLAS_CROSSCHECK.md` and `docs/adr/0001-architecture-and-verification-boundaries.md`. | Replace with `327` across six (`48 + 70 + 89 + 54 + 30 + 36`). | No |
 | CI job "Tectonic PDF, Clean-Room arXiv & SLSA Provenance" | The SLSA attestation covers the CI-rebuilt PDF (`583c8fad...`) and the arXiv tarball (`8272a20e...`). The committed PDF (`66470ab3...`) is not attested; only the tarball hash matches. | Archive the CI-built PDF or attest the committed one; until then cite only the tarball as attested. | No |
 
-### Known issues in the code and tests (not yet fixed)
+### Known issues in the code and tests logged in the 2026-11-26 audit (resolved in v6.8.0 below)
 
-There is no Lean code in this repository. The following are test-coverage gaps and small code issues found by the same audit; they are not fixed in this pass.
+- `tests/test_observatory.mjs`: no test recorded the requests `server.mjs` sends to the Asmodensius port while T1/T2 state changes (`D7RO` checked only as a display constant).
+- `tests/test_observatory.mjs`: no raw-socket `Upgrade` request with a foreign `Origin` (expected `403`) exercised `server.on("upgrade")`.
+- `tests/test_observatory.mjs`: no case set a required tier offline (`st.engines.t1_dna = false`, `t2_cells = false`) expecting `DEGRADED`.
+- `tests/test_observatory.mjs` test 6: raw inputs, not Node-normalized ones, needed to be passed to both sides of the parity check.
+- `scripts/run_mutation_audit.mjs`: rewrote `results/mutation_audit.json` with a volatile `elapsed_ms` on every run.
+- `web/index.html` line 26: status pill title called the residual check `"thermodynamic ... invariant verification"` instead of `"Upstream-reported residual and freshness gate"`.
 
-- `tests/test_observatory.mjs`: no test records the requests `server.mjs` sends to the Asmodensius port while T1/T2 state changes, so the `D7RO` design rule is checked only as a display constant (`lib/observatory_core.mjs:534-535`, `377-378`).
-- `tests/test_observatory.mjs`: no raw-socket `Upgrade` request with a foreign `Origin` (expected `403`) exercises `server.on("upgrade")` (`server.mjs:1839-1858`).
-- `tests/test_observatory.mjs`: no case sets a required tier offline (for example `st.engines.t1_dna = false`) and expects `DEGRADED`.
-- `tests/test_observatory.mjs` test 6: raw inputs, not Node-normalized ones, should be passed to both sides of the parity check.
-- `scripts/run_mutation_audit.mjs`: the header says it never leaves the working tree dirty, but it rewrites `results/mutation_audit.json` with a new `elapsed_ms` on every run.
-- `web/index.html` line 26: the status pill title calls the residual check "thermodynamic ... invariant verification"; the gate only checks that upstream-reported residual fields are zero and fresh. Suggested title: "Upstream-reported residual and freshness gate".
+## Resolutions in v6.8.0 (2026-11-26)
+
+Every paper, bibliography, metadata, CI, code, UI, and test-coverage item from the 2026-11-26 statement audit was closed in `v6.8.0`:
+
+| # | Audit Item | Finding Class | Concrete Resolution in `v6.8.0` |
+|---:|---|---|---|
+| 1 | `D7RO` live wire-spy test gap | `gap` | Refactored `server.mjs` to expose configurable `PORTS` and single-tick pollers (`pollAsmodensiusSnapOnce`, `pollAsmodensiusFieldsOnce`); added live 4-server loopback wire-spy `Test 5e` recording every HTTP method/URL/body on mock Asmodensius during T1/T2 mutations (`0` non-`GET` writes in Phase A, strictly read-only `POST /api/inspect {"uid":...}` in Phase B, `0` leaked T1/T2 bytes), verified non-vacuous by `server.mjs` mutant `M9_D7RO_WIRE_LEAK_SERVER`. |
+| 2 | Live raw-socket WebSocket `Upgrade` CSWSH test gap | `gap` | Added live TCP `net.createConnection` `Upgrade: websocket` test `Test 3b` verifying `HTTP/1.1 403 Forbidden` + socket destruction for foreign `Origin: https://evil.example` (`/ws` and `/proxy/macro/ws`) and non-loopback `Host`, plus positive `101 Switching Protocols` control and explicit absent-`Origin` CLI check, verified non-vacuous by `server.mjs` mutant `M7_WS_UPGRADE_CSWSH_BYPASS`. |
+| 3 | Offline-engine `DEGRADED` conservation gate test gap | `gap` | Extended `Test 5b` to explicitly test `st.engines.t1_dna = false`, `t2_cells = false`, and `t4_env = false` (fresh timestamps, zero residuals) each forcing `DEGRADED` (`conservationOk === false`), verified non-vacuous by `M8_OFFLINE_CONSERVATION_FALSE_GREEN`. |
+| 4 | Raw unnormalized Node↔Python parity test gap | `gap` / `bug` | Upgraded `Test 6` to pass 18 raw unnormalized adversarial and seeded-random inputs directly to BOTH Node `normalizeGenesisConfig` and Python `macro_wild_relay.py --dry-run`; fixed 3 real raw-input clamping divergences caught in Python/Node (`cap < 0`, `lesion` clamping vs modulo masking, non-boolean hardware flags & invalid presets/grids). |
+| 5 | `run_mutation_audit.mjs` dirtying `results/mutation_audit.json` | `bug` | Removed volatile `elapsed_ms` from `results/mutation_audit.json`, made default `npm run mutate` strictly read-only (`--write` opt-in), expanded to `9/9` planted mutants (`7` in `lib/observatory_core.mjs`, `2` in `server.mjs`), and enforced `git diff --exit-code results/mutation_audit.json` in CI. |
+| 6 | `web/index.html` line 26 status pill title | `error` | Updated `title` strictly to `"Upstream-reported residual and freshness gate"` and locked it in `Test 1b`. |
+| 7 | `bedau1998` wrong DOI & reachability-only citation verifier | `error` / `gap` | Dropped wrong DOI `10.7551/mitpress/1428.003.0028` from `paper/refs.bib` (Crossref confirmed MIT Press *Artificial Life VI*, 1998, ISBN `978-0-262-51099-8`, pp. 228–237 has no chapter DOI); upgraded `scripts/check_citations.py` to verify Handle reachability + Crossref/DataCite title & author match + zero retractions (`13/13` entries verified in `results/citation-audit.json`). |
+| 8 | Paper prose, `CITATION.cff`, `AGENTS.md`, `DEVIATIONS.md` | `error` | Updated `paper/main.tex` for all v6.8.0 tests, honest `9/9` planted-mutant scope, absent-`Origin` CLI note, SWHID, SLSA/Rekor, and dual timestamps; recompiled `dist/Donahue_2026_omega_triscale_observatory.pdf` (`0` Overfull `\hbox`) & clean-room `dist/arxiv_submission.tar.gz`; set `CITATION.cff` `date-released: "2026-11-26"`; synced `AGENTS.md` and `DEVIATIONS.md` to `327` across six formal sibling repos. |
+| 9 | CI SLSA attestation covering rebuilt vs committed PDF | `gap` | Added `scripts/build_paper.py --verify-only` in `.github/workflows/ci.yml` so CI verifies clean compilation and clean-room arXiv rebuild without overwriting the committed PDF, attesting BOTH committed `dist/Donahue_2026_omega_triscale_observatory.pdf` and `dist/arxiv_submission.tar.gz` via `actions/attest-build-provenance@v2`. |

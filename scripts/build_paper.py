@@ -3,10 +3,16 @@
 # Copyright (c) 2026 Alexander Stephen Donahue
 """Compile `paper/main.tex` via Tectonic, audit for zero overfull hboxes / undefined refs,
 copy frozen PDF to `dist/Donahue_2026_omega_triscale_observatory.pdf`, package deterministic
-`dist/arxiv_submission.tar.gz`, and verify clean-room arXiv compilation."""
+`dist/arxiv_submission.tar.gz`, and verify clean-room arXiv compilation.
+
+Usage:
+  python scripts/build_paper.py               # Build & update dist/ PDF + arxiv_submission.tar.gz
+  python scripts/build_paper.py --verify-only # CI mode: verify zero-overflow compile & clean-room arXiv tarball without overwriting committed dist/ PDF
+"""
 
 from __future__ import annotations
 
+import argparse
 import gzip
 import io
 import os
@@ -37,89 +43,117 @@ def find_tectonic() -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Compile paper/main.tex and verify clean-room arXiv tarball.")
+    parser.add_argument(
+        "--verify-only",
+        action="store_true",
+        help="Verify zero-overflow compilation and clean-room arXiv rebuild without overwriting committed dist/ artifacts",
+    )
+    args = parser.parse_args()
+
     tectonic = find_tectonic()
-    build_dir = PAPER_DIR / "build"
-    if build_dir.exists():
-        shutil.rmtree(build_dir)
-    build_dir.mkdir(parents=True, exist_ok=True)
-    DIST_DIR.mkdir(parents=True, exist_ok=True)
+    if args.verify_only:
+        build_dir = Path(tempfile.mkdtemp(prefix="omega_paper_verify_"))
+    else:
+        build_dir = PAPER_DIR / "build"
+        if build_dir.exists():
+            shutil.rmtree(build_dir)
+        build_dir.mkdir(parents=True, exist_ok=True)
+        DIST_DIR.mkdir(parents=True, exist_ok=True)
 
-    res = subprocess.run(
-        [tectonic, "-X", "compile", "main.tex", "--outdir", "build", "--keep-logs", "--keep-intermediates"],
-        cwd=PAPER_DIR,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if res.returncode != 0:
-        print(res.stdout, file=sys.stderr)
-        print(res.stderr, file=sys.stderr)
-        sys.exit(res.returncode)
-
-    log_txt = (build_dir / "main.log").read_text(encoding="utf-8", errors="replace")
-    bad_lines = [
-        ln for ln in log_txt.splitlines()
-        if re.search(r"Overfull \\hbox|LaTeX Warning: Reference|LaTeX Warning: Citation|Missing character", ln)
-    ]
-    if bad_lines:
-        print(f"WARNING: Found {len(bad_lines)} TeX log issues:", file=sys.stderr)
-        for ln in bad_lines:
-            print("  " + ln, file=sys.stderr)
-        sys.exit(1)
-
-    frozen_pdf = DIST_DIR / "Donahue_2026_omega_triscale_observatory.pdf"
-    shutil.copy2(build_dir / "main.pdf", frozen_pdf)
-    page_m = re.search(r"Output written on .*?\((\d+)\s+page", log_txt)
-    pages_str = f", {page_m.group(1)} pages" if page_m else ""
-    print(
-        f"PASS: Compiled {frozen_pdf.name} ({frozen_pdf.stat().st_size / 1048576:.3f} MB{pages_str}) "
-        f"with 0 overfull hboxes & 0 undefined refs!"
-    )
-
-    # Package deterministic arXiv tarball (mtime=0, uid=0, gid=0, USTAR)
-    tar_buf = io.BytesIO()
-    files = [
-        ("main.tex", PAPER_DIR / "main.tex"),
-        ("main.bbl", build_dir / "main.bbl"),
-        ("refs.bib", PAPER_DIR / "refs.bib"),
-    ]
-    fig_dir = PAPER_DIR / "figures"
-    if fig_dir.exists():
-        files += [(f"figures/{p.name}", p) for p in sorted(fig_dir.glob("*.pdf"))]
-
-    with tarfile.open(fileobj=tar_buf, mode="w", format=tarfile.USTAR_FORMAT) as tf:
-        for arcname, src in files:
-            if not src.exists():
-                continue
-            raw = src.read_bytes()
-            ti = tarfile.TarInfo(name=arcname)
-            ti.size = len(raw)
-            ti.mtime = 0
-            ti.uid = 0
-            ti.gid = 0
-            ti.uname = ""
-            ti.gname = ""
-            ti.mode = 0o644
-            tf.addfile(ti, io.BytesIO(raw))
-
-    arxiv_gz = DIST_DIR / "arxiv_submission.tar.gz"
-    with arxiv_gz.open("wb") as f_out:
-        with gzip.GzipFile(filename="", mode="wb", fileobj=f_out, compresslevel=9, mtime=0) as gz:
-            gz.write(tar_buf.getvalue())
-    print(f"PASS: Packaged deterministic {arxiv_gz.name} ({arxiv_gz.stat().st_size / 1048576:.3f} MB)")
-
-    # Clean-room arXiv compilation verification
-    tmp = Path(tempfile.mkdtemp(prefix="arxiv_clean_"))
     try:
-        with tarfile.open(arxiv_gz, "r:gz") as tf:
-            tf.extractall(tmp, filter="data")
-        cres = subprocess.run([tectonic, "-X", "compile", "main.tex"], cwd=tmp, capture_output=True, text=True, check=False)
-        if cres.returncode != 0:
-            print("FAIL: Clean-room arXiv compilation failed:\n" + cres.stderr, file=sys.stderr)
-            sys.exit(cres.returncode)
-        print("PASS: Clean-room arXiv tarball compilation succeeded!")
+        res = subprocess.run(
+            [tectonic, "-X", "compile", "main.tex", "--outdir", str(build_dir), "--keep-logs", "--keep-intermediates"],
+            cwd=PAPER_DIR,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if res.returncode != 0:
+            print(res.stdout, file=sys.stderr)
+            print(res.stderr, file=sys.stderr)
+            sys.exit(res.returncode)
+
+        log_txt = (build_dir / "main.log").read_text(encoding="utf-8", errors="replace")
+        bad_lines = [
+            ln for ln in log_txt.splitlines()
+            if re.search(r"Overfull \\hbox|LaTeX Warning: Reference|LaTeX Warning: Citation|Missing character", ln)
+        ]
+        if bad_lines:
+            print(f"WARNING: Found {len(bad_lines)} TeX log issues:", file=sys.stderr)
+            for ln in bad_lines:
+                print("  " + ln, file=sys.stderr)
+            sys.exit(1)
+
+        page_m = re.search(r"Output written on .*?\((\d+)\s+page", log_txt)
+        pages_str = f", {page_m.group(1)} pages" if page_m else ""
+        frozen_pdf = DIST_DIR / "Donahue_2026_omega_triscale_observatory.pdf"
+        arxiv_gz = DIST_DIR / "arxiv_submission.tar.gz"
+
+        if not args.verify_only:
+            shutil.copy2(build_dir / "main.pdf", frozen_pdf)
+            print(
+                f"PASS: Compiled {frozen_pdf.name} ({frozen_pdf.stat().st_size / 1048576:.3f} MB{pages_str}) "
+                f"with 0 overfull hboxes & 0 undefined refs!"
+            )
+
+            # Package deterministic arXiv tarball (mtime=0, uid=0, gid=0, USTAR)
+            tar_buf = io.BytesIO()
+            files = [
+                ("main.tex", PAPER_DIR / "main.tex"),
+                ("main.bbl", build_dir / "main.bbl"),
+                ("refs.bib", PAPER_DIR / "refs.bib"),
+            ]
+            fig_dir = PAPER_DIR / "figures"
+            if fig_dir.exists():
+                files += [(f"figures/{p.name}", p) for p in sorted(fig_dir.glob("*.pdf"))]
+
+            with tarfile.open(fileobj=tar_buf, mode="w", format=tarfile.USTAR_FORMAT) as tf:
+                for arcname, src in files:
+                    if not src.exists():
+                        continue
+                    raw = src.read_bytes()
+                    ti = tarfile.TarInfo(name=arcname)
+                    ti.size = len(raw)
+                    ti.mtime = 0
+                    ti.uid = 0
+                    ti.gid = 0
+                    ti.uname = ""
+                    ti.gname = ""
+                    ti.mode = 0o644
+                    tf.addfile(ti, io.BytesIO(raw))
+
+            with arxiv_gz.open("wb") as f_out:
+                with gzip.GzipFile(filename="", mode="wb", fileobj=f_out, compresslevel=9, mtime=0) as gz:
+                    gz.write(tar_buf.getvalue())
+            print(f"PASS: Packaged deterministic {arxiv_gz.name} ({arxiv_gz.stat().st_size / 1048576:.3f} MB)")
+        else:
+            if not frozen_pdf.exists() or frozen_pdf.stat().st_size < 10_000:
+                print(f"FAIL: Committed frozen PDF missing or truncated: {frozen_pdf}", file=sys.stderr)
+                sys.exit(1)
+            if not arxiv_gz.exists() or arxiv_gz.stat().st_size < 1_000:
+                print(f"FAIL: Committed arXiv tarball missing or truncated: {arxiv_gz}", file=sys.stderr)
+                sys.exit(1)
+            print(
+                f"PASS (--verify-only): paper/main.tex compiled cleanly ({pages_str.lstrip(', ')}, 0 overfull hboxes, "
+                f"0 undefined refs); committed dist/ artifacts preserved intact for SLSA attestation."
+            )
+
+        # Clean-room arXiv compilation verification of the committed tarball
+        tmp = Path(tempfile.mkdtemp(prefix="arxiv_clean_"))
+        try:
+            with tarfile.open(arxiv_gz, "r:gz") as tf:
+                tf.extractall(tmp, filter="data")
+            cres = subprocess.run([tectonic, "-X", "compile", "main.tex"], cwd=tmp, capture_output=True, text=True, check=False)
+            if cres.returncode != 0:
+                print("FAIL: Clean-room arXiv compilation failed:\n" + cres.stderr, file=sys.stderr)
+                sys.exit(cres.returncode)
+            print("PASS: Clean-room arXiv tarball compilation succeeded!")
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
     finally:
-        shutil.rmtree(tmp, ignore_errors=True)
+        if args.verify_only:
+            shutil.rmtree(build_dir, ignore_errors=True)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,260 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "OMEGA 4-Tier Multi-Scale Observatory Verification & Telemetry Artifacts",
+  "alternateName": "omega-triscale-observatory v6.8.0",
+  "description": "Verification receipts, 9-mutant planted-regression audit, Node.js telemetry micro-benchmarks, live Crossref/DataCite citation audit (13/13 entries, 0 retractions), and 9-page AMS-LaTeX preprint for OMEGA 4-Tier Multi-Scale Observatory v6.8.0. Strictly a visualization and orchestration instrument; 0 local Lean 4 files; not externally peer-reviewed; 0/1,900 Mega-Atlas open problems retired.",
+  "version": "6.8.0",
+  "datePublished": "2026-11-26",
+  "url": "https://0thernes.github.io/omega-triscale-observatory/",
+  "sameAs": "https://github.com/0thernes/omega-triscale-observatory",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "citeAs": "Donahue, Alexander Stephen (2026). OMEGA 4-Tier Multi-Scale Observatory (v6.8.0). Independent Researcher, Spokane, WA, USA. ORCID: 0009-0006-8168-9648. https://github.com/0thernes/omega-triscale-observatory",
+  "creator": {
+    "@type": "sc:Person",
+    "name": "Alexander Stephen Donahue",
+    "identifier": "https://orcid.org/0009-0006-8168-9648",
+    "affiliation": "Independent Researcher, Spokane, WA, USA",
+    "url": "https://0thernes.art"
+  },
+  "keywords": [
+    "artificial life",
+    "multi-scale observatory",
+    "observer independence",
+    "reverse proxy",
+    "WebGL2",
+    "telemetry metrology",
+    "mutation testing",
+    "property-based testing"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "mutation-audit-json",
+      "name": "mutation_audit.json",
+      "description": "Deterministic 9-mutant planted-regression audit receipt (7 core, 2 server).",
+      "contentUrl": "https://raw.githubusercontent.com/0thernes/omega-triscale-observatory/main/results/mutation_audit.json",
+      "encodingFormat": "application/json",
+      "sha256": "004b3a54f36b7c41a54e50cef485dd6094b9468612909b648a38b86c44a49eea",
+      "contentSize": "2082 B"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "benchmarks-json",
+      "name": "benchmarks.json",
+      "description": "Deterministic Node.js telemetry and security guard micro-benchmarks.",
+      "contentUrl": "https://raw.githubusercontent.com/0thernes/omega-triscale-observatory/main/results/benchmarks.json",
+      "encodingFormat": "application/json",
+      "sha256": "4facc8160c1be7922e1458181d3c50a1d4bec4ccd7313bc7f5baaebe00fe4666",
+      "contentSize": "943 B"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "citation-audit-json",
+      "name": "citation-audit.json",
+      "description": "Live Crossref/DataCite title+author and URL verification audit for all 13 BibTeX entries.",
+      "contentUrl": "https://raw.githubusercontent.com/0thernes/omega-triscale-observatory/main/results/citation-audit.json",
+      "encodingFormat": "application/json",
+      "sha256": "297e80a8194dffd3c2c0f99f7e82f4580b521fafaca6453a6005415bb8179035",
+      "contentSize": "8516 B"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "white-paper-pdf",
+      "name": "Donahue_2026_omega_triscale_observatory.pdf",
+      "description": "9-page AMS-LaTeX technical architecture preprint (not externally peer-reviewed).",
+      "contentUrl": "https://raw.githubusercontent.com/0thernes/omega-triscale-observatory/main/dist/Donahue_2026_omega_triscale_observatory.pdf",
+      "encodingFormat": "application/pdf",
+      "sha256": "05f265fa6b9ae5a5486b683bbf99cbf309050c46d2c27cf1f25a2dd700ecea3e",
+      "contentSize": "183746 B"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "arxiv-tarball",
+      "name": "arxiv_submission.tar.gz",
+      "description": "Deterministic clean-room arXiv source tarball (USTAR, mtime=0).",
+      "contentUrl": "https://raw.githubusercontent.com/0thernes/omega-triscale-observatory/main/dist/arxiv_submission.tar.gz",
+      "encodingFormat": "application/gzip",
+      "sha256": "45e5778520ea50fe0885ba51e72b7d44da2b36488f832dbe0ca200d660c603d0",
+      "contentSize": "17779 B"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "planted_mutants",
+      "name": "planted_mutants",
+      "description": "All 9 hand-planted regression mutants across lib/observatory_core.mjs (7) and server.mjs (2).",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "planted_mutants/id",
+          "name": "id",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "mutation-audit-json"
+            },
+            "extract": {
+              "jsonPath": "$.results[*].id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "planted_mutants/file",
+          "name": "file",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "mutation-audit-json"
+            },
+            "extract": {
+              "jsonPath": "$.results[*].file"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "planted_mutants/killed",
+          "name": "killed",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "mutation-audit-json"
+            },
+            "extract": {
+              "jsonPath": "$.results[*].killed"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "benchmarks",
+      "name": "benchmarks",
+      "description": "Deterministic latency micro-benchmarks across four core observatory pipelines.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "benchmarks/name",
+          "name": "name",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "benchmarks-json"
+            },
+            "extract": {
+              "jsonPath": "$.benchmarks[*].name"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "benchmarks/mean_ms",
+          "name": "mean_ms",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "benchmarks-json"
+            },
+            "extract": {
+              "jsonPath": "$.benchmarks[*].mean_ms"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "benchmarks/p95_ms",
+          "name": "p95_ms",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "benchmarks-json"
+            },
+            "extract": {
+              "jsonPath": "$.benchmarks[*].p95_ms"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "citations",
+      "name": "citations",
+      "description": "Live Crossref/DataCite title+author and URL verification audit across all 13 BibTeX entries.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "citations/key",
+          "name": "key",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "citation-audit-json"
+            },
+            "extract": {
+              "jsonPath": "$.entries[*].key"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "citations/status",
+          "name": "status",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "citation-audit-json"
+            },
+            "extract": {
+              "jsonPath": "$.entries[*].status"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -4,8 +4,8 @@
 
 | Version | Supported |
 |---|---|
-| `6.7.x` | Yes |
-| `< 6.7.0` | No — please upgrade to `6.7.0` |
+| `6.8.x` | Yes |
+| `< 6.8.0` | No — please upgrade to `6.8.0` |
 
 ## Security Model Summary
 

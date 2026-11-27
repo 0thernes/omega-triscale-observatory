@@ -30,12 +30,16 @@ const JS_TARGETS = [
 
 const PY_TARGETS = [
   "macro_wild_relay.py",
-  "tests/test_relay.py"
+  "tests/test_relay.py",
+  "scripts/check_citations.py",
+  "scripts/build_paper.py",
+  "scripts/stamp_timestamps.py"
 ];
 
 function findPython() {
   const candidates = [
     process.env.PYTHON_BIN,
+    "C:\\Users\\Alexa\\.anaconda-desktop\\micromamba\\envs\\assistant\\python.exe",
     "C:\\Users\\Alexa\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
     "python3",
     "python"

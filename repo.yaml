@@ -2,7 +2,7 @@
 # Project manifest for the Build Standard for LLMs v1.2.0. Read by scripts/audit-repo.sh and Audit-Repo.ps1.
 standard: "1.2.0"
 name: "omega-triscale-observatory"
-description: "Unified 4-Tier Artificial Life Multi-Scale Observatory v6.7.0 supervising 8 live local endpoints across 7 public repositories with render-only D7RO observer isolation, bare-metal 1..1M controls, and 6/6 mutation verification."
+description: "Unified 4-Tier Artificial Life Multi-Scale Observatory v6.8.0 supervising 8 live local endpoints across 7 public repositories with wire-spy tested D7RO observer isolation, raw-socket WS CSWSH guard, raw-input Node-Python parity, and 9/9 planted mutants killed."
 owner: "Alexander Stephen Donahue (0thernes)"
 year: "2026"
 project_type: research
@@ -30,12 +30,12 @@ items:
   A03: {status: done}  # Quickstart that works from a clean clone [core]
   A04: {status: done}  # Usage examples [core]
   A05: {status: done}  # Demo media (docs/media/social-preview.svg) [recommended]
-  A06: {status: done}  # LICENSE (Apache-2.0 + LICENSE-DOCS CC-BY-4.0) [core]
+  A06: {status: done}  # LICENSE (Apache-2.0 + LICENSE-DOCS CC-BY-4.0 + REUSE.toml) [core]
   A07: {status: done}  # CHANGELOG [core]
   A08: {status: done}  # Semantic version, tags and a single version source [core]
-  A09: {status: done}  # Automated tests that pass [core]
+  A09: {status: done}  # Automated tests that pass (14/14 Node + 6/6 Python) [core]
   A10: {status: done}  # Informational CI [core]
-  A11: {status: done}  # Releases (tags: ["v*"] in .github/workflows/ci.yml) [recommended]
+  A11: {status: done}  # Releases (tags: ["v*"] in .github/workflows/ci.yml & release.yml) [recommended]
   A12: {status: done}  # .gitignore [core]
   A13: {status: done}  # .gitattributes and .editorconfig [recommended]
   A14: {status: done}  # CONTRIBUTING guide [recommended]
@@ -43,7 +43,7 @@ items:
   A16: {status: done}  # SECURITY.md [core]
   A17: {status: done}  # SUPPORT.md [recommended]
   A18: {status: done}  # Issue templates (no PR templates per R4) [recommended]
-  A19: {status: done}  # About description and topics updated via gh repo edit [core]
+  A19: {status: done}  # About description, homepage and topics updated via gh repo edit [core]
   A20: {status: done}  # docs/ folder [recommended]
   A21: {status: done}  # Architecture Decision Records [recommended]
   A22: {status: done}  # CITATION.cff [advanced]
@@ -51,7 +51,7 @@ items:
   A24: {status: done}  # No secrets, build output or huge files committed [core]
   A25: {status: done}  # Cross-platform CI (ubuntu-latest + windows-latest) [recommended]
   A26: {status: done}  # Social preview image (docs/media/social-preview.svg) [recommended]
-  A27: {status: n/a, note: "Loopback-only local supervisor (127.0.0.1:8790) cannot host live WebSocket/SSE reverse proxies on static GitHub Pages; documented in DEVIATIONS.md."}
+  A27: {status: done}  # GitHub Pages Architecture & Verification Showcase (docs/index.html + .github/workflows/pages.yml) [advanced]
   A28: {status: done}  # Package manifest (package.json) [recommended]
   A29: {status: done}  # ROADMAP.md [recommended]
   A30: {status: done}  # Labels for the finding classes (.github/labels.tsv) [recommended]
@@ -62,8 +62,8 @@ items:
   A35: {status: done}  # Data, backups and offsite repo mirror (docs/operations.md + git bundle) [recommended]
   A36: {status: n/a, note: "Local loopback workstation tool (deployed: false); local rollback documented in docs/operations.md."}
   A37: {status: done}  # Performance budgets (docs/benchmarks.md + results/benchmarks.json) [advanced]
-  A38: {status: done}  # Accessibility (WAI-ARIA role/aria-label/aria-live, keyboard hotkeys, Okabe-Ito colorblind-safe palettes) [core]
-  A39: {status: done}  # Third-party licensing and attribution (NOTICE + THIRD_PARTY_NOTICES.md) [recommended]
+  A38: {status: done}  # Accessibility (WCAG 2.2 AA showcase + WAI-ARIA role/aria-label/aria-live, keyboard hotkeys, Okabe-Ito palettes) [core]
+  A39: {status: done}  # Third-party licensing and attribution (NOTICE + THIRD_PARTY_NOTICES.md + REUSE.toml) [recommended]
   A40: {status: n/a, note: "Zero runtime AI SDKs or LLMs shipped (ai: false)."}
   A41: {status: done}  # Deprecation and upgrade path (UPGRADING.md) [advanced]
   A42: {status: done}  # Maintenance status (status: active in README.md) [recommended]
@@ -72,27 +72,27 @@ items:
   A45: {status: n/a, note: "Zero personal data collected, stored, or transmitted (personal_data: false)."}
   B01: {status: done}  # Reproducible build from a clean clone (just reproduce) [core]
   B02: {status: done}  # Pinned toolchains and lockfiles (package-lock.json + requirements.txt) [core]
-  B03: {status: done}  # Determinism checks (SplitMix32 PRNG, deterministic taxonomy, deterministic arXiv tarball mtime=0) [core]
+  B03: {status: done}  # Determinism checks (SplitMix32 PRNG, deterministic taxonomy, deterministic mutation_audit.json, deterministic arXiv tarball mtime=0) [core]
   B04: {status: done}  # CLAIMS.md ledger [core]
   B05: {status: done}  # Falsifiable tests per claim (C1-C10 mapped in CLAIMS.md & docs/statement-fidelity.md) [core]
-  B06: {status: done}  # Negative tests (path traversal, CSRF/CSWSH, invalid clade/z, truncated AZST, stale telemetry) [core]
-  B07: {status: done}  # Regression test per fixed bug (resolveSafePath, query 400s, hardware flag toggles, D7RO) [core]
+  B06: {status: done}  # Negative tests (path traversal, CSRF, live raw-socket WS CSWSH 403, invalid clade/z, truncated AZST, offline/stale tiers) [core]
+  B07: {status: done}  # Regression test per fixed bug (resolveSafePath, query 400s, WS upgrade 403, offline DEGRADED, D7RO wire-spy, raw-input cap/lesion parity) [core]
   B08: {status: done}  # Golden and snapshot tests (AZST binary fixture, taxonomy determinism, Bio-FX PICK preservation) [recommended]
-  B09: {status: done}  # Contract and API tests (live ephemeral 127.0.0.1:0 HTTP tests for /healthz, /api/stack/*, /proxy/*) [recommended]
+  B09: {status: done}  # Contract and API tests (live ephemeral 127.0.0.1:0 HTTP, WS upgrade, and D7RO wire-spy tests) [recommended]
   B10: {status: done}  # Property-based tests (250 Node prop_check + 120 Python randomized relay trials) [core]
-  B11: {status: done}  # Differential testing (Node normalizeGenesisConfig/buildRelayArgs vs Python macro_wild_relay.py --dry-run) [recommended]
+  B11: {status: done}  # Differential testing (18 raw unnormalized adversarial & seeded inputs compared directly between Node and Python --dry-run) [recommended]
   B12: {status: done}  # Reference implementation as test oracle (Python macro_wild_relay.py --dry-run independent cross-language oracle) [recommended]
-  B13: {status: done}  # Mutation testing (scripts/run_mutation_audit.mjs — 6/6 = 100.0% mutants killed) [recommended]
+  B13: {status: done}  # Mutation testing (scripts/run_mutation_audit.mjs — 9/9 hand-planted regression mutants killed: 7 core, 2 server) [recommended]
   B14: {status: done}  # Metamorphic testing (112-trait swap antisymmetry, constant-shift invariance, clamping monotonicity) [advanced]
   B15: {status: n/a, note: "Zero native C/C++/asm code (native: false); randomized property fuzzing covered by prop_check."}
   B16: {status: n/a, note: "Zero native C/C++/asm code (native: false); memory-safe Node.js & Python runtimes."}
   B17: {status: done}  # Static analysis and linters, report-only (scripts/lint_check.mjs + CI ruff) [recommended]
   B18: {status: done}  # Strict type checking (jsconfig.json strict + CI mypy) [recommended]
-  B19: {status: done}  # Concurrency and race testing (serialized macroSpawnLock + in-flight poller guards + ephemeral HTTP client isolation) [advanced]
+  B19: {status: done}  # Concurrency and race testing (serialized macroSpawnLock + in-flight poller guards + ephemeral HTTP/WS client isolation) [advanced]
   B20: {status: done}  # Numeric and floating-point stability (NaN/Infinity guards, [0,1] clamping, cosine zero-norm guard, Shannon zero-total guard) [advanced]
-  B21: {status: done}  # Failure injection (offline/stale engines -> DEGRADED, observerFail -> ALERT, truncated AZST -> null, bad JSON -> 400) [advanced]
-  B22: {status: n/a, note: "Zero local Lean 4 files (formal: false); six formal companion repos hold 327 audited 6-kernel Lean 4.35.0 proofs (DEVIATIONS.md D1)."}
-  B23: {status: n/a, note: "No separate TLA+/Alloy model (formal: false); D7RO & clamping invariants verified by prop_check and 6/6 mutation audit."}
+  B21: {status: done}  # Failure injection (offline t1/t2/t4 -> DEGRADED, stale -> DEGRADED, residual/observerFail -> ALERT, truncated AZST -> null, bad JSON -> 400) [advanced]
+  B22: {status: n/a, note: "Zero local Lean 4 files (formal: false); six formal companion repos report 327 audited 6-kernel Lean 4.35.0 proofs (DEVIATIONS.md D1)."}
+  B23: {status: n/a, note: "No separate TLA+/Alloy model (formal: false); D7RO & clamping invariants tested by wire-spy, prop_check, and 9/9 planted mutants."}
   B24: {status: n/a, note: "Orchestration/UI instrument implemented in zero-dependency Node.js ESM, Python 3, and WebGL2 (formal: false)."}
   B25: {status: n/a, note: "Zero C/C++/Rust runtime code (formal: false, native: false)."}
   B26: {status: done}  # Honest benchmarks (docs/benchmarks.md + results/benchmarks.json) [core]
@@ -106,9 +106,9 @@ items:
   B34: {status: n/a, note: "No runtime AI/LLM inference shipped (ai: false)."}
   B35: {status: done}  # Security scanning, report-only (gitleaks in .github/workflows/ci.yml) [recommended]
   B36: {status: done}  # Threat model (docs/threat-model.md) [recommended]
-  B37: {status: done}  # Release hashes and checksums (SHA256SUMS in ci.yml + CHECKSUMS.sha256) [core]
-  B38: {status: done}  # Build provenance and attestations (actions/attest-build-provenance@v2 in ci.yml) [recommended]
-  B39: {status: n/a, note: "No research dataset bundled (experimental: false); artifacts checksummed via CHECKSUMS.sha256."}
+  B37: {status: done}  # Release hashes and checksums (SHA256SUMS in ci.yml & release.yml + CHECKSUMS.sha256 + data/MANIFEST.sha256 + RFC 3161 .tsr + Bitcoin .ots) [core]
+  B38: {status: done}  # Build provenance and attestations (actions/attest-build-provenance@v2 on committed PDF & arXiv tarball in ci.yml & release.yml) [recommended]
+  B39: {status: n/a, note: "No empirical research dataset bundled (experimental: false); verification artifacts checksummed via data/MANIFEST.sha256 & CHECKSUMS.sha256."}
   B40: {status: done}  # Audit trail (docs/run-log.md + HARDENING_LOG.md + git history) [recommended]
   B41: {status: done}  # Limitations and real-vs-metaphor (LIMITATIONS.md) [core]
   B42: {status: done}  # What would prove us wrong (CLAIMS.md explicit refutation column) [core]

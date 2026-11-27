@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Alexander Stephen Donahue
 /**
- * Runnable Example: OMEGA 4-Tier Multi-Scale Observatory v6.7.0 Core Pipeline
+ * Runnable Example: OMEGA 4-Tier Multi-Scale Observatory v6.8.0 Core Pipeline
  * Executes standalone with zero external dependencies and zero child processes.
  */
 

@@ -1,9 +1,9 @@
 {
-  "title": "OMEGA 4-Tier Multi-Scale Observatory (v6.7.0): Render-Only Observer Isolation, Loopback Reverse-Proxy Telemetry, and Automated Verification Across Eight Local Artificial-Life Endpoints",
-  "description": "Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life cockpit supervising eight local endpoints across seven public repositories on 127.0.0.1:8790. Enforces render-only D7RO observer independence, loopback CSRF/CSWSH and path-traversal defense, bounded bare-metal 1..1,000,000 controls (AVX2/VNNI, 24C P+E, DDR5 PF, RTX 5070 Ti CUDA PTX, large pages), 112-trait spectral differentials, <=240 omnitemporal ring buffer, 12/12 Node tests (250 prop_check trials), 5/5 Python relay tests (120 trials), 6/6 (100.0%) surgical mutation kills, and an AMS-LaTeX architecture white paper. Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648). Strictly a visualization and orchestration instrument; 0 local Lean 4 files; 0/1,900 overarching Mega-Atlas open problems retired.",
+  "title": "OMEGA 4-Tier Multi-Scale Observatory (v6.8.0): Render-Only Observer Isolation, Loopback Reverse-Proxy Telemetry, and Automated Verification Across Eight Local Artificial-Life Endpoints",
+  "description": "Zero-dependency Node.js ESM, Python 3, and WebGL 2.0 multi-scale Artificial Life cockpit supervising eight local endpoints across seven public repositories on 127.0.0.1:8790. Features render-only D7RO observer isolation verified by coupling-matrix assertions, #ifdef PICK preservation, and a live loopback wire-spy test; loopback CSRF and live raw-socket WebSocket Upgrade 403 CSWSH rejection; path-traversal defense; offline-engine DEGRADED conservation gating; bounded bare-metal 1..1,000,000 controls differentially verified on 18 raw unnormalized inputs between Node and Python; 112-trait spectral differentials; <=240 omnitemporal ring buffer; 14/14 Node tests (250 prop_check trials); 6/6 Python relay tests (120 trials); 9/9 hand-planted regression mutants killed (7 in lib/observatory_core.mjs, 2 in server.mjs); 13/13 Crossref/DataCite verified references; dual RFC 3161 + Bitcoin OTS timestamps; and an AMS-LaTeX architecture white paper. Author: Alexander Stephen Donahue (Independent Researcher, Spokane, WA, USA; ORCID 0009-0006-8168-9648). Strictly a visualization and orchestration instrument; 0 local Lean 4 files; not externally peer-reviewed; 0/1,900 overarching Mega-Atlas open problems retired. Transparent AI coding assistance disclosed in docs/AI_DISCLOSURE.md.",
   "upload_type": "software",
-  "version": "6.7.0",
-  "publication_date": "2026-11-25",
+  "version": "6.8.0",
+  "publication_date": "2026-11-26",
   "access_right": "open",
   "license": "apache-2.0",
   "language": "eng",
@@ -28,6 +28,11 @@
     {
       "identifier": "https://github.com/0thernes/omega-triscale-observatory",
       "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://0thernes.github.io/omega-triscale-observatory/",
+      "relation": "isDocumentedBy",
       "scheme": "url"
     },
     {

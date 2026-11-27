@@ -25,7 +25,7 @@ Sending `SIGINT` (`Ctrl+C`) or `SIGTERM` triggers `shutdown()` in `server.mjs`, 
   {
     "ok": true,
     "service": "omega-triscale-observatory",
-    "version": "6.7.0",
+    "version": "6.8.0",
     "uptime_s": 12.34,
     "engines": { "t1_dna": false, "t2_cells": false, "t2_omega": false, "t3_noetic": false, "t3_creatures": false, "t4_env": false },
     "conservationState": "DEGRADED",
@@ -43,7 +43,7 @@ Sending `SIGINT` (`Ctrl+C`) or `SIGTERM` triggers `shutdown()` in `server.mjs`, 
   - Offsite research archive & mirror registration: `https://github.com/0thernes/0thernes-research-archive` (plus Software Heritage snapshot and local ReFS Dev Drive / external `I:` backup).
 - **Offline Git Bundle Backup:** Create a full self-contained offline backup bundle at any time:
   ```bash
-  git bundle create omega-triscale-observatory-v6.7.0.bundle --all
-  git bundle verify omega-triscale-observatory-v6.7.0.bundle
+  git bundle create omega-triscale-observatory-v6.8.0.bundle --all
+  git bundle verify omega-triscale-observatory-v6.8.0.bundle
   ```
 - **Local Rollback:** Revert to any prior tagged release cleanly via `git checkout v6.6.0` (or restore from the verified `.bundle` archive).

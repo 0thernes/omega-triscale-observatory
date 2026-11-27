@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: Apache-2.0
 name: CI — Verification, Mutation Audit, Paper & Provenance
 
 on:
@@ -30,27 +31,45 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Node.js Test Suite (Contract, HTTP, 250 prop_check, Metamorphic, Differential)
+      - name: Node.js Test Suite (14/14 — Live WS CSWSH, D7RO Wire-Spy, Offline DEGRADED, 250 prop_check, Raw-Input Parity)
         run: npm test
 
-      - name: Python Relay Unittest Suite (120 Randomized Trials)
+      - name: Python Relay Unittest Suite (6/6 — 120 Randomized Trials + Raw Adversarial Clamping)
         run: python -m unittest discover -s tests -v
 
       - name: Static Syntax, Security, Determinism & Identity Lint
         run: npm run lint
 
-      - name: Surgical Mutation Audit (6/6 Mutants)
-        run: npm run mutate
+      - name: Surgical Mutation Audit (9/9 Planted Mutants — Non-Dirty Working Tree)
+        run: |
+          npm run mutate
+          git diff --exit-code results/mutation_audit.json
 
       - name: Deterministic Micro-Benchmarks (Report-Only)
         run: npm run bench
 
-      - name: Offline BibTeX Citation Syntax Audit
+      - name: Offline BibTeX Citation Syntax & Completeness Audit
         run: python scripts/check_citations.py --offline
+
+      - name: Verify Dual Cryptographic Timestamps (DigiCert RFC 3161 + Bitcoin OTS)
+        run: python scripts/stamp_timestamps.py --verify
+
+      - name: Verify CHECKSUMS.sha256 Integrity
+        shell: pwsh
+        run: |
+          $lines = Get-Content -LiteralPath "CHECKSUMS.sha256" | Where-Object { $_ -match "^[0-9a-f]{64}  " }
+          foreach ($ln in $lines) {
+            $parts = $ln -split "  ", 2
+            $expected = $parts[0].ToLowerInvariant()
+            $rel = $parts[1].Trim()
+            $actual = (Get-FileHash -LiteralPath $rel -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $expected) { Write-Error "Checksum mismatch for ${rel}: expected ${expected}, got ${actual}"; exit 1 }
+          }
+          Write-Host "PASS: Verified $($lines.Count) SHA-256 digests in CHECKSUMS.sha256."
 
       - name: Build Standard v1.2.0 Repository Audit
         shell: pwsh
-        run: pwsh -NoProfile -File scripts/Audit-Repo.ps1
+        run: pwsh -NoProfile -File scripts/Audit-Repo.ps1 -Path .
 
   security-scan:
     name: Security Scan (gitleaks + Python static check)
@@ -74,11 +93,11 @@ jobs:
         continue-on-error: true
         run: |
           pip install --quiet ruff==0.11.12 mypy==1.15.0
-          ruff check macro_wild_relay.py tests/test_relay.py scripts/build_paper.py scripts/check_citations.py
-          mypy --ignore-missing-imports macro_wild_relay.py scripts/build_paper.py scripts/check_citations.py
+          ruff check macro_wild_relay.py tests/test_relay.py scripts/build_paper.py scripts/check_citations.py scripts/stamp_timestamps.py
+          mypy --ignore-missing-imports macro_wild_relay.py scripts/build_paper.py scripts/check_citations.py scripts/stamp_timestamps.py
 
   paper-and-provenance:
-    name: Tectonic PDF, Clean-Room arXiv & SLSA Provenance
+    name: Tectonic PDF Verification, Clean-Room arXiv & SLSA Provenance
     runs-on: ubuntu-latest
     needs: [verify]
     steps:
@@ -91,10 +110,10 @@ jobs:
       - name: Install Tectonic
         uses: wtfjoke/setup-tectonic@v3
 
-      - name: Compile AMS-LaTeX White Paper & Clean-Room Verify arXiv Tarball
-        run: python scripts/build_paper.py
+      - name: Verify Zero-Overflow paper/main.tex Compile & Clean-Room arXiv Tarball (Preserving Committed dist/ PDF)
+        run: python scripts/build_paper.py --verify-only
 
-      - name: Generate SHA256SUMS Manifest
+      - name: Generate SHA256SUMS Manifest for Committed Release Artifacts
         run: |
           sha256sum \
             VERSION \
@@ -103,10 +122,13 @@ jobs:
             server.mjs \
             macro_wild_relay.py \
             dist/Donahue_2026_omega_triscale_observatory.pdf \
-            dist/arxiv_submission.tar.gz > SHA256SUMS
+            dist/arxiv_submission.tar.gz \
+            CHECKSUMS.sha256 \
+            CHECKSUMS.sha256.tsr \
+            CHECKSUMS.sha256.ots > SHA256SUMS
           cat SHA256SUMS
 
-      - name: Attest Build Provenance (SLSA)
+      - name: Attest Build Provenance (SLSA / Sigstore Rekor on Committed PDF & arXiv Tarball)
         uses: actions/attest-build-provenance@v2
         with:
           subject-path: |
@@ -114,13 +136,17 @@ jobs:
             dist/arxiv_submission.tar.gz
             SHA256SUMS
 
-      - name: Upload Frozen Paper & Checksums Artifact
+      - name: Upload Frozen Paper, Citation Audit, Timestamps & Checksums Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: omega-triscale-observatory-v6.7.0-dist
+          name: omega-triscale-observatory-v6.8.0-dist
           path: |
             dist/Donahue_2026_omega_triscale_observatory.pdf
             dist/arxiv_submission.tar.gz
             SHA256SUMS
+            CHECKSUMS.sha256
+            CHECKSUMS.sha256.tsr
+            CHECKSUMS.sha256.ots
             results/mutation_audit.json
             results/benchmarks.json
+            results/citation-audit.json
