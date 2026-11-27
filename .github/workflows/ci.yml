@@ -21,13 +21,13 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -75,7 +75,7 @@ jobs:
     name: Security Scan (gitleaks + Python static check)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -85,7 +85,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -101,9 +101,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [verify]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -129,7 +129,7 @@ jobs:
           cat SHA256SUMS
 
       - name: Attest Build Provenance (SLSA / Sigstore Rekor on Committed PDF & arXiv Tarball)
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             dist/Donahue_2026_omega_triscale_observatory.pdf
@@ -137,7 +137,7 @@ jobs:
             SHA256SUMS
 
       - name: Upload Frozen Paper, Citation Audit, Timestamps & Checksums Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: omega-triscale-observatory-v6.8.0-dist
           path: |

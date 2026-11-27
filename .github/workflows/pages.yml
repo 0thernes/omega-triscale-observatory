@@ -19,8 +19,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
+      - uses: actions/checkout@v7
+      - uses: actions/configure-pages@v6
       - name: Assemble static site (WCAG 2.2 AA Showcase + Media + White Paper + FAIR/LLMs Metadata)
         run: |
           mkdir -p _site/media _site/dist _site/results
@@ -30,7 +30,7 @@ jobs:
           cp results/mutation_audit.json results/benchmarks.json results/citation-audit.json _site/results/
           cp llms.txt llms-full.txt croissant.json ro-crate-metadata.json codemeta.json CITATION.cff CHECKSUMS.sha256 _site/
           touch _site/.nojekyll
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
@@ -42,4 +42,4 @@ jobs:
     needs: build
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
