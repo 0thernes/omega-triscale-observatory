@@ -95,8 +95,8 @@
       "description": "Live Crossref/DataCite title+author and URL verification audit for all 13 BibTeX entries.",
       "contentUrl": "https://raw.githubusercontent.com/0thernes/omega-triscale-observatory/main/results/citation-audit.json",
       "encodingFormat": "application/json",
-      "sha256": "297e80a8194dffd3c2c0f99f7e82f4580b521fafaca6453a6005415bb8179035",
-      "contentSize": "8516 B"
+      "sha256": "af3212167a9787ab3a6da316debdd13fe0d572684ef675f4310c2eda2d219ecf",
+      "contentSize": "8234 B"
     },
     {
       "@type": "cr:FileObject",

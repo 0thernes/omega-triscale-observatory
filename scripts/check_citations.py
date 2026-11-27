@@ -316,7 +316,7 @@ def main() -> None:
 
     if args.write:
         OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-        OUT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        OUT_PATH.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
         print(f"Wrote {OUT_PATH.relative_to(ROOT)}.")
 
     if failures:

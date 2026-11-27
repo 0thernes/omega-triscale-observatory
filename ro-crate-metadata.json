@@ -178,8 +178,8 @@
       "name": "citation-audit.json",
       "description": "Live Crossref/DataCite title+author citation verification audit (13/13)",
       "encodingFormat": "application/json",
-      "sha256": "297e80a8194dffd3c2c0f99f7e82f4580b521fafaca6453a6005415bb8179035",
-      "contentSize": 8516
+      "sha256": "af3212167a9787ab3a6da316debdd13fe0d572684ef675f4310c2eda2d219ecf",
+      "contentSize": 8234
     },
     {
       "@id": "dist/Donahue_2026_omega_triscale_observatory.pdf",
@@ -259,7 +259,7 @@
       "name": "croissant.json",
       "description": "MLCommons Croissant 1.0 metadata",
       "encodingFormat": "application/ld+json",
-      "sha256": "88fcf41d174f2e2aeb0f097204ae832253ea5c59852485e1e7b6784cf527e8ce",
+      "sha256": "47c36df2facf3f72d08bd031756e4e83b311a4059a784a90b9a418f55acd5c72",
       "contentSize": 8819
     },
     {

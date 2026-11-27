@@ -45,15 +45,6 @@ jobs:
           npm run mutate
           git diff --exit-code results/mutation_audit.json
 
-      - name: Deterministic Micro-Benchmarks (Report-Only)
-        run: npm run bench
-
-      - name: Offline BibTeX Citation Syntax & Completeness Audit
-        run: python scripts/check_citations.py --offline
-
-      - name: Verify Dual Cryptographic Timestamps (DigiCert RFC 3161 + Bitcoin OTS)
-        run: python scripts/stamp_timestamps.py --verify
-
       - name: Verify CHECKSUMS.sha256 Integrity
         shell: pwsh
         run: |
@@ -66,6 +57,15 @@ jobs:
             if ($actual -ne $expected) { Write-Error "Checksum mismatch for ${rel}: expected ${expected}, got ${actual}"; exit 1 }
           }
           Write-Host "PASS: Verified $($lines.Count) SHA-256 digests in CHECKSUMS.sha256."
+
+      - name: Verify Dual Cryptographic Timestamps (DigiCert RFC 3161 + Bitcoin OTS)
+        run: python scripts/stamp_timestamps.py --verify
+
+      - name: Deterministic Micro-Benchmarks (Report-Only)
+        run: npm run bench
+
+      - name: Offline BibTeX Citation Syntax & Completeness Audit
+        run: python scripts/check_citations.py --offline
 
       - name: Build Standard v1.2.0 Repository Audit
         shell: pwsh

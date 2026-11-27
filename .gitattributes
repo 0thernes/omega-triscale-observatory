@@ -12,6 +12,8 @@ justfile text eol=lf
 *.pdf binary
 *.gz binary
 *.zip binary
+*.tsr binary
+*.ots binary
 
 # Generated / standard metadata
 llms-full.txt linguist-generated=true
